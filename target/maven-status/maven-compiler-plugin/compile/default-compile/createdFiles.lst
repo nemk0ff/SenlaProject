@@ -1,0 +1,11 @@
+ru\senla\socialnetwork\model\MyEntity.class
+ru\senla\socialnetwork\model\Gender.class
+ru\senla\socialnetwork\repository\GenericDao.class
+ru\senla\socialnetwork\config\HibernateConfig.class
+ru\senla\socialnetwork\SenlaProjectApplication.class
+ru\senla\socialnetwork\repository\UserRepository.class
+ru\senla\socialnetwork\controllers\TestController.class
+ru\senla\socialnetwork\model\User.class
+ru\senla\socialnetwork\model\User$UserBuilder.class
+ru\senla\socialnetwork\model\UserRole.class
+ru\senla\socialnetwork\repository\HibernateAbstractDao.class

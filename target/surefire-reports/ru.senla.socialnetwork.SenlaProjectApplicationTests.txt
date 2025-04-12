@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: ru.senla.socialnetwork.SenlaProjectApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.440 s -- in ru.senla.socialnetwork.SenlaProjectApplicationTests
