@@ -7,6 +7,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ import ru.senla.socialnetwork.model.enums.UserRole;
 public class UserDTO {
   private Long id;
 
+  @NotBlank(message = "Укажите email пользователя")
   private String email;
 
   private UserRole role;

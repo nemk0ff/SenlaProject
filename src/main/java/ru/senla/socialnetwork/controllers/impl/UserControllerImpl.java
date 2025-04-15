@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,12 +39,19 @@ public class UserControllerImpl implements UserController {
     return ResponseEntity.ok(UserMapper.INSTANCE.toListDTO(userService.find(userDTO)));
   }
 
+  @Override
+  @GetMapping("/edit")
+  @PreAuthorize("hasRole('ADMIN') or #userDTO.email == authentication.name")
+  public ResponseEntity<?> edit(@RequestBody UserDTO userDTO) {
+    return ResponseEntity.ok(UserMapper.INSTANCE.toDTO(userService.edit(userDTO)));
+  }
+
   @PostMapping("/login")
   @Override
   public ResponseEntity<?> login(@RequestBody @Valid AuthDTO request) {
     if (userService.isUserValid(request)) {
-      String role = userService.getRole(request.getMail());
-      String token = JwtUtils.generateToken(request.getMail(), role);
+      String role = userService.getRole(request.getEmail());
+      String token = JwtUtils.generateToken(request.getEmail(), role);
       return ResponseEntity.ok(Map.of("token", token, "role", role));
     }
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

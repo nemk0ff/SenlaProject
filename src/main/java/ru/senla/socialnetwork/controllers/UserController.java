@@ -9,6 +9,8 @@ public interface UserController {
 
   ResponseEntity<?> find(UserDTO userDTO);
 
+  ResponseEntity<?> edit(UserDTO userDTO);
+
   ResponseEntity<?> register(UserDTO request);
 
   ResponseEntity<?> login(AuthDTO request);

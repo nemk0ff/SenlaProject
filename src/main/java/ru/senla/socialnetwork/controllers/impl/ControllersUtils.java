@@ -1,9 +1,10 @@
-package ru.senla.socialnetwork.security;
+package ru.senla.socialnetwork.controllers.impl;
+
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 
-public class SecurityAccessUtils {
+public class ControllersUtils {
   public static void checkAccessDenied(Authentication authentication, String errorMessage,
                                        String requiredUsername) {
     if (authentication.getAuthorities().stream()

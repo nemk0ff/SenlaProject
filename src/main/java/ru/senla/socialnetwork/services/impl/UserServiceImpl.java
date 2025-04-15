@@ -59,8 +59,8 @@ public class UserServiceImpl implements UserService {
   @Transactional
   @Override
   public boolean isUserValid(AuthDTO userInfo) {
-    log.info("Проверяем логин и пароль пользователя {}...", userInfo.getMail());
-    UserDetails correctDetails = loadUserByUsername(userInfo.getMail());
+    log.info("Проверяем логин и пароль пользователя {}...", userInfo.getEmail());
+    UserDetails correctDetails = loadUserByUsername(userInfo.getEmail());
     if (passwordEncoder.matches(userInfo.getPassword(), correctDetails.getPassword())) {
       log.info("Пользователь ввёл корректные данные");
       return true;
@@ -71,10 +71,10 @@ public class UserServiceImpl implements UserService {
 
   @Transactional
   @Override
-  public String getRole(String username) {
-    log.info("Ищем роль пользователя {}...", username);
-    String role = loadUserByUsername(username).getAuthorities().iterator().next().getAuthority();
-    log.info("Роль для {} найдена: {}", username, role);
+  public String getRole(String email) {
+    log.info("Ищем роль пользователя {}...", email);
+    String role = loadUserByUsername(email).getAuthorities().iterator().next().getAuthority();
+    log.info("Роль для {} найдена: {}", email, role);
     return role;
   }
 
@@ -109,5 +109,16 @@ public class UserServiceImpl implements UserService {
   @Override
   public void save(User user) {
     userDao.save(user);
+  }
+
+  @Transactional
+  @Override
+  public User edit(UserDTO userDTO) {
+    User mergedUser = UserMapper.INSTANCE.toUser(userDTO);
+    User oldUser = userDao.findByEmail(userDTO.getEmail())
+        .orElseThrow(() -> new EntityNotFoundException(
+            "Пользователь " + userDTO.getEmail() + " не зарегистрирован"));
+    mergedUser.setId(oldUser.getId());
+    return userDao.update(mergedUser);
   }
 }

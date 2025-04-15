@@ -20,7 +20,6 @@ public interface UserService extends UserDetailsService {
   void save(User user);
 
   List<User> find(UserDTO userDTO);
-  // TODO: Редактирование персональной информации пользователя
 
-  // TODO: Поиск пользователей по: фамилии, имени, полу, возрасту
+  User edit(UserDTO userDTO);
 }

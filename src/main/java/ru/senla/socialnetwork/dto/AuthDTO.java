@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class AuthDTO {
   @NotBlank(message = "Почта (имя пользователя) не может быть пустой")
-  private String mail;
+  private String email;
   @NotBlank(message = "Пароль не может быть пустым")
   private String password;
 }
