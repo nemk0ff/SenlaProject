@@ -25,7 +25,7 @@ import ru.senla.socialnetwork.model.enums.FriendStatus;
 @Builder
 @Entity
 @Table(name = "friendRequests")
-public final class FriendRequest {
+public final class FriendRequest implements MyEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")

@@ -10,12 +10,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.senla.socialnetwork.model.entities.User;
 import ru.senla.socialnetwork.repository.UserDao;
 
 @Repository
-@Transactional
 @Slf4j
 public class UserDaoImpl extends HibernateAbstractDao<User> implements UserDao {
 

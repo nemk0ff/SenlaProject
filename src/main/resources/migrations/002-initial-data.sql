@@ -23,4 +23,29 @@ VALUES ('ivanov_arkadiy@senla.ru', 'USER', '$2a$10$nGSytfuznHGN4lLgtYxI8.fR6wECX
        ('orlova_maria@senla.ru', 'USER', '$2a$10$nGSytfuznHGN4lLgtYxI8.fR6wECXaYX8WaQwXZYOVV/F75s3dUji', 'Maria', 'Orlova', '2007-06-20', 'FEMALE',
         'Будущий врач, учусь в медицинском колледже', '2025-04-09 21:30:00+03');
 
+--changeset admin:insert-friend-requests
+INSERT INTO friendRequests (sender_id, recipient_id, status, created_at)
+VALUES
+    -- Pending requests
+    (1, 2, 'PENDING', '2025-04-10 09:15:00+03'),
+    (1, 3, 'PENDING', '2025-04-10 10:20:00+03'),
+    (2, 4, 'PENDING', '2025-04-10 11:25:00+03'),
+    (3, 5, 'PENDING', '2025-04-10 12:30:00+03'),
+    (4, 6, 'PENDING', '2025-04-10 13:35:00+03'),
+
+    -- Accepted requests
+    (2, 1, 'ACCEPTED', '2025-04-09 14:40:00+03'),
+    (3, 2, 'ACCEPTED', '2025-04-09 15:45:00+03'),
+    (5, 3, 'ACCEPTED', '2025-04-09 16:50:00+03'),
+    (6, 4, 'ACCEPTED', '2025-04-09 17:55:00+03'),
+    (7, 5, 'ACCEPTED', '2025-04-09 18:00:00+03'),
+
+    -- Rejected requests
+    (8, 1, 'REJECTED', '2025-04-08 19:05:00+03'),
+    (9, 2, 'REJECTED', '2025-04-08 20:10:00+03'),
+    (10, 3, 'REJECTED', '2025-04-08 21:15:00+03'),
+    (4, 7, 'REJECTED', '2025-04-08 22:20:00+03'),
+    (5, 8, 'REJECTED', '2025-04-08 23:25:00+03');
+
+--rollback DELETE FROM friendRequests;
 --rollback DELETE FROM users;

@@ -1,8 +1,11 @@
 package ru.senla.socialnetwork.repository;
 
+import java.util.List;
 import java.util.Optional;
 import ru.senla.socialnetwork.model.entities.FriendRequest;
 
 public interface FriendRequestDao {
-  Optional<FriendRequest> getByUserId(Long userId);
+  List<FriendRequest> getAll();
+
+  List<FriendRequest> getByUserId(Long userId);
 }
