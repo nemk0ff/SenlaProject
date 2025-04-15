@@ -30,13 +30,13 @@ public class UserDaoImpl extends HibernateAbstractDao<User> implements UserDao {
       StringBuilder hql = new StringBuilder("FROM User WHERE 1=1");
       Map<String, Object> params = new HashMap<>();
 
-      if (user.getFirstName() != null && !user.getFirstName().isEmpty()) {
-        hql.append(" AND firstName = :firstName");
-        params.put("firstName", user.getFirstName());
+      if (user.getName() != null && !user.getName().isEmpty()) {
+        hql.append(" AND name = :name");
+        params.put("name", user.getName());
       }
-      if (user.getLastName() != null && !user.getLastName().isEmpty()) {
-        hql.append(" AND lastName = :lastName");
-        params.put("lastName", user.getLastName());
+      if (user.getSurname() != null && !user.getSurname().isEmpty()) {
+        hql.append(" AND surname = :surname");
+        params.put("surname", user.getSurname());
       }
       if (user.getGender() != null) {
         hql.append(" AND gender = :gender");
@@ -64,12 +64,22 @@ public class UserDaoImpl extends HibernateAbstractDao<User> implements UserDao {
     try {
       return Optional.ofNullable(
           sessionFactory.getCurrentSession()
-              .createQuery("FROM User WHERE mail = :mail", User.class)
-              .setParameter("mail", email)
+              .createQuery("FROM User WHERE email = :email", User.class)
+              .setParameter("email", email)
               .uniqueResult()
       );
     } catch (HibernateException e) {
       throw new DataRetrievalFailureException("Ошибка при поиске пользователя " + email, e);
+    }
+  }
+
+  @Override
+  public void save(User user) {
+    log.debug("Сохранение пользователя: {}, {}, {}", user.getEmail(), user.getName(), user.getSurname());
+    try {
+      sessionFactory.getCurrentSession().persist(user);
+    } catch (HibernateException e) {
+      throw new DataRetrievalFailureException("Ошибка сохранения пользователя " + user.getEmail(), e);
     }
   }
 }

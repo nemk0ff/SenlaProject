@@ -8,4 +8,6 @@ public interface UserDao {
   List<User> findByParam(User user);
 
   Optional<User> findByEmail(String email);
+
+  void save(User user);
 }

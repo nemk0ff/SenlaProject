@@ -53,6 +53,7 @@ public class UserControllerImpl implements UserController {
   @PostMapping("/register")
   @Override
   public ResponseEntity<?> register(@RequestBody @Valid UserDTO userDTO) {
-    return ResponseEntity.ok("e");
+    log.info("Получени UserDTO: {}", userDTO.getName());
+    return ResponseEntity.ok(UserMapper.INSTANCE.toDTO(userService.create(userDTO)));
   }
 }

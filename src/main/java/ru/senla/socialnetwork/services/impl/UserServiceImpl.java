@@ -12,8 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.senla.socialnetwork.dto.AuthDTO;
 import ru.senla.socialnetwork.dto.UserDTO;
 import ru.senla.socialnetwork.dto.mappers.UserMapper;
+import ru.senla.socialnetwork.exceptions.UserAlreadyExistsException;
 import ru.senla.socialnetwork.exceptions.UserNotRegisteredException;
 import ru.senla.socialnetwork.model.entities.User;
+import ru.senla.socialnetwork.model.enums.UserRole;
 import ru.senla.socialnetwork.repository.impl.UserDaoImpl;
 import ru.senla.socialnetwork.services.UserService;
 
@@ -74,5 +76,38 @@ public class UserServiceImpl implements UserService {
     String role = loadUserByUsername(username).getAuthorities().iterator().next().getAuthority();
     log.info("Роль для {} найдена: {}", username, role);
     return role;
+  }
+
+  @Transactional
+  @Override
+  public User create(UserDTO userDTO) {
+    log.info("Регистрируем нового пользователя {}...", userDTO.getName());
+    if (existsByEmail(userDTO.getEmail())) {
+      throw new UserAlreadyExistsException("Пользователь " + userDTO.getEmail()
+          + " уже существует");
+    }
+    User user = User.builder()
+        .email(userDTO.getEmail())
+        .password(passwordEncoder.encode(userDTO.getPassword()))
+        .name(userDTO.getName())
+        .surname(userDTO.getSurname())
+        .role(UserRole.USER)
+        .gender(userDTO.getGender())
+        .build();
+    save(user);
+    log.info("Пользователь {} успешно зарегистрирован.", userDTO.getEmail());
+    return user;
+  }
+
+  @Transactional
+  @Override
+  public boolean existsByEmail(String email) {
+    return userDao.findByEmail(email).isPresent();
+  }
+
+  @Transactional
+  @Override
+  public void save(User user) {
+    userDao.save(user);
   }
 }

@@ -29,9 +29,9 @@ public class UserDTO {
 
   private String password;
 
-  private String firstName;
+  private String name;
 
-  private String lastName;
+  private String surname;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
   private LocalDate birthDate;

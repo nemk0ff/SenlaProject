@@ -11,7 +11,13 @@ public interface UserService extends UserDetailsService {
 
   String getRole(String username);
 
+  User create(UserDTO userDTO);
+
   User get(long userId);
+
+  boolean existsByEmail(String email);
+
+  void save(User user);
 
   List<User> find(UserDTO userDTO);
   // TODO: Редактирование персональной информации пользователя

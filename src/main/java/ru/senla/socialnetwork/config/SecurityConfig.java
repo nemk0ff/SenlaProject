@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.senla.socialnetwork.security.JwtAuthFilter;
@@ -20,6 +21,7 @@ import ru.senla.socialnetwork.security.JwtAuthFilter;
 @EnableMethodSecurity(proxyTargetClass = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
+  private final AuthenticationEntryPoint authEntryPoint;
   private final UserDetailsService userDetailsService;
 
   @Bean
@@ -27,11 +29,14 @@ public class SecurityConfig {
     http.csrf(AbstractHttpConfigurer::disable)
         .userDetailsService(userDetailsService)
         .authorizeHttpRequests(auth -> auth
-//            .requestMatchers("/users/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
-            .anyRequest().authenticated())
+            .requestMatchers("/users/login").permitAll()
+            .requestMatchers("/users/register").permitAll()
+            .anyRequest().permitAll())
         .sessionManagement(session -> session
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);
+        .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class)
+        .exceptionHandling(exceptionHandling -> exceptionHandling
+            .authenticationEntryPoint(authEntryPoint));
     return http.build();
   }
 
@@ -40,3 +45,4 @@ public class SecurityConfig {
     return new JwtAuthFilter(userDetailsService);
   }
 }
+

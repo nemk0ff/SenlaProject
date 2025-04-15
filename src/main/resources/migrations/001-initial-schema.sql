@@ -1,12 +1,12 @@
 --liquibase formatted sql
 
---changeset admin:create-tables-users-friendRequests
+--changeset admin:create-tables-user-&-friendRequests
 CREATE TABLE IF NOT EXISTS Users (
                                      id SERIAL PRIMARY KEY,
-                                     mail VARCHAR(255) NOT NULL UNIQUE,
+                                     email VARCHAR(255) NOT NULL UNIQUE,
     role VARCHAR(32) NOT NULL CHECK (role IN ('USER', 'ADMIN')),
-    password VARCHAR(255) NOT NULL,
-    firstname VARCHAR(32) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    surname VARCHAR(32) NOT NULL,
     lastname VARCHAR(32) NOT NULL,
     birthdate DATE,
     gender VARCHAR(32) CHECK (gender IN ('MALE', 'FEMALE', 'OTHER')),
