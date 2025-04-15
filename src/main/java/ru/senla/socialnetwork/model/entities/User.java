@@ -32,7 +32,7 @@ public final class User implements MyEntity {
   @Column(name = "id")
   private Long id;
 
-  @Column(name = "mail", nullable = false, unique = true)
+  @Column(name = "email", nullable = false, unique = true)
   private String email;
 
   @Enumerated(EnumType.STRING)
@@ -42,11 +42,11 @@ public final class User implements MyEntity {
   @Column(name = "password", nullable = false)
   private String password;
 
-  @Column(name = "firstname", nullable = false, length = 32)
-  private String firstName;
+  @Column(name = "name", nullable = false, length = 32)
+  private String name;
 
-  @Column(name = "lastname", nullable = false, length = 32)
-  private String lastName;
+  @Column(name = "surname", nullable = false, length = 32)
+  private String surname;
 
   @Column(name = "birthdate")
   private LocalDate birthDate;
