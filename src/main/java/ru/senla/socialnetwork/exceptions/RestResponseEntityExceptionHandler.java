@@ -74,4 +74,21 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     return new ResponseEntity<>(problemDetail, HttpStatus.UNAUTHORIZED);
   }
+
+  @ExceptionHandler({
+      FriendRequestException.class
+  })
+  protected ResponseEntity<ProblemDetail> handleFriendRequestException(
+      RuntimeException ex, WebRequest request) {
+
+    log.warn("Ошибка при действии с friendRequest: {}", ex.getMessage());
+
+    ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+        HttpStatus.UNAUTHORIZED, "Не удалось создать friendRequest: " + ex.getMessage());
+    problemDetail.setTitle("Ошибка при действии с friendRequest");
+    problemDetail.setProperty("timestamp", Instant.now());
+    problemDetail.setProperty("path", ((ServletWebRequest) request).getRequest().getRequestURI());
+
+    return new ResponseEntity<>(problemDetail, HttpStatus.UNAUTHORIZED);
+  }
 }

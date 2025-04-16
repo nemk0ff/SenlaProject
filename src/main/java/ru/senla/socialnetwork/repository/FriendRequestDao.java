@@ -5,7 +5,11 @@ import java.util.Optional;
 import ru.senla.socialnetwork.model.entities.FriendRequest;
 
 public interface FriendRequestDao {
-  List<FriendRequest> getAll();
+//  List<FriendRequest> getAll();
 
-  List<FriendRequest> getByUserId(Long userId);
+  List<FriendRequest> getAllByUserId(Long userId);
+
+  Optional<FriendRequest> getByUsersIds(Long firstUser, Long secondUser, boolean isOrderRelevant);
+
+  FriendRequest add(FriendRequest friendRequest);
 }
