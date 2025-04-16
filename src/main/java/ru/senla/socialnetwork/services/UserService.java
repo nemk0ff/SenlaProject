@@ -22,4 +22,6 @@ public interface UserService extends UserDetailsService {
   List<User> find(UserDTO userDTO);
 
   User edit(UserDTO userDTO);
+
+  User changeEmail(String oldEmail, String newEmail);
 }

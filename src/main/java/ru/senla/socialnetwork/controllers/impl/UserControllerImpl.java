@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.UserController;
 import ru.senla.socialnetwork.dto.AuthDTO;
+import ru.senla.socialnetwork.dto.ChangeEmailDTO;
 import ru.senla.socialnetwork.dto.UserDTO;
 import ru.senla.socialnetwork.dto.mappers.UserMapper;
+import ru.senla.socialnetwork.model.entities.User;
 import ru.senla.socialnetwork.security.JwtUtils;
 import ru.senla.socialnetwork.services.UserService;
 
@@ -46,6 +48,20 @@ public class UserControllerImpl implements UserController {
     return ResponseEntity.ok(UserMapper.INSTANCE.toDTO(userService.edit(userDTO)));
   }
 
+  @PostMapping("/change-email")
+  @PreAuthorize("hasRole('ADMIN') or #request.currentEmail == authentication.name")
+  public ResponseEntity<?> changeEmail(@RequestBody @Valid ChangeEmailDTO request) {
+    User updatedUser = userService.changeEmail(
+        request.currentEmail(),
+        request.newEmail());
+    String newToken = JwtUtils.generateToken(
+        request.newEmail(),
+        updatedUser.getRole().toString());
+    return ResponseEntity.ok(Map.of(
+        "token", newToken,
+        "updatedUser", UserMapper.INSTANCE.toDTO(updatedUser)));
+  }
+
   @PostMapping("/login")
   @Override
   public ResponseEntity<?> login(@RequestBody @Valid AuthDTO request) {
@@ -61,7 +77,6 @@ public class UserControllerImpl implements UserController {
   @PostMapping("/register")
   @Override
   public ResponseEntity<?> register(@RequestBody @Valid UserDTO userDTO) {
-    log.info("Получени UserDTO: {}", userDTO.getName());
     return ResponseEntity.ok(UserMapper.INSTANCE.toDTO(userService.create(userDTO)));
   }
 }

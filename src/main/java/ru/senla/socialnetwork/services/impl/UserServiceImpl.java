@@ -121,4 +121,19 @@ public class UserServiceImpl implements UserService {
     mergedUser.setId(oldUser.getId());
     return userDao.update(mergedUser);
   }
+
+  @Transactional
+  @Override
+  public User changeEmail(String oldEmail, String newEmail) {
+    User user = userDao.findByEmail(oldEmail).orElseThrow(() -> new EntityNotFoundException(
+        "Пользователь " + oldEmail + " не зарегистрирован"));
+    if (oldEmail.equals(newEmail)) {
+      throw new IllegalArgumentException("Старый и новый email овпадают");
+    }
+    if (existsByEmail(newEmail)) {
+      throw new IllegalArgumentException("Данный email уже занят, введите другой");
+    }
+    user.setEmail(newEmail);
+    return userDao.update(user);
+  }
 }

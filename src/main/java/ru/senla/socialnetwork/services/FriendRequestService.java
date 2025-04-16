@@ -6,8 +6,6 @@ import ru.senla.socialnetwork.model.entities.User;
 import ru.senla.socialnetwork.model.enums.FriendStatus;
 
 public interface FriendRequestService {
-//  List<FriendRequest> getAll();
-
   List<FriendRequest> getAllByUser(String userEmail);
 
   List<User> getFriendsByUser(String userEmail);
@@ -19,4 +17,6 @@ public interface FriendRequestService {
   FriendRequest sendRequest(String senderEmail, String recipientEmail);
 
   FriendRequest replyToRequest(String senderEmail, String recipientEmail, FriendStatus status);
+
+  void unfriend(String userEmail, String unfriendEmail);
 }

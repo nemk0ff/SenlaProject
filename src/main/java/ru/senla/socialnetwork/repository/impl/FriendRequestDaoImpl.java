@@ -17,19 +17,6 @@ public class FriendRequestDaoImpl extends HibernateAbstractDao<FriendRequest>
     super(FriendRequest.class, sessionFactory);
   }
 
-//  public List<FriendRequest> getAll() {
-//    log.info("Получение всех friendRequests...");
-//    try {
-//      List<FriendRequest> friendRequests = sessionFactory.getCurrentSession()
-//          .createQuery("FROM FriendRequest ORDER BY id", FriendRequest.class)
-//          .getResultList();
-//      log.info("Найдено {} запросов", friendRequests.size());
-//      return friendRequests;
-//    } catch (Exception e) {
-//      throw new DataRetrievalFailureException("Ошибка при получении всех friendRequests", e);
-//    }
-//  }
-
   @Override
   public List<FriendRequest> getAllByUserId(Long userId) {
     log.info("Получение friendRequests для user#{}...", userId);

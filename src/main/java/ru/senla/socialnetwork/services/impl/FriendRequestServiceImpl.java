@@ -25,12 +25,6 @@ public class FriendRequestServiceImpl implements FriendRequestService {
   private final UserDao userDao;
   private final FriendRequestDaoImpl friendRequestDao;
 
-//  @Transactional(readOnly = true)
-//  @Override
-//  public List<FriendRequest> getAll() {
-//    return friendRequestDao.getAll();
-//  }
-
   @Transactional(readOnly = true)
   @Override
   public List<FriendRequest> getAllByUser(String userEmail) {
@@ -51,7 +45,7 @@ public class FriendRequestServiceImpl implements FriendRequestService {
       String friendEmail = !r.getSender().getEmail().equals(userEmail)
           ? r.getSender().getEmail() : r.getRecipient().getEmail();
       friends.add(userDao.findByEmail(friendEmail)
-          .orElseThrow(() -> new EntityNotFoundException("Пользователь не найден")));
+          .orElseThrow(() -> new EntityNotFoundException("Пользователь не зарегистрирован")));
     }
     return friends;
   }
@@ -61,8 +55,8 @@ public class FriendRequestServiceImpl implements FriendRequestService {
   public List<FriendRequest> getIncomingRequests(String userEmail, FriendStatus status) {
     return getAllByUser(userEmail)
         .stream()
-        .filter(request -> request.getStatus().equals(FriendStatus.PENDING)
-        && request.getStatus().equals(status))
+        .filter(request -> request.getRecipient().getEmail().equals(userEmail)
+            && request.getStatus().equals(status))
         .toList();
   }
 
@@ -115,6 +109,7 @@ public class FriendRequestServiceImpl implements FriendRequestService {
     return friendRequestDao.update(request);
   }
 
+  @Transactional
   @Override
   public FriendRequest replyToRequest(String senderEmail, String recipientEmail, FriendStatus status) {
     User sender = getUser(senderEmail);
@@ -131,6 +126,21 @@ public class FriendRequestServiceImpl implements FriendRequestService {
       acceptedRequest.setStatus(FriendStatus.ACCEPTED);
       return friendRequestDao.update(acceptedRequest);
     }
+  }
+
+  @Transactional
+  @Override
+  public void unfriend(String userEmail, String unfriendEmail) {
+    User user = getUser(userEmail);
+    User unfriend = getUser(unfriendEmail);
+
+    Optional<FriendRequest> friendship = friendRequestDao.getByUsersIds(
+        user.getId(), unfriend.getId(), false);
+    if (friendship.isEmpty() || !friendship.get().getStatus().equals(FriendStatus.ACCEPTED)) {
+      throw new FriendRequestException(unfriendEmail + " не является другом " + userEmail);
+    }
+
+    friendRequestDao.delete(friendship.get());
   }
 
   private User getUser(String email) {
