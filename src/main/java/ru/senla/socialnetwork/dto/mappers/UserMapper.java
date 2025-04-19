@@ -3,16 +3,22 @@ package ru.senla.socialnetwork.dto.mappers;
 import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import ru.senla.socialnetwork.dto.UserDTO;
+import ru.senla.socialnetwork.dto.auth.RegisterDTO;
+import ru.senla.socialnetwork.dto.users.UserEditDTO;
+import ru.senla.socialnetwork.dto.users.UserResponseDTO;
 import ru.senla.socialnetwork.model.entities.User;
 
 @Mapper
 public interface UserMapper {
   UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-  UserDTO toDTO(User user);
+  UserResponseDTO toUserResponseDTO(User user);
 
-  List<UserDTO> toListDTO(List<User> users);
+  List<UserResponseDTO> toListUserResponseDTO(List<User> users);
 
-  User toUser(UserDTO userDTO);
+  User userDTOtoUser(UserResponseDTO userDTO);
+
+  User registrationDTOtoUser(RegisterDTO registrationDTO);
+
+  User userEditDTOtoUser(UserEditDTO userEditDTO);
 }

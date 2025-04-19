@@ -7,6 +7,8 @@ import org.hibernate.SessionFactory;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 import ru.senla.socialnetwork.model.entities.FriendRequest;
+import ru.senla.socialnetwork.model.entities.User;
+import ru.senla.socialnetwork.model.enums.FriendStatus;
 import ru.senla.socialnetwork.repository.FriendRequestDao;
 
 @Repository
@@ -15,6 +17,29 @@ public class FriendRequestDaoImpl extends HibernateAbstractDao<FriendRequest>
     implements FriendRequestDao {
   public FriendRequestDaoImpl(SessionFactory sessionFactory) {
     super(FriendRequest.class, sessionFactory);
+  }
+
+  @Override
+  public List<User> findFriendsByUserId(Long userId) {
+    log.info("Получение списка друзей для user#{}...", userId);
+    try {
+      String hql = "SELECT CASE WHEN fr.sender.id = :userId THEN fr.recipient ELSE fr.sender END " +
+          "FROM FriendRequest fr " +
+          "WHERE (fr.sender.id = :userId OR fr.recipient.id = :userId) " +
+          "AND fr.status = :status";
+
+      List<User> friends = sessionFactory.getCurrentSession()
+          .createQuery(hql, User.class)
+          .setParameter("userId", userId)
+          .setParameter("status", FriendStatus.ACCEPTED)
+          .list();
+
+      log.info("Найдено {} друзей для user#{}", friends.size(), userId);
+      return friends;
+    } catch (Exception e) {
+      throw new DataRetrievalFailureException(
+          "Ошибка при получении списка друзей для user#" + userId, e);
+    }
   }
 
   @Override

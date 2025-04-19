@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ru.senla.socialnetwork.exceptions.JwtAuthException;
+import ru.senla.socialnetwork.exceptions.users.JwtAuthException;
 
 @Slf4j
 @Component

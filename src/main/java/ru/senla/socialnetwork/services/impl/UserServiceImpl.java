@@ -1,21 +1,18 @@
 package ru.senla.socialnetwork.services.impl;
 
-import jakarta.persistence.EntityNotFoundException;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.senla.socialnetwork.dto.AuthDTO;
-import ru.senla.socialnetwork.dto.UserDTO;
+import ru.senla.socialnetwork.dto.users.UserEditDTO;
 import ru.senla.socialnetwork.dto.mappers.UserMapper;
-import ru.senla.socialnetwork.exceptions.UserAlreadyExistsException;
-import ru.senla.socialnetwork.exceptions.UserNotRegisteredException;
+import ru.senla.socialnetwork.exceptions.users.EmailAlreadyExistsException;
+import ru.senla.socialnetwork.exceptions.general.EntitiesNotFoundException;
+import ru.senla.socialnetwork.exceptions.users.UserNotRegisteredException;
 import ru.senla.socialnetwork.model.entities.User;
-import ru.senla.socialnetwork.model.enums.UserRole;
+import ru.senla.socialnetwork.model.enums.Gender;
 import ru.senla.socialnetwork.repository.impl.UserDaoImpl;
 import ru.senla.socialnetwork.services.UserService;
 
@@ -25,78 +22,22 @@ import ru.senla.socialnetwork.services.UserService;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
   private final UserDaoImpl userDao;
-  private final PasswordEncoder passwordEncoder;
 
   @Override
   @Transactional(readOnly = true)
   public User get(long userId) {
-    return userDao.find(userId).orElseThrow(() -> new EntityNotFoundException(""));
-  }
-
-  @Override
-  public List<User> find(UserDTO userDTO) {
-    List<User> foundUsers = userDao.findByParam(UserMapper.INSTANCE.toUser(userDTO));
-    if (foundUsers.isEmpty()) {
-      throw new EntityNotFoundException("По вашему запросу не найдено пользователей.");
-    }
-    return foundUsers;
+    return userDao.find(userId).orElseThrow(
+        () -> new UserNotRegisteredException("id" + userId));
   }
 
   @Override
   @Transactional(readOnly = true)
-  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    log.debug("Поиск пользователя по email: {}", email);
-    User user = userDao.findByEmail(email).orElseThrow(
-        () -> new UserNotRegisteredException("Пользователь " + email + " не найден"));
-    log.debug("Пользователь найден: {}", user);
-    return org.springframework.security.core.userdetails.User.builder()
-        .username(user.getEmail())
-        .password(user.getPassword())
-        .roles(user.getRole().name())
-        .build();
-  }
-
-  @Transactional
-  @Override
-  public boolean isUserValid(AuthDTO userInfo) {
-    log.info("Проверяем логин и пароль пользователя {}...", userInfo.getEmail());
-    UserDetails correctDetails = loadUserByUsername(userInfo.getEmail());
-    if (passwordEncoder.matches(userInfo.getPassword(), correctDetails.getPassword())) {
-      log.info("Пользователь ввёл корректные данные");
-      return true;
+  public List<User> find(String name, String surname, Gender gender, LocalDate birthdate) {
+    List<User> foundUsers = userDao.findByParam(name, surname, gender, birthdate);
+    if (foundUsers.isEmpty()) {
+      throw new EntitiesNotFoundException();
     }
-    log.info("Пользователь ввёл неверный пароль");
-    return false;
-  }
-
-  @Transactional
-  @Override
-  public String getRole(String email) {
-    log.info("Ищем роль пользователя {}...", email);
-    String role = loadUserByUsername(email).getAuthorities().iterator().next().getAuthority();
-    log.info("Роль для {} найдена: {}", email, role);
-    return role;
-  }
-
-  @Transactional
-  @Override
-  public User create(UserDTO userDTO) {
-    log.info("Регистрируем нового пользователя {}...", userDTO.getName());
-    if (existsByEmail(userDTO.getEmail())) {
-      throw new UserAlreadyExistsException("Пользователь " + userDTO.getEmail()
-          + " уже существует");
-    }
-    User user = User.builder()
-        .email(userDTO.getEmail())
-        .password(passwordEncoder.encode(userDTO.getPassword()))
-        .name(userDTO.getName())
-        .surname(userDTO.getSurname())
-        .role(UserRole.USER)
-        .gender(userDTO.getGender())
-        .build();
-    save(user);
-    log.info("Пользователь {} успешно зарегистрирован.", userDTO.getEmail());
-    return user;
+    return foundUsers;
   }
 
   @Transactional
@@ -107,17 +48,10 @@ public class UserServiceImpl implements UserService {
 
   @Transactional
   @Override
-  public void save(User user) {
-    userDao.save(user);
-  }
-
-  @Transactional
-  @Override
-  public User edit(UserDTO userDTO) {
-    User mergedUser = UserMapper.INSTANCE.toUser(userDTO);
-    User oldUser = userDao.findByEmail(userDTO.getEmail())
-        .orElseThrow(() -> new EntityNotFoundException(
-            "Пользователь " + userDTO.getEmail() + " не зарегистрирован"));
+  public User edit(UserEditDTO editDTO) {
+    User mergedUser = UserMapper.INSTANCE.userEditDTOtoUser(editDTO);
+    User oldUser = userDao.findByEmail(editDTO.email()).orElseThrow(
+            () -> new UserNotRegisteredException(editDTO.email()));
     mergedUser.setId(oldUser.getId());
     return userDao.update(mergedUser);
   }
@@ -125,13 +59,13 @@ public class UserServiceImpl implements UserService {
   @Transactional
   @Override
   public User changeEmail(String oldEmail, String newEmail) {
-    User user = userDao.findByEmail(oldEmail).orElseThrow(() -> new EntityNotFoundException(
-        "Пользователь " + oldEmail + " не зарегистрирован"));
+    User user = userDao.findByEmail(oldEmail).orElseThrow(
+        () -> new UserNotRegisteredException(oldEmail));
     if (oldEmail.equals(newEmail)) {
       throw new IllegalArgumentException("Старый и новый email овпадают");
     }
     if (existsByEmail(newEmail)) {
-      throw new IllegalArgumentException("Данный email уже занят, введите другой");
+      throw new EmailAlreadyExistsException(newEmail);
     }
     user.setEmail(newEmail);
     return userDao.update(user);

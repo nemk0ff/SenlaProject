@@ -1,15 +1,17 @@
 package ru.senla.socialnetwork.services.impl;
 
-import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.senla.socialnetwork.exceptions.FriendRequestException;
+import ru.senla.socialnetwork.exceptions.friendRequests.AlreadyFriendsException;
+import ru.senla.socialnetwork.exceptions.friendRequests.AlreadySentException;
+import ru.senla.socialnetwork.exceptions.friendRequests.FriendRequestException;
+import ru.senla.socialnetwork.exceptions.friendRequests.SelfFriendshipException;
+import ru.senla.socialnetwork.exceptions.users.UserNotRegisteredException;
 import ru.senla.socialnetwork.model.entities.FriendRequest;
 import ru.senla.socialnetwork.model.entities.User;
 import ru.senla.socialnetwork.model.enums.FriendStatus;
@@ -28,26 +30,15 @@ public class FriendRequestServiceImpl implements FriendRequestService {
   @Transactional(readOnly = true)
   @Override
   public List<FriendRequest> getAllByUser(String userEmail) {
-    User user = userDao.findByEmail(userEmail).orElseThrow(() ->
-        new EntityNotFoundException("Пользователь " + userEmail + " не зарегистрирован."));
+    User user = getUser(userEmail);
     return friendRequestDao.getAllByUserId(user.getId());
   }
 
   @Transactional(readOnly = true)
   @Override
   public List<User> getFriendsByUser(String userEmail) {
-    List<FriendRequest> acceptedRequests = getAllByUser(userEmail)
-        .stream()
-        .filter(request -> request.getStatus().equals(FriendStatus.ACCEPTED))
-        .toList();
-    List<User> friends = new ArrayList<>();
-    for (FriendRequest r : acceptedRequests) {
-      String friendEmail = !r.getSender().getEmail().equals(userEmail)
-          ? r.getSender().getEmail() : r.getRecipient().getEmail();
-      friends.add(userDao.findByEmail(friendEmail)
-          .orElseThrow(() -> new EntityNotFoundException("Пользователь не зарегистрирован")));
-    }
-    return friends;
+    User user = getUser(userEmail);
+    return friendRequestDao.findFriendsByUserId(user.getId());
   }
 
   @Transactional(readOnly = true)
@@ -73,12 +64,9 @@ public class FriendRequestServiceImpl implements FriendRequestService {
   @Transactional
   @Override
   public FriendRequest sendRequest(String senderEmail, String recipientEmail) {
-    // Если sender == recipient - IllegalArg
-    // Если sender или recipient не существуют - IllegalArg
-    // Если заявка уже есть в статусе Accepted, то нужно вернуть ошибку AlreadyExists
-    // Если есть заявка от recipient в статусе Pending или Canceled, то нужно принять её
-    // Если есть заявка от sender в статусе Pending, то нужно вернуть ошибку AlreadyExists
-    // Если есть заявка от sender в статусе Rejected, то нужно переотправить запрос на дружбу
+    if (senderEmail.equals(recipientEmail)) {
+      throw new SelfFriendshipException();
+    }
     User sender = getUser(senderEmail);
     User recipient = getUser(recipientEmail);
 
@@ -93,39 +81,48 @@ public class FriendRequestServiceImpl implements FriendRequestService {
           .build());
     }
 
-    FriendRequest request = optionalRequest.get();
+    FriendRequest request = handleExistingRequest(optionalRequest.get(),
+        senderEmail, recipientEmail);
+    return friendRequestDao.update(request);
+  }
+
+  private FriendRequest handleExistingRequest(FriendRequest request, String senderEmail,
+                                              String recipientEmail) {
     if (request.getStatus().equals(FriendStatus.ACCEPTED)) {
-      throw new FriendRequestException(recipientEmail + " уже ваш друг");
-    } else if (request.getSender().equals(sender)) {
+      throw new AlreadyFriendsException(recipientEmail);
+    } else if (request.getSender().getEmail().equals(senderEmail)) {
       if (request.getStatus().equals(FriendStatus.PENDING)) {
-        throw new FriendRequestException(
-            "Вы уже отправили заявку в друзья пользователю " + recipientEmail);
+        throw new AlreadySentException(recipientEmail);
       } else if (request.getStatus().equals(FriendStatus.REJECTED)) {
         request.setStatus(FriendStatus.PENDING);
       }
-    } else if (request.getSender().equals(recipient)) {
+    } else if (request.getSender().getEmail().equals(recipientEmail)) {
       request.setStatus(FriendStatus.ACCEPTED);
     }
-    return friendRequestDao.update(request);
+    return request;
   }
 
   @Transactional
   @Override
   public FriendRequest replyToRequest(String senderEmail, String recipientEmail, FriendStatus status) {
+    if (status != FriendStatus.ACCEPTED && status != FriendStatus.REJECTED) {
+      throw new IllegalArgumentException("Недопустимый статус для ответа: " + status);
+    }
     User sender = getUser(senderEmail);
     User recipient = getUser(recipientEmail);
 
     Optional<FriendRequest> optionalRequest = friendRequestDao.getByUsersIds(sender.getId(),
         recipient.getId(), true);
-
-    if (optionalRequest.isEmpty()
-        || optionalRequest.get().getStatus().equals(FriendStatus.ACCEPTED)) {
-      throw new FriendRequestException("У вас нет активных запросов на дружбу от " + senderEmail);
-    } else {
-      FriendRequest acceptedRequest = optionalRequest.get();
-      acceptedRequest.setStatus(FriendStatus.ACCEPTED);
-      return friendRequestDao.update(acceptedRequest);
+    if (optionalRequest.isEmpty()) {
+      throw new FriendRequestException(
+          "У вас нет активных запросов на дружбу от " + senderEmail);
+    } else if (optionalRequest.get().getStatus().equals(FriendStatus.ACCEPTED)) {
+      throw new AlreadyFriendsException(recipientEmail);
     }
+
+    FriendRequest repliedRequest = optionalRequest.get();
+    repliedRequest.setStatus(status);
+    return friendRequestDao.update(repliedRequest);
   }
 
   @Transactional
@@ -145,6 +142,6 @@ public class FriendRequestServiceImpl implements FriendRequestService {
 
   private User getUser(String email) {
     return userDao.findByEmail(email).orElseThrow(
-        () -> new FriendRequestException("Пользователь не зарегистрирован: " + email));
+        () -> new UserNotRegisteredException(email));
   }
 }

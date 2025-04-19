@@ -1,5 +1,7 @@
 package ru.senla.socialnetwork.controllers.impl;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import java.security.Principal;
 import lombok.AllArgsConstructor;
@@ -13,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.FriendRequestController;
-import ru.senla.socialnetwork.dto.FriendRequestDTO;
+import ru.senla.socialnetwork.dto.friendRequests.RespondRequestDTO;
+import ru.senla.socialnetwork.dto.friendRequests.SendRequestDTO;
+import ru.senla.socialnetwork.dto.friendRequests.RemoveFriendRequestDTO;
 import ru.senla.socialnetwork.dto.mappers.FriendRequestMapper;
 import ru.senla.socialnetwork.model.enums.FriendStatus;
 import ru.senla.socialnetwork.services.FriendRequestService;
@@ -26,13 +30,13 @@ public class FriendRequestControllerImpl implements FriendRequestController {
   private final FriendRequestService friendRequestService;
 
   @Override
-  @GetMapping()
+  @GetMapping
   public ResponseEntity<?> showFriends(String userEmail) {
     return ResponseEntity.ok(friendRequestService.getFriendsByUser(userEmail));
   }
 
   @Override
-  @GetMapping("/out_requests")
+  @GetMapping("/outgoing_requests")
   @PreAuthorize("hasRole('ADMIN') or #userEmail == authentication.name")
   public ResponseEntity<?> showOutgoingRequests(String userEmail) {
     return ResponseEntity.ok(FriendRequestMapper.INSTANCE
@@ -40,9 +44,9 @@ public class FriendRequestControllerImpl implements FriendRequestController {
   }
 
   @Override
-  @GetMapping("/requests")
+  @GetMapping("/incoming_requests")
   public ResponseEntity<?> showIncomingRequests(
-      @RequestParam(required = false) String recipientEmail,
+      @RequestParam(required = false) @Email String recipientEmail,
       @RequestParam @NotNull FriendStatus status,
       Principal principal) {
     String actual = recipientEmail != null ? recipientEmail : principal.getName();
@@ -52,32 +56,31 @@ public class FriendRequestControllerImpl implements FriendRequestController {
 
   @Override
   @PostMapping("/send")
-  @PreAuthorize("hasRole('ADMIN') or #friendRequestDTO.senderEmail == authentication.name")
-  public ResponseEntity<?> sendRequest(@RequestBody FriendRequestDTO friendRequestDTO) {
+  @PreAuthorize("hasRole('ADMIN') or #request.senderEmail == authentication.name")
+  public ResponseEntity<?> sendRequest(@Valid @RequestBody SendRequestDTO request) {
     return ResponseEntity.ok(FriendRequestMapper.INSTANCE
-        .toDto(friendRequestService.sendRequest(friendRequestDTO.getSenderEmail(),
-            friendRequestDTO.getRecipientEmail())));
+        .toDto(friendRequestService.sendRequest(request.senderEmail(),
+            request.recipientEmail())));
   }
 
   @Override
-  @PostMapping("/reply")
-  @PreAuthorize("hasRole('ADMIN') or #friendRequestDTO.recipientEmail == authentication.name")
-  public ResponseEntity<?> replyToRequest(@RequestBody FriendRequestDTO friendRequestDTO) {
+  @PostMapping("/respond")
+  @PreAuthorize("hasRole('ADMIN') or #request.recipientEmail == authentication.name")
+  public ResponseEntity<?> respondRequest(@Valid @RequestBody RespondRequestDTO request) {
     return ResponseEntity.ok(FriendRequestMapper.INSTANCE
-        .toDto(friendRequestService.replyToRequest(friendRequestDTO.getSenderEmail(),
-            friendRequestDTO.getRecipientEmail(), friendRequestDTO.getStatus())));
+        .toDto(friendRequestService.replyToRequest(request.senderEmail(),
+            request.recipientEmail(), request.status())));
   }
 
   @Override
-  @PostMapping("/unfriend")
-  @PreAuthorize("hasRole('ADMIN') or #friendRequestDTO.userEmail == authentication.name")
-  public ResponseEntity<?> unfriend(
-      @RequestParam("unfriendEmail") String friendToRemoveEmail,
-      @RequestParam(name = "userEmail", required = false) String userEmail,
+  @PostMapping("/remove")
+  @PreAuthorize("hasRole('ADMIN') or #request.userEmail == authentication.name")
+  public ResponseEntity<?> removeFriend(
+      @RequestBody @Valid RemoveFriendRequestDTO request,
       Principal principal) {
-    String actualUserEmail = userEmail != null ? userEmail : principal.getName();
-    friendRequestService.unfriend(actualUserEmail, friendToRemoveEmail);
-    return ResponseEntity.ok(friendToRemoveEmail + " удалён из списка друзей "
+    String actualUserEmail = request.userEmail() != null ? request.userEmail() : principal.getName();
+    friendRequestService.unfriend(actualUserEmail, request.friendEmail());
+    return ResponseEntity.ok(request.friendEmail() + " удалён из списка друзей "
         + actualUserEmail);
   }
 }
