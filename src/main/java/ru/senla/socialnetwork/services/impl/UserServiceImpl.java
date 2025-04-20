@@ -11,7 +11,7 @@ import ru.senla.socialnetwork.dto.mappers.UserMapper;
 import ru.senla.socialnetwork.exceptions.users.EmailAlreadyExistsException;
 import ru.senla.socialnetwork.exceptions.general.EntitiesNotFoundException;
 import ru.senla.socialnetwork.exceptions.users.UserNotRegisteredException;
-import ru.senla.socialnetwork.model.entities.User;
+import ru.senla.socialnetwork.model.entities.users.User;
 import ru.senla.socialnetwork.model.enums.Gender;
 import ru.senla.socialnetwork.repository.impl.UserDaoImpl;
 import ru.senla.socialnetwork.services.UserService;

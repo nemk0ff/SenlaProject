@@ -2,12 +2,8 @@ package ru.senla.socialnetwork.services;
 
 import java.time.LocalDate;
 import java.util.List;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import ru.senla.socialnetwork.dto.auth.AuthRequestDTO;
-import ru.senla.socialnetwork.dto.auth.AuthResponseDTO;
-import ru.senla.socialnetwork.dto.auth.RegisterDTO;
 import ru.senla.socialnetwork.dto.users.UserEditDTO;
-import ru.senla.socialnetwork.model.entities.User;
+import ru.senla.socialnetwork.model.entities.users.User;
 import ru.senla.socialnetwork.model.enums.Gender;
 
 public interface UserService {

@@ -1,8 +1,8 @@
 package ru.senla.socialnetwork.services;
 
 import java.util.List;
-import ru.senla.socialnetwork.model.entities.FriendRequest;
-import ru.senla.socialnetwork.model.entities.User;
+import ru.senla.socialnetwork.model.entities.friendRequests.FriendRequest;
+import ru.senla.socialnetwork.model.entities.users.User;
 import ru.senla.socialnetwork.model.enums.FriendStatus;
 
 public interface FriendRequestService {

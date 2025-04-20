@@ -11,7 +11,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Repository;
-import ru.senla.socialnetwork.model.entities.User;
+import ru.senla.socialnetwork.model.entities.users.User;
 import ru.senla.socialnetwork.model.enums.Gender;
 import ru.senla.socialnetwork.repository.UserDao;
 

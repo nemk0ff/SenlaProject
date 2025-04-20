@@ -14,7 +14,7 @@ import ru.senla.socialnetwork.dto.mappers.UserMapper;
 import ru.senla.socialnetwork.exceptions.users.IllegalPasswordException;
 import ru.senla.socialnetwork.exceptions.users.EmailAlreadyExistsException;
 import ru.senla.socialnetwork.exceptions.users.UserNotRegisteredException;
-import ru.senla.socialnetwork.model.entities.User;
+import ru.senla.socialnetwork.model.entities.users.User;
 import ru.senla.socialnetwork.model.enums.UserRole;
 import ru.senla.socialnetwork.repository.impl.UserDaoImpl;
 import ru.senla.socialnetwork.security.JwtUtils;

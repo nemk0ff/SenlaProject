@@ -1,6 +1,8 @@
 package ru.senla.socialnetwork.controllers;
 
-import java.security.Principal;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import ru.senla.socialnetwork.dto.friendRequests.RemoveFriendRequestDTO;
 import ru.senla.socialnetwork.dto.friendRequests.RespondRequestDTO;
@@ -13,12 +15,12 @@ public interface FriendRequestController {
 
   ResponseEntity<?> showOutgoingRequests(String userEmail);
 
-  ResponseEntity<?> showIncomingRequests(
-      String recipientEmail, FriendStatus status, Principal principal);
+  ResponseEntity<?> showIncomingRequests(@Email String recipientEmail,
+                                         @NotNull FriendStatus status);
 
-  ResponseEntity<?> sendRequest(SendRequestDTO request);
+  ResponseEntity<?> sendRequest(@Valid SendRequestDTO request);
 
-  ResponseEntity<?> respondRequest(RespondRequestDTO request);
+  ResponseEntity<?> respondRequest(@Valid RespondRequestDTO request);
 
-  ResponseEntity<?> removeFriend(RemoveFriendRequestDTO request, Principal principal);
+  ResponseEntity<?> removeFriend(@Valid RemoveFriendRequestDTO request);
 }

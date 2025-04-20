@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,19 +46,18 @@ public class FriendRequestControllerImpl implements FriendRequestController {
 
   @Override
   @GetMapping("/incoming_requests")
+  @PreAuthorize("hasRole('ADMIN') or #recipientEmail == authentication.name")
   public ResponseEntity<?> showIncomingRequests(
-      @RequestParam(required = false) @Email String recipientEmail,
-      @RequestParam @NotNull FriendStatus status,
-      Principal principal) {
-    String actual = recipientEmail != null ? recipientEmail : principal.getName();
+      @RequestParam @Email String recipientEmail,
+      @RequestParam @NotNull FriendStatus status) {
     return ResponseEntity.ok(FriendRequestMapper.INSTANCE
-        .toListDTO(friendRequestService.getIncomingRequests(actual, status)));
+        .toListDTO(friendRequestService.getIncomingRequests(recipientEmail, status)));
   }
 
   @Override
   @PostMapping("/send")
   @PreAuthorize("hasRole('ADMIN') or #request.senderEmail == authentication.name")
-  public ResponseEntity<?> sendRequest(@Valid @RequestBody SendRequestDTO request) {
+  public ResponseEntity<?> sendRequest(@RequestBody @Valid SendRequestDTO request) {
     return ResponseEntity.ok(FriendRequestMapper.INSTANCE
         .toDto(friendRequestService.sendRequest(request.senderEmail(),
             request.recipientEmail())));
@@ -66,21 +66,19 @@ public class FriendRequestControllerImpl implements FriendRequestController {
   @Override
   @PostMapping("/respond")
   @PreAuthorize("hasRole('ADMIN') or #request.recipientEmail == authentication.name")
-  public ResponseEntity<?> respondRequest(@Valid @RequestBody RespondRequestDTO request) {
+  public ResponseEntity<?> respondRequest(@RequestBody @Valid RespondRequestDTO request) {
     return ResponseEntity.ok(FriendRequestMapper.INSTANCE
         .toDto(friendRequestService.replyToRequest(request.senderEmail(),
             request.recipientEmail(), request.status())));
   }
 
   @Override
-  @PostMapping("/remove")
+  @DeleteMapping("/remove")
   @PreAuthorize("hasRole('ADMIN') or #request.userEmail == authentication.name")
   public ResponseEntity<?> removeFriend(
-      @RequestBody @Valid RemoveFriendRequestDTO request,
-      Principal principal) {
-    String actualUserEmail = request.userEmail() != null ? request.userEmail() : principal.getName();
-    friendRequestService.unfriend(actualUserEmail, request.friendEmail());
+      @RequestBody @Valid RemoveFriendRequestDTO request) {
+    friendRequestService.unfriend(request.userEmail(), request.friendEmail());
     return ResponseEntity.ok(request.friendEmail() + " удалён из списка друзей "
-        + actualUserEmail);
+        + request.userEmail());
   }
 }

@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Repository;
-import ru.senla.socialnetwork.model.entities.FriendRequest;
-import ru.senla.socialnetwork.model.entities.User;
+import ru.senla.socialnetwork.model.entities.friendRequests.FriendRequest;
+import ru.senla.socialnetwork.model.entities.users.User;
 import ru.senla.socialnetwork.model.enums.FriendStatus;
 import ru.senla.socialnetwork.repository.FriendRequestDao;
 

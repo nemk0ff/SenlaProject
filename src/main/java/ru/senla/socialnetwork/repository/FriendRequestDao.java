@@ -2,8 +2,8 @@ package ru.senla.socialnetwork.repository;
 
 import java.util.List;
 import java.util.Optional;
-import ru.senla.socialnetwork.model.entities.FriendRequest;
-import ru.senla.socialnetwork.model.entities.User;
+import ru.senla.socialnetwork.model.entities.friendRequests.FriendRequest;
+import ru.senla.socialnetwork.model.entities.users.User;
 
 public interface FriendRequestDao {
   List<User> findFriendsByUserId(Long userId);

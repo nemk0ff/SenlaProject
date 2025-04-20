@@ -5,7 +5,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import ru.senla.socialnetwork.dto.friendRequests.FriendRequestDTO;
-import ru.senla.socialnetwork.model.entities.FriendRequest;
+import ru.senla.socialnetwork.model.entities.friendRequests.FriendRequest;
 
 @Mapper
 public interface FriendRequestMapper {
