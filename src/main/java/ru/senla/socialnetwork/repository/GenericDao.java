@@ -7,4 +7,6 @@ public interface GenericDao<T extends MyEntity> {
   T update(T entity);
 
   Optional<T> find(Long id);
+
+  void delete(T entity);
 }

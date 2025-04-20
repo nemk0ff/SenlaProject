@@ -39,4 +39,11 @@ public abstract class HibernateAbstractDao<T extends MyEntity> implements Generi
       throw new DataRetrievalFailureException("Ошибка при поиске " + type.getSimpleName(), e);
     }
   }
+
+  @Override
+  public void delete(T entity) {
+    log.debug("Удаляем из базы : {}", entity);
+    sessionFactory.getCurrentSession().remove(entity);
+    log.debug("Удаление прошло успешно: {}", entity.getId());
+  }
 }

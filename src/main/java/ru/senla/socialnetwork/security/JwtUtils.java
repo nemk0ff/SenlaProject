@@ -7,7 +7,7 @@ import io.jsonwebtoken.security.MacAlgorithm;
 import java.time.Instant;
 import javax.crypto.SecretKey;
 import java.util.Date;
-import ru.senla.socialnetwork.exceptions.JwtAuthException;
+import ru.senla.socialnetwork.exceptions.users.JwtAuthException;
 
 public class JwtUtils {
   private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor(

@@ -1,6 +1,5 @@
 package ru.senla.socialnetwork.model.entities;
 
-public sealed interface MyEntity permits User {
+public interface MyEntity {
   Long getId();
-  void setId(Long id);
 }

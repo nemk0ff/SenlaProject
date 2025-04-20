@@ -1,5 +1,6 @@
 package ru.senla.socialnetwork.repository.impl;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,12 +11,11 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-import ru.senla.socialnetwork.model.entities.User;
+import ru.senla.socialnetwork.model.entities.users.User;
+import ru.senla.socialnetwork.model.enums.Gender;
 import ru.senla.socialnetwork.repository.UserDao;
 
 @Repository
-@Transactional
 @Slf4j
 public class UserDaoImpl extends HibernateAbstractDao<User> implements UserDao {
 
@@ -24,27 +24,27 @@ public class UserDaoImpl extends HibernateAbstractDao<User> implements UserDao {
   }
 
   @Override
-  public List<User> findByParam(User user) {
-    log.info("Поиск пользователя {}...", user);
+  public List<User> findByParam(String name, String surname, Gender gender, LocalDate birthdate) {
+    log.info("Поиск пользователя: {}, {}, {}, {}...", name, surname, gender, birthdate);
     try {
       StringBuilder hql = new StringBuilder("FROM User WHERE 1=1");
       Map<String, Object> params = new HashMap<>();
 
-      if (user.getName() != null && !user.getName().isEmpty()) {
+      if (name != null && !name.isEmpty()) {
         hql.append(" AND name = :name");
-        params.put("name", user.getName());
+        params.put("name", name);
       }
-      if (user.getSurname() != null && !user.getSurname().isEmpty()) {
+      if (surname != null && !surname.isEmpty()) {
         hql.append(" AND surname = :surname");
-        params.put("surname", user.getSurname());
+        params.put("surname", surname);
       }
-      if (user.getGender() != null) {
+      if (gender != null) {
         hql.append(" AND gender = :gender");
-        params.put("gender", user.getGender());
+        params.put("gender", gender);
       }
-      if (user.getBirthDate() != null) {
+      if (birthdate != null) {
         hql.append(" AND birthDate = :birthDate");
-        params.put("birthDate", user.getBirthDate());
+        params.put("birthDate", birthdate);
       }
 
       Query<User> query = sessionFactory.getCurrentSession()
@@ -55,7 +55,7 @@ public class UserDaoImpl extends HibernateAbstractDao<User> implements UserDao {
       log.info("Найдено {} пользователей", users.size());
       return users;
     } catch (Exception e) {
-      throw new DataRetrievalFailureException("Ошибка при поиске пользователей", e);
+      throw new DataRetrievalFailureException("Ошибка при поиске пользователей по параметрам", e);
     }
   }
 
