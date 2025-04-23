@@ -11,33 +11,32 @@ import ru.senla.socialnetwork.exceptions.friendRequests.AlreadyFriendsException;
 import ru.senla.socialnetwork.exceptions.friendRequests.AlreadySentException;
 import ru.senla.socialnetwork.exceptions.friendRequests.FriendRequestException;
 import ru.senla.socialnetwork.exceptions.friendRequests.SelfFriendshipException;
-import ru.senla.socialnetwork.exceptions.users.UserNotRegisteredException;
-import ru.senla.socialnetwork.model.entities.friendRequests.FriendRequest;
-import ru.senla.socialnetwork.model.entities.users.User;
-import ru.senla.socialnetwork.model.enums.FriendStatus;
-import ru.senla.socialnetwork.repository.UserDao;
-import ru.senla.socialnetwork.repository.impl.FriendRequestDaoImpl;
+import ru.senla.socialnetwork.model.friendRequests.FriendRequest;
+import ru.senla.socialnetwork.model.users.User;
+import ru.senla.socialnetwork.model.friendRequests.FriendStatus;
+import ru.senla.socialnetwork.dao.impl.FriendRequestDaoImpl;
 import ru.senla.socialnetwork.services.FriendRequestService;
+import ru.senla.socialnetwork.services.general.CommonService;
 
 @Slf4j
 @Service
 @Transactional
 @AllArgsConstructor
 public class FriendRequestServiceImpl implements FriendRequestService {
-  private final UserDao userDao;
+  private final CommonService commonService;
   private final FriendRequestDaoImpl friendRequestDao;
 
   @Transactional(readOnly = true)
   @Override
   public List<FriendRequest> getAllByUser(String userEmail) {
-    User user = getUser(userEmail);
+    User user = commonService.getUserByEmail(userEmail);
     return friendRequestDao.getAllByUserId(user.getId());
   }
 
   @Transactional(readOnly = true)
   @Override
   public List<User> getFriendsByUser(String userEmail) {
-    User user = getUser(userEmail);
+    User user = commonService.getUserByEmail(userEmail);
     return friendRequestDao.findFriendsByUserId(user.getId());
   }
 
@@ -67,13 +66,13 @@ public class FriendRequestServiceImpl implements FriendRequestService {
     if (senderEmail.equals(recipientEmail)) {
       throw new SelfFriendshipException();
     }
-    User sender = getUser(senderEmail);
-    User recipient = getUser(recipientEmail);
+    User sender = commonService.getUserByEmail(senderEmail);
+    User recipient = commonService.getUserByEmail(recipientEmail);
 
     Optional<FriendRequest> optionalRequest = friendRequestDao.getByUsersIds(sender.getId(),
         recipient.getId(), false);
     if (optionalRequest.isEmpty()) {
-      return friendRequestDao.add(FriendRequest.builder()
+      return friendRequestDao.saveOrUpdate(FriendRequest.builder()
           .sender(sender)
           .recipient(recipient)
           .status(FriendStatus.PENDING)
@@ -83,7 +82,7 @@ public class FriendRequestServiceImpl implements FriendRequestService {
 
     FriendRequest request = handleExistingRequest(optionalRequest.get(),
         senderEmail, recipientEmail);
-    return friendRequestDao.update(request);
+    return friendRequestDao.saveOrUpdate(request);
   }
 
   private FriendRequest handleExistingRequest(FriendRequest request, String senderEmail,
@@ -108,8 +107,8 @@ public class FriendRequestServiceImpl implements FriendRequestService {
     if (status != FriendStatus.ACCEPTED && status != FriendStatus.REJECTED) {
       throw new IllegalArgumentException("Недопустимый статус для ответа: " + status);
     }
-    User sender = getUser(senderEmail);
-    User recipient = getUser(recipientEmail);
+    User sender = commonService.getUserByEmail(senderEmail);
+    User recipient = commonService.getUserByEmail(recipientEmail);
 
     Optional<FriendRequest> optionalRequest = friendRequestDao.getByUsersIds(sender.getId(),
         recipient.getId(), true);
@@ -122,26 +121,20 @@ public class FriendRequestServiceImpl implements FriendRequestService {
 
     FriendRequest repliedRequest = optionalRequest.get();
     repliedRequest.setStatus(status);
-    return friendRequestDao.update(repliedRequest);
+    return friendRequestDao.saveOrUpdate(repliedRequest);
   }
 
   @Transactional
   @Override
   public void unfriend(String userEmail, String unfriendEmail) {
-    User user = getUser(userEmail);
-    User unfriend = getUser(unfriendEmail);
+    User user = commonService.getUserByEmail(userEmail);
+    User unfriend = commonService.getUserByEmail(unfriendEmail);
 
     Optional<FriendRequest> friendship = friendRequestDao.getByUsersIds(
         user.getId(), unfriend.getId(), false);
     if (friendship.isEmpty() || !friendship.get().getStatus().equals(FriendStatus.ACCEPTED)) {
       throw new FriendRequestException(unfriendEmail + " не является другом " + userEmail);
     }
-
     friendRequestDao.delete(friendship.get());
-  }
-
-  private User getUser(String email) {
-    return userDao.findByEmail(email).orElseThrow(
-        () -> new UserNotRegisteredException(email));
   }
 }

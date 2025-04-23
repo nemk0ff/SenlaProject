@@ -1,9 +1,9 @@
-package ru.senla.socialnetwork.repository;
+package ru.senla.socialnetwork.dao;
 
 import java.util.List;
 import java.util.Optional;
-import ru.senla.socialnetwork.model.entities.friendRequests.FriendRequest;
-import ru.senla.socialnetwork.model.entities.users.User;
+import ru.senla.socialnetwork.model.friendRequests.FriendRequest;
+import ru.senla.socialnetwork.model.users.User;
 
 public interface FriendRequestDao {
   List<User> findFriendsByUserId(Long userId);
@@ -11,6 +11,4 @@ public interface FriendRequestDao {
   List<FriendRequest> getAllByUserId(Long userId);
 
   Optional<FriendRequest> getByUsersIds(Long firstUser, Long secondUser, boolean isOrderRelevant);
-
-  FriendRequest add(FriendRequest friendRequest);
 }

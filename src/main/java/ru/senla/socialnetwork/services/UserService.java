@@ -3,13 +3,12 @@ package ru.senla.socialnetwork.services;
 import java.time.LocalDate;
 import java.util.List;
 import ru.senla.socialnetwork.dto.users.UserEditDTO;
-import ru.senla.socialnetwork.model.entities.users.User;
-import ru.senla.socialnetwork.model.enums.Gender;
+import ru.senla.socialnetwork.model.users.User;
+import ru.senla.socialnetwork.model.users.Gender;
 
 public interface UserService {
   User get(long userId);
 
-  boolean existsByEmail(String email);
 
   List<User> find(String name, String surname, Gender gender, LocalDate birthdate);
 

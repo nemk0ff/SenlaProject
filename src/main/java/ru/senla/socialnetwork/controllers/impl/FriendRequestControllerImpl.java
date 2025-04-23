@@ -3,7 +3,6 @@ package ru.senla.socialnetwork.controllers.impl;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import java.security.Principal;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,7 @@ import ru.senla.socialnetwork.dto.friendRequests.RespondRequestDTO;
 import ru.senla.socialnetwork.dto.friendRequests.SendRequestDTO;
 import ru.senla.socialnetwork.dto.friendRequests.RemoveFriendRequestDTO;
 import ru.senla.socialnetwork.dto.mappers.FriendRequestMapper;
-import ru.senla.socialnetwork.model.enums.FriendStatus;
+import ru.senla.socialnetwork.model.friendRequests.FriendStatus;
 import ru.senla.socialnetwork.services.FriendRequestService;
 
 @Slf4j

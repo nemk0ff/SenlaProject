@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.model.entities;
+package ru.senla.socialnetwork.model.general;
 
 public interface MyEntity {
   Long getId();

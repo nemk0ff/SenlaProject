@@ -1,5 +1,6 @@
-package ru.senla.socialnetwork.model.entities.users;
+package ru.senla.socialnetwork.model.users;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -7,17 +8,20 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.senla.socialnetwork.model.entities.MyEntity;
-import ru.senla.socialnetwork.model.enums.Gender;
-import ru.senla.socialnetwork.model.enums.UserRole;
+import ru.senla.socialnetwork.model.general.MyEntity;
+import ru.senla.socialnetwork.model.chats.ChatMember;
+import ru.senla.socialnetwork.model.chats.ChatMessage;
 
 @Getter
 @Setter
@@ -61,4 +65,10 @@ public final class User implements MyEntity {
 
   @Column(name = "registered_at")
   private ZonedDateTime registeredAt;
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+  private List<ChatMember> chatMemberships = new ArrayList<>();
+
+  @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+  private List<ChatMessage> messages = new ArrayList<>();
 }

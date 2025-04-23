@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.repository.impl;
+package ru.senla.socialnetwork.dao.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,10 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Repository;
-import ru.senla.socialnetwork.model.entities.friendRequests.FriendRequest;
-import ru.senla.socialnetwork.model.entities.users.User;
-import ru.senla.socialnetwork.model.enums.FriendStatus;
-import ru.senla.socialnetwork.repository.FriendRequestDao;
+import ru.senla.socialnetwork.model.friendRequests.FriendRequest;
+import ru.senla.socialnetwork.model.users.User;
+import ru.senla.socialnetwork.model.friendRequests.FriendStatus;
+import ru.senla.socialnetwork.dao.FriendRequestDao;
 
 @Repository
 @Slf4j
@@ -83,19 +83,6 @@ public class FriendRequestDaoImpl extends HibernateAbstractDao<FriendRequest>
     } catch (Exception e) {
       throw new DataRetrievalFailureException(
           "Ошибка при поиске friendRequests для " + firstUser + " и " + secondUser);
-    }
-  }
-
-  @Override
-  public FriendRequest add(FriendRequest friendRequest) {
-    log.debug("Добавление friendRequest в бд: {}...", friendRequest);
-    try {
-      sessionFactory.getCurrentSession().persist(friendRequest);
-      log.info("FriendRequest успешно добавлен в бд: {}", friendRequest);
-      return friendRequest;
-    } catch (Exception e) {
-      throw new DataRetrievalFailureException(
-          "Не удалось добавить friendRequest: " + e.getMessage(), e);
     }
   }
 }

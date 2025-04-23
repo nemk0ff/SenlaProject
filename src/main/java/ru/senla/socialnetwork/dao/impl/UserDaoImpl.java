@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.repository.impl;
+package ru.senla.socialnetwork.dao.impl;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -11,9 +11,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Repository;
-import ru.senla.socialnetwork.model.entities.users.User;
-import ru.senla.socialnetwork.model.enums.Gender;
-import ru.senla.socialnetwork.repository.UserDao;
+import ru.senla.socialnetwork.model.users.User;
+import ru.senla.socialnetwork.model.users.Gender;
+import ru.senla.socialnetwork.dao.UserDao;
 
 @Repository
 @Slf4j
@@ -70,16 +70,6 @@ public class UserDaoImpl extends HibernateAbstractDao<User> implements UserDao {
       );
     } catch (HibernateException e) {
       throw new DataRetrievalFailureException("Ошибка при поиске пользователя " + email, e);
-    }
-  }
-
-  @Override
-  public void save(User user) {
-    log.debug("Сохранение пользователя: {}, {}, {}", user.getEmail(), user.getName(), user.getSurname());
-    try {
-      sessionFactory.getCurrentSession().persist(user);
-    } catch (HibernateException e) {
-      throw new DataRetrievalFailureException("Ошибка сохранения пользователя " + user.getEmail(), e);
     }
   }
 }

@@ -1,12 +1,12 @@
-package ru.senla.socialnetwork.repository.impl;
+package ru.senla.socialnetwork.dao.impl;
 
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.springframework.dao.DataRetrievalFailureException;
-import ru.senla.socialnetwork.model.entities.MyEntity;
-import ru.senla.socialnetwork.repository.GenericDao;
+import ru.senla.socialnetwork.model.general.MyEntity;
+import ru.senla.socialnetwork.dao.GenericDao;
 
 @Slf4j
 public abstract class HibernateAbstractDao<T extends MyEntity> implements GenericDao<T> {
@@ -19,11 +19,15 @@ public abstract class HibernateAbstractDao<T extends MyEntity> implements Generi
   }
 
   @Override
-  public T update(T entity) {
-    log.debug("Перезаписываем информацию о : {}", entity);
-    T mergedEntity = sessionFactory.getCurrentSession().merge(entity);
-    log.debug("Информация успешно перезаписана: {}", entity.getId());
-    return mergedEntity;
+  public T saveOrUpdate(T entity) {
+    log.debug("Сохранение/обновление: {}", entity);
+    try {
+      T mergedEntity = sessionFactory.getCurrentSession().merge(entity);
+      log.info("Успешно сохранено/обновлено: {}", mergedEntity);
+      return mergedEntity;
+    } catch (HibernateException e) {
+      throw new DataRetrievalFailureException("Ошибка при сохранении/обновлении " + entity, e);
+    }
   }
 
   @Override

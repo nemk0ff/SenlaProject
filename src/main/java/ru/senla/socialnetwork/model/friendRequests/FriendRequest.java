@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.model.entities.friendRequests;
+package ru.senla.socialnetwork.model.friendRequests;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,9 +16,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.senla.socialnetwork.model.entities.MyEntity;
-import ru.senla.socialnetwork.model.entities.users.User;
-import ru.senla.socialnetwork.model.enums.FriendStatus;
+import ru.senla.socialnetwork.model.general.MyEntity;
+import ru.senla.socialnetwork.model.users.User;
 
 @Getter
 @Setter

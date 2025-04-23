@@ -20,8 +20,8 @@ import ru.senla.socialnetwork.controllers.UserController;
 import ru.senla.socialnetwork.dto.users.ChangeEmailDTO;
 import ru.senla.socialnetwork.dto.users.UserEditDTO;
 import ru.senla.socialnetwork.dto.mappers.UserMapper;
-import ru.senla.socialnetwork.model.entities.users.User;
-import ru.senla.socialnetwork.model.enums.Gender;
+import ru.senla.socialnetwork.model.users.User;
+import ru.senla.socialnetwork.model.users.Gender;
 import ru.senla.socialnetwork.security.JwtUtils;
 import ru.senla.socialnetwork.services.UserService;
 

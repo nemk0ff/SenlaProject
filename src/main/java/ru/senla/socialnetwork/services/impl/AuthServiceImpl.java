@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.senla.socialnetwork.dao.UserDao;
+import ru.senla.socialnetwork.dao.impl.UserDaoImpl;
 import ru.senla.socialnetwork.dto.auth.AuthRequestDTO;
 import ru.senla.socialnetwork.dto.auth.AuthResponseDTO;
 import ru.senla.socialnetwork.dto.auth.RegisterDTO;
@@ -14,9 +16,8 @@ import ru.senla.socialnetwork.dto.mappers.UserMapper;
 import ru.senla.socialnetwork.exceptions.users.IllegalPasswordException;
 import ru.senla.socialnetwork.exceptions.users.EmailAlreadyExistsException;
 import ru.senla.socialnetwork.exceptions.users.UserNotRegisteredException;
-import ru.senla.socialnetwork.model.entities.users.User;
-import ru.senla.socialnetwork.model.enums.UserRole;
-import ru.senla.socialnetwork.repository.impl.UserDaoImpl;
+import ru.senla.socialnetwork.model.users.User;
+import ru.senla.socialnetwork.model.users.UserRole;
 import ru.senla.socialnetwork.security.JwtUtils;
 import ru.senla.socialnetwork.services.AuthService;
 
@@ -57,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
     user.setPassword(passwordEncoder.encode(regDTO.password()));
     user.setRole(UserRole.USER);
 
-    userDao.save(user);
+    userDao.saveOrUpdate(user);
     log.info("Пользователь {} успешно зарегистрирован.", regDTO.email());
     return user;
   }
