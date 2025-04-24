@@ -1,5 +1,6 @@
 package ru.senla.socialnetwork.dao.chats.impl;
 
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.springframework.dao.DataRetrievalFailureException;
@@ -40,5 +41,35 @@ public class ChatDaoImpl extends HibernateAbstractDao<Chat> implements ChatDao {
     }
   }
 
+  @Override
+  public Optional<Chat> find(Long id) {
+    log.info("Поиск чата по id: {}", id);
+    try {
+      String hql = "SELECT c FROM Chat c LEFT JOIN FETCH c.members WHERE c.id = :id";
+      return sessionFactory.getCurrentSession()
+          .createQuery(hql, Chat.class)
+          .setParameter("id", id)
+          .uniqueResultOptional();
+    } catch (Exception e) {
+      throw new DataRetrievalFailureException("Ошибка при поиске чата по id " + id, e);
+    }
+  }
 
+  @Override
+  public Optional<Chat> findWithMembersAndUsers(Long id) {
+    log.info("Расширенный поиск чата по id: {}", id);
+    try {
+      String hql = "SELECT DISTINCT c FROM Chat c " +
+          "LEFT JOIN FETCH c.members m " +
+          "LEFT JOIN FETCH m.user " +
+          "WHERE c.id = :chatId";
+
+      return sessionFactory.getCurrentSession()
+          .createQuery(hql, Chat.class)
+          .setParameter("chatId", id)
+          .uniqueResultOptional();
+    } catch (Exception e) {
+      throw new DataRetrievalFailureException("Ошибка при расширенном поиске чата по id " + id, e);
+    }
+  }
 }

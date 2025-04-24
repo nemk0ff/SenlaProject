@@ -3,6 +3,7 @@ package ru.senla.socialnetwork.services.chats.impl;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.senla.socialnetwork.dao.chats.ChatDao;
 import ru.senla.socialnetwork.dao.chats.ChatMemberDao;
 import ru.senla.socialnetwork.dto.chats.ChatDTO;
-import ru.senla.socialnetwork.dto.chats.CreateChatDTO;
+import ru.senla.socialnetwork.dto.chats.CreateGroupChatDTO;
+import ru.senla.socialnetwork.dto.chats.CreatePersonalChatDTO;
 import ru.senla.socialnetwork.dto.mappers.ChatMapper;
 import ru.senla.socialnetwork.exceptions.chats.InvalidChatException;
 import ru.senla.socialnetwork.exceptions.users.UserNotRegisteredException;
@@ -21,6 +23,7 @@ import ru.senla.socialnetwork.model.chats.ChatMember;
 import ru.senla.socialnetwork.model.general.MemberRole;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.services.chats.ChatService;
+import ru.senla.socialnetwork.services.chats.CommonChatService;
 import ru.senla.socialnetwork.services.general.CommonService;
 
 @Slf4j
@@ -29,26 +32,62 @@ import ru.senla.socialnetwork.services.general.CommonService;
 @AllArgsConstructor
 public class ChatServiceImpl implements ChatService {
   private final CommonService commonService;
+  private final CommonChatService commonChatService;
+  private final ChatMapper chatMapper;
   private final ChatDao chatDao;
   private final ChatMemberDao chatMemberDao;
 
   @Override
   @Transactional
-  public ChatDTO create(CreateChatDTO request) {
-    validateChat(request);
+  public ChatDTO create(CreateGroupChatDTO request) {
+    validateEmail(request.creatorEmail());
+    if (request.membersEmails().isEmpty()) {
+      throw new InvalidChatException("Групповой чат должен иметь хотя бы одного участника");
+    }
 
-    Chat savedChat = saveChat(request);
+    Chat chat = chatDao.saveOrUpdate(Chat.builder()
+        .name(request.name())
+        .isGroup(true)
+        .createdAt(ZonedDateTime.now())
+        .build());
+    addMembersToChat(chat, request);
 
-    addMembersToChat(savedChat, request);
+    log.info("Создан групповой чат {} пользователем {}", request.name(), request.creatorEmail());
+    return getChat(chat.getId());
+  }
 
-    return ChatMapper.INSTANCE.chatToChatDTO(savedChat);
+  @Override
+  @Transactional
+  public ChatDTO create(CreatePersonalChatDTO request) {
+    User creator = commonService.getUserByEmail(request.creatorEmail());
+    User friend = commonService.getUserByEmail(request.friendEmail());
+
+    String chatName = request.creatorEmail() + " - " + request.friendEmail();
+    if (chatDao.existsByMembers(request.creatorEmail(), request.friendEmail())) {
+      throw new InvalidChatException("Личный чат " + chatName + " уже существует");
+    }
+
+    Chat chat = chatDao.saveOrUpdate(Chat.builder()
+        .name(chatName)
+        .isGroup(false)
+        .createdAt(ZonedDateTime.now())
+        .build());
+
+    List<ChatMember> chatMembers = new ArrayList<>();
+    chatMembers.add(createChatMember(chat, creator, MemberRole.ADMIN));
+    chatMembers.add(createChatMember(chat, friend, MemberRole.ADMIN));
+
+    chatMemberDao.saveAll(chatMembers);
+    chat.getMembers().addAll(chatMembers);
+
+    log.info("Создан личный чат между {} и {}", creator.getEmail(), friend.getEmail());
+    return getChat(chat.getId());
   }
 
   @Override
   @Transactional
   public void deleteChat(Long chatId) {
-    Chat chat = chatDao.find(chatId)
-        .orElseThrow(() -> new EntityNotFoundException("Чат не найден"));
+    Chat chat = commonChatService.getChat(chatId);
 
     List<ChatMember> members = chatMemberDao.findMembersByChatId(chatId);
     members.forEach(chatMemberDao::delete);
@@ -56,48 +95,41 @@ public class ChatServiceImpl implements ChatService {
     chatDao.delete(chat);
   }
 
-  private void validateChat(CreateChatDTO chatDTO) {
-    if(!commonService.existsByEmail(chatDTO.creatorEmail())) {
-      throw new UserNotRegisteredException(chatDTO.creatorEmail());
-    }
+  @Override
+  @Transactional(readOnly = true)
+  public ChatDTO getChat(Long chatId) {
+    return chatMapper.chatToChatDTO(commonChatService.getChat(chatId));
+  }
 
-    if (!chatDTO.isGroup()) {
-      if (chatDTO.membersEmails().size() != 1) {
-        throw new InvalidChatException("Личный чат должен иметь ровно одного участника");
-      } else if (chatDao.existsByMembers(chatDTO.creatorEmail(),
-          chatDTO.membersEmails().iterator().next())) {
-        throw new InvalidChatException("У вас уже есть личный чат с ");
-      }
-    }
-    if (chatDTO.isGroup() && chatDTO.membersEmails().isEmpty()) {
-      throw new InvalidChatException("Групповой чат должен иметь хотя бы одного участника");
+  private void validateEmail(String userEmail) {
+    if(!commonService.existsByEmail(userEmail)) {
+      throw new UserNotRegisteredException(userEmail);
     }
   }
 
-  private Chat saveChat(CreateChatDTO chatDTO) {
-    return chatDao.saveOrUpdate(Chat.builder()
-        .name(chatDTO.name())
-        .isGroup(chatDTO.isGroup())
-        .createdAt(ZonedDateTime.now())
-        .build());
+  private ChatMember createChatMember(Chat chat, User user, MemberRole role) {
+    return ChatMember.builder()
+        .chat(chat)
+        .user(user)
+        .role(role)
+        .joinDate(ZonedDateTime.now())
+        .build();
   }
 
-  private void addMembersToChat(Chat chat, CreateChatDTO chatDTO) {
-    Set<String> membersEmails = chatDTO.membersEmails();
-    membersEmails.add(chatDTO.creatorEmail());
+  private void addMembersToChat(Chat chat, CreateGroupChatDTO request) {
+    Set<String> allMembers = new HashSet<>(request.membersEmails());
+    allMembers.add(request.creatorEmail());
 
     List<ChatMember> chatMembers = new ArrayList<>();
 
-    for (String memberEmail : chatDTO.membersEmails()) {
+    for (String memberEmail : allMembers) {
       User user = commonService.getUserByEmail(memberEmail);
-      chatMembers.add(ChatMember.builder()
-          .chat(chat)
-          .user(user)
-          .role(chatDTO.creatorEmail().equals(memberEmail) ?
-              MemberRole.ADMIN : MemberRole.MEMBER)
-          .joinDate(ZonedDateTime.now())
-          .build());
+      ChatMember member = createChatMember(chat, user,
+          request.creatorEmail().equals(memberEmail) ?
+              MemberRole.ADMIN : MemberRole.MEMBER);
+      chatMembers.add(member);
     }
     chatMemberDao.saveAll(chatMembers);
+    chat.getMembers().addAll(chatMembers);
   }
 }

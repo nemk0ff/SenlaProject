@@ -27,4 +27,5 @@ public class CommonServiceImpl implements CommonService {
   public boolean existsByEmail(String email) {
     return userDao.findByEmail(email).isPresent();
   }
+
 }
