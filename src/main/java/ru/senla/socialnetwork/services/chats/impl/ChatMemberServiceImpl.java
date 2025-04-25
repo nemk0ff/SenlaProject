@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.senla.socialnetwork.dao.chats.ChatMemberDao;
 import ru.senla.socialnetwork.dto.chats.ChatMemberDTO;
 import ru.senla.socialnetwork.dto.mappers.ChatMemberMapper;
+import ru.senla.socialnetwork.exceptions.chats.ChatMemberException;
 import ru.senla.socialnetwork.model.chats.Chat;
 import ru.senla.socialnetwork.model.chats.ChatMember;
 import ru.senla.socialnetwork.model.general.MemberRole;
@@ -43,7 +44,6 @@ public class ChatMemberServiceImpl implements ChatMemberService {
         .build();
 
     ChatMember savedMember = chatMemberDao.saveOrUpdate(newMember);
-    //chat.getMembers().add(savedMember);
 
     log.info("Пользователь {} добавлен в чат {}", userEmailToAdd, chatId);
     return chatMemberMapper.memberToDTO(savedMember);
@@ -51,9 +51,6 @@ public class ChatMemberServiceImpl implements ChatMemberService {
 
   @Override
   public void removeUserFromChat(Long chatId, String userEmailToRemove) {
-//    if (currentUserEmail.equals(userEmailToRemove)) {
-//      throw new ChatException("Нельзя удалить самого себя. Используйте выход из чата");
-//    }
     ChatMember memberToRemove = commonChatService.getMember(chatId, userEmailToRemove);
 
     chatMemberDao.delete(memberToRemove);

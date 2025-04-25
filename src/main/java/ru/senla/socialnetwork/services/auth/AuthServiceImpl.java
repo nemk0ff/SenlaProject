@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.services.impl;
+package ru.senla.socialnetwork.services.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,6 @@ import ru.senla.socialnetwork.exceptions.users.UserNotRegisteredException;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.model.users.UserRole;
 import ru.senla.socialnetwork.security.JwtUtils;
-import ru.senla.socialnetwork.services.AuthService;
 
 @Slf4j
 @Service

@@ -20,7 +20,7 @@ import ru.senla.socialnetwork.dto.friendRequests.SendRequestDTO;
 import ru.senla.socialnetwork.dto.friendRequests.RemoveFriendRequestDTO;
 import ru.senla.socialnetwork.dto.mappers.FriendRequestMapper;
 import ru.senla.socialnetwork.model.friendRequests.FriendStatus;
-import ru.senla.socialnetwork.services.FriendRequestService;
+import ru.senla.socialnetwork.services.friendRequest.FriendRequestService;
 
 @Slf4j
 @RestController

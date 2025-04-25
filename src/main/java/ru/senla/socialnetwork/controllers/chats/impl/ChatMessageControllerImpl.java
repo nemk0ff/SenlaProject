@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -63,5 +64,18 @@ public class ChatMessageControllerImpl implements ChatMessageController {
       @PathVariable Long messageId) {
     log.info("Открепление сообщения {} в чате {}", messageId, chatId);
     return ResponseEntity.ok(chatMessageService.unpinMessage(chatId, messageId));
+  }
+
+  @Override
+  @DeleteMapping("/{messageId}")
+  @PreAuthorize("@commonChatServiceImpl.isChatMember(#chatId, authentication.name)")
+  public ResponseEntity<?> deleteMessage(
+      @PathVariable Long chatId,
+      @PathVariable Long messageId,
+      Authentication authentication) {
+    log.info("Удаление сообщения {} в чате {} пользователем {}",
+        messageId, chatId, authentication.getName());
+    chatMessageService.deleteMessage(chatId, messageId, authentication.getName());
+    return ResponseEntity.noContent().build();
   }
 }

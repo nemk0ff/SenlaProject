@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.services.impl;
+package ru.senla.socialnetwork.services.friendRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,7 +15,6 @@ import ru.senla.socialnetwork.exceptions.friendRequests.SelfFriendshipException;
 import ru.senla.socialnetwork.model.friendRequests.FriendRequest;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.model.friendRequests.FriendStatus;
-import ru.senla.socialnetwork.services.FriendRequestService;
 import ru.senla.socialnetwork.services.common.CommonService;
 
 @Slf4j

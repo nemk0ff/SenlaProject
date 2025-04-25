@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.services;
+package ru.senla.socialnetwork.services.auth;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import ru.senla.socialnetwork.dto.auth.AuthRequestDTO;

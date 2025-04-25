@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.services;
+package ru.senla.socialnetwork.services.friendRequest;
 
 import java.util.List;
 import ru.senla.socialnetwork.model.friendRequests.FriendRequest;

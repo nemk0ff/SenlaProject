@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.services.impl;
+package ru.senla.socialnetwork.services.user;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
@@ -15,7 +15,6 @@ import ru.senla.socialnetwork.exceptions.users.UserException;
 import ru.senla.socialnetwork.exceptions.users.UserNotRegisteredException;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.model.users.Gender;
-import ru.senla.socialnetwork.services.UserService;
 import ru.senla.socialnetwork.services.common.CommonService;
 
 @Slf4j

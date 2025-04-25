@@ -12,4 +12,6 @@ public interface ChatMessageService {
   ChatMessageDTO pinMessage(Long chatId, Long messageId);
 
   ChatMessageDTO unpinMessage(Long chatId, Long messageId);
+
+  void deleteMessage(Long chatId, Long messageId, String currentUserEmail);
 }

@@ -12,7 +12,7 @@ import ru.senla.socialnetwork.controllers.AuthController;
 import ru.senla.socialnetwork.dto.auth.AuthRequestDTO;
 import ru.senla.socialnetwork.dto.auth.RegisterDTO;
 import ru.senla.socialnetwork.dto.mappers.UserMapper;
-import ru.senla.socialnetwork.services.AuthService;
+import ru.senla.socialnetwork.services.auth.AuthService;
 
 @Slf4j
 @RestController

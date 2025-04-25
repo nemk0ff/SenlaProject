@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.services;
+package ru.senla.socialnetwork.services.user;
 
 import java.time.LocalDate;
 import java.util.List;

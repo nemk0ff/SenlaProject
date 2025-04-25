@@ -14,6 +14,7 @@ import ru.senla.socialnetwork.exceptions.chats.ChatMessageException;
 import ru.senla.socialnetwork.model.chats.Chat;
 import ru.senla.socialnetwork.model.chats.ChatMember;
 import ru.senla.socialnetwork.model.chats.ChatMessage;
+import ru.senla.socialnetwork.model.general.MemberRole;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.services.chats.ChatMessageService;
 import ru.senla.socialnetwork.services.chats.CommonChatService;
@@ -69,7 +70,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
   public ChatMessageDTO pinMessage(Long chatId, Long messageId) {
     ChatMessage message = getMessage(chatId, messageId);
 
-    if(message.getIsPinned()) {
+    if (message.getIsPinned()) {
       throw new ChatMessageException("Это сообщение уже закреплено.");
     }
     message.setIsPinned(true);
@@ -81,13 +82,28 @@ public class ChatMessageServiceImpl implements ChatMessageService {
   public ChatMessageDTO unpinMessage(Long chatId, Long messageId) {
     ChatMessage message = getMessage(chatId, messageId);
 
-    if(!message.getIsPinned()) {
+    if (!message.getIsPinned()) {
       throw new ChatMessageException("Это сообщение не закреплено.");
     }
 
     message.setIsPinned(false);
     ChatMessage updatedMessage = chatMessageDao.saveOrUpdate(message);
     return chatMessageMapper.toDTO(updatedMessage);
+  }
+
+  @Override
+  public void deleteMessage(Long chatId, Long messageId, String currentUserEmail) {
+    ChatMessage message = getMessage(chatId, messageId);
+    ChatMember member = commonChatService.getMember(chatId, currentUserEmail);
+
+    if (!message.getAuthor().getEmail().equals(currentUserEmail)) {
+      if (member.getRole() != MemberRole.ADMIN && member.getRole() != MemberRole.MODERATOR) {
+        throw new ChatMessageException("Только автор, модератор или админ могут удалить сообщение");
+      }
+    }
+
+    chatMessageDao.delete(message);
+    log.info("Сообщение {} удалено пользователем {}", messageId, currentUserEmail);
   }
 
   private ChatMessage getMessage(Long chatId, Long messageId) {
