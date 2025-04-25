@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.exceptions.users;
+package ru.senla.socialnetwork.exceptions.auth;
 
 import org.springframework.security.core.AuthenticationException;
 

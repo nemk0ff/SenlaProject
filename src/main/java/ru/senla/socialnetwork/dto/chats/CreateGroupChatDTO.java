@@ -6,6 +6,5 @@ import java.util.Set;
 public record CreateGroupChatDTO(
     @Email String creatorEmail,
     String name,
-    boolean isGroup,
     Set<@Email String> membersEmails) {
 }

@@ -1,6 +1,5 @@
 package ru.senla.socialnetwork.services.chats.impl;
 
-import jakarta.persistence.EntityNotFoundException;
 import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,14 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.senla.socialnetwork.dao.chats.ChatMemberDao;
 import ru.senla.socialnetwork.dto.chats.ChatMemberDTO;
 import ru.senla.socialnetwork.dto.mappers.ChatMemberMapper;
-import ru.senla.socialnetwork.exceptions.chats.InvalidChatException;
 import ru.senla.socialnetwork.model.chats.Chat;
 import ru.senla.socialnetwork.model.chats.ChatMember;
 import ru.senla.socialnetwork.model.general.MemberRole;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.services.chats.ChatMemberService;
 import ru.senla.socialnetwork.services.chats.CommonChatService;
-import ru.senla.socialnetwork.services.general.CommonService;
+import ru.senla.socialnetwork.services.common.CommonService;
 
 @Slf4j
 @Service
@@ -29,11 +27,11 @@ public class ChatMemberServiceImpl implements ChatMemberService {
   private final ChatMemberMapper chatMemberMapper;
 
   @Override
-  public ChatMemberDTO addUserToChat(Long chatId, String currentUserEmail, String userEmailToAdd) {
+  public ChatMemberDTO addUserToChat(Long chatId, String userEmailToAdd) {
     Chat chat = commonChatService.getChat(chatId);
 
-    if (isUserInChat(chatId, userEmailToAdd)) {
-      throw new InvalidChatException("Пользователь уже в чате");
+    if (commonChatService.isChatMember(chatId, userEmailToAdd)) {
+      throw new ChatMemberException("Пользователь уже в чате");
     }
 
     User userToAdd = commonService.getUserByEmail(userEmailToAdd);
@@ -47,19 +45,19 @@ public class ChatMemberServiceImpl implements ChatMemberService {
     ChatMember savedMember = chatMemberDao.saveOrUpdate(newMember);
     //chat.getMembers().add(savedMember);
 
-    log.info("Пользователь {} добавлен в чат {} пользователем {}", userEmailToAdd, chatId, currentUserEmail);
+    log.info("Пользователь {} добавлен в чат {}", userEmailToAdd, chatId);
     return chatMemberMapper.memberToDTO(savedMember);
   }
 
   @Override
-  public void removeUserFromChat(Long chatId, String currentUserEmail, String userEmailToRemove) {
-    if (currentUserEmail.equals(userEmailToRemove)) {
-      throw new InvalidChatException("Нельзя удалить самого себя. Используйте выход из чата");
-    }
+  public void removeUserFromChat(Long chatId, String userEmailToRemove) {
+//    if (currentUserEmail.equals(userEmailToRemove)) {
+//      throw new ChatException("Нельзя удалить самого себя. Используйте выход из чата");
+//    }
     ChatMember memberToRemove = commonChatService.getMember(chatId, userEmailToRemove);
 
     chatMemberDao.delete(memberToRemove);
-    log.info("Пользователь {} удален из чата {} пользователем {}", userEmailToRemove, chatId, currentUserEmail);
+    log.info("Пользователь {} удален из чата {}", userEmailToRemove, chatId);
   }
 
   @Override
@@ -77,25 +75,12 @@ public class ChatMemberServiceImpl implements ChatMemberService {
     ChatMember member = commonChatService.getMember(chatId, userEmail);
 
     if (member.getRole() == MemberRole.ADMIN && countAdminsInChat(chatId) == 1) {
-      throw new InvalidChatException("Нельзя покинуть чат, так как вы единственный админ. " +
+      throw new ChatMemberException("Нельзя покинуть чат, так как вы единственный админ. " +
           "Необходимо назначить какого-нибудь участника админом перед выходом из чата.");
     }
 
     chatMemberDao.delete(member);
     log.info("Пользователь {} покинул чат {}", userEmail, chatId);
-  }
-
-  @Override
-  public boolean isUserInChat(Long chatId, String userEmail) {
-    return chatMemberDao.existsByChatIdAndUserEmail(chatId, userEmail);
-  }
-
-  @Override
-  public boolean isChatCreator(Long chatId, String email) {
-    Chat chat = commonChatService.getChat(chatId);
-    return chat.getMembers().stream()
-        .anyMatch(member -> member.getUser().getEmail().equals(email)
-            && member.getRole() == MemberRole.ADMIN);
   }
 
   @Override

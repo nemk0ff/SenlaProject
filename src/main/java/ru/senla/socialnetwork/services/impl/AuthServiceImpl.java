@@ -8,12 +8,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.senla.socialnetwork.dao.UserDao;
-import ru.senla.socialnetwork.dao.impl.UserDaoImpl;
 import ru.senla.socialnetwork.dto.auth.AuthRequestDTO;
 import ru.senla.socialnetwork.dto.auth.AuthResponseDTO;
 import ru.senla.socialnetwork.dto.auth.RegisterDTO;
 import ru.senla.socialnetwork.dto.mappers.UserMapper;
-import ru.senla.socialnetwork.exceptions.users.IllegalPasswordException;
+import ru.senla.socialnetwork.exceptions.auth.IllegalPasswordException;
 import ru.senla.socialnetwork.exceptions.users.EmailAlreadyExistsException;
 import ru.senla.socialnetwork.exceptions.users.UserNotRegisteredException;
 import ru.senla.socialnetwork.model.users.User;
@@ -26,7 +25,7 @@ import ru.senla.socialnetwork.services.AuthService;
 @Transactional
 @AllArgsConstructor
 public class AuthServiceImpl implements AuthService {
-  private final UserDaoImpl userDao;
+  private final UserDao userDao;
   private final PasswordEncoder passwordEncoder;
 
   @Transactional

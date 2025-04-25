@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.senla.socialnetwork.dao.FriendRequestDao;
 import ru.senla.socialnetwork.exceptions.friendRequests.AlreadyFriendsException;
 import ru.senla.socialnetwork.exceptions.friendRequests.AlreadySentException;
 import ru.senla.socialnetwork.exceptions.friendRequests.FriendRequestException;
@@ -14,9 +15,8 @@ import ru.senla.socialnetwork.exceptions.friendRequests.SelfFriendshipException;
 import ru.senla.socialnetwork.model.friendRequests.FriendRequest;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.model.friendRequests.FriendStatus;
-import ru.senla.socialnetwork.dao.impl.FriendRequestDaoImpl;
 import ru.senla.socialnetwork.services.FriendRequestService;
-import ru.senla.socialnetwork.services.general.CommonService;
+import ru.senla.socialnetwork.services.common.CommonService;
 
 @Slf4j
 @Service
@@ -24,7 +24,7 @@ import ru.senla.socialnetwork.services.general.CommonService;
 @AllArgsConstructor
 public class FriendRequestServiceImpl implements FriendRequestService {
   private final CommonService commonService;
-  private final FriendRequestDaoImpl friendRequestDao;
+  private final FriendRequestDao friendRequestDao;
 
   @Transactional(readOnly = true)
   @Override

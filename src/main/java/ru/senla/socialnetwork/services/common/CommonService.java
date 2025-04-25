@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.services.general;
+package ru.senla.socialnetwork.services.common;
 
 import ru.senla.socialnetwork.model.users.User;
 

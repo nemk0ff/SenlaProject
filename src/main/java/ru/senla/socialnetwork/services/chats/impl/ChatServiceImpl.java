@@ -1,6 +1,5 @@
 package ru.senla.socialnetwork.services.chats.impl;
 
-import jakarta.persistence.EntityNotFoundException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,7 +15,7 @@ import ru.senla.socialnetwork.dto.chats.ChatDTO;
 import ru.senla.socialnetwork.dto.chats.CreateGroupChatDTO;
 import ru.senla.socialnetwork.dto.chats.CreatePersonalChatDTO;
 import ru.senla.socialnetwork.dto.mappers.ChatMapper;
-import ru.senla.socialnetwork.exceptions.chats.InvalidChatException;
+import ru.senla.socialnetwork.exceptions.chats.ChatException;
 import ru.senla.socialnetwork.exceptions.users.UserNotRegisteredException;
 import ru.senla.socialnetwork.model.chats.Chat;
 import ru.senla.socialnetwork.model.chats.ChatMember;
@@ -24,7 +23,7 @@ import ru.senla.socialnetwork.model.general.MemberRole;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.services.chats.ChatService;
 import ru.senla.socialnetwork.services.chats.CommonChatService;
-import ru.senla.socialnetwork.services.general.CommonService;
+import ru.senla.socialnetwork.services.common.CommonService;
 
 @Slf4j
 @Service
@@ -42,7 +41,7 @@ public class ChatServiceImpl implements ChatService {
   public ChatDTO create(CreateGroupChatDTO request) {
     validateEmail(request.creatorEmail());
     if (request.membersEmails().isEmpty()) {
-      throw new InvalidChatException("Групповой чат должен иметь хотя бы одного участника");
+      throw new ChatException("Групповой чат должен иметь хотя бы одного участника");
     }
 
     Chat chat = chatDao.saveOrUpdate(Chat.builder()
@@ -64,7 +63,7 @@ public class ChatServiceImpl implements ChatService {
 
     String chatName = request.creatorEmail() + " - " + request.friendEmail();
     if (chatDao.existsByMembers(request.creatorEmail(), request.friendEmail())) {
-      throw new InvalidChatException("Личный чат " + chatName + " уже существует");
+      throw new ChatException("Личный чат " + chatName + " уже существует");
     }
 
     Chat chat = chatDao.saveOrUpdate(Chat.builder()

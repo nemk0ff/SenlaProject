@@ -25,7 +25,7 @@ public class ChatMemberControllerImpl implements ChatMemberController {
 
   @PostMapping
   @PreAuthorize("hasRole('ADMIN') " +
-      "OR @chatMemberServiceImpl.isUserInChat(#chatId, authentication.name)")
+      "OR @commonChatServiceImpl.isChatMember(#chatId, authentication.name)")
   public ResponseEntity<ChatMemberDTO> addMember(
       @PathVariable Long chatId,
       @RequestParam String userEmail) {
@@ -34,7 +34,7 @@ public class ChatMemberControllerImpl implements ChatMemberController {
 
   @DeleteMapping("/{userEmail}")
   @PreAuthorize("(hasRole('ADMIN') " +
-      "OR @chatMemberServiceImpl.isUserInChat(#chatId, authentication.name)) " +
+      "OR @commonChatServiceImpl.isChatMember(#chatId, authentication.name)) " +
       "AND authentication.name != userEmail")
   public ResponseEntity<Void> removeMember(
       @PathVariable Long chatId,
@@ -44,7 +44,7 @@ public class ChatMemberControllerImpl implements ChatMemberController {
   }
 
   @PostMapping("/{userEmail}/mute")
-  @PreAuthorize("@chatMemberServiceImpl.isUserInChat(#chatId, authentication.name)")
+  @PreAuthorize("@commonChatServiceImpl.isChatMember(#chatId, authentication.name)")
   public ResponseEntity<ChatMemberDTO> muteMember(
       @PathVariable Long chatId,
       @PathVariable String userEmail,
@@ -54,7 +54,7 @@ public class ChatMemberControllerImpl implements ChatMemberController {
   }
 
   @PostMapping("/leave")
-  @PreAuthorize("@chatMemberServiceImpl.isUserInChat(#chatId, authentication.name)")
+  @PreAuthorize("@commonChatServiceImpl.isChatMember(#chatId, authentication.name)")
   public ResponseEntity<Void> leaveChat(
       @PathVariable Long chatId,
       String userEmail) {
