@@ -4,7 +4,6 @@ import jakarta.annotation.Nullable;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.Instant;
 import java.util.List;
-import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -29,9 +28,10 @@ import ru.senla.socialnetwork.exceptions.users.UserException;
 @Slf4j
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-  @ExceptionHandler(HttpMessageNotReadableException.class)
-  public ResponseEntity<ProblemDetail> handleHttpMessageNotReadable(
-      HttpMessageNotReadableException ex, WebRequest request) {
+  @Override
+  protected ResponseEntity<Object> handleHttpMessageNotReadable(
+      HttpMessageNotReadableException ex, HttpHeaders headers,
+      HttpStatusCode status, WebRequest request) {
     log.warn("Некорректный JSON: {}", ex.getMessage());
 
     ProblemDetail problemDetail = problemDetailBuilder(
@@ -50,19 +50,15 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     ProblemDetail problemDetail = problemDetailBuilder(
         "Неверный тип параметра", request, HttpStatus.BAD_REQUEST, ex);
 
-    problemDetail.setDetail(String.format(
-        "Параметр '%s' должен быть типа %s", ex.getName(),
-        Objects.requireNonNull(ex.getRequiredType()).getSimpleName()));
-
     return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
   }
 
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(
       MethodArgumentNotValidException ex,
-       @Nullable HttpHeaders headers,
-       @Nullable HttpStatusCode status,
-       @Nullable WebRequest request) {
+      @Nullable HttpHeaders headers,
+      @Nullable HttpStatusCode status,
+      @Nullable WebRequest request) {
     log.warn("Ошибка валидации данных: {}", ex.getMessage());
 
     ProblemDetail problemDetail = problemDetailBuilder("Ошибка валидации данных",

@@ -6,29 +6,47 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/senlaproject
-      SPRING_DATASOURCE_USERNAME: senla_user
-      SPRING_DATASOURCE_PASSWORD: senla_password
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql:5432/senlaproject
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
     depends_on:
-      db:
+      liquibase:
+        condition: service_completed_successfully
+      postgresql:
         condition: service_healthy
     restart: unless-stopped
 
-  db:
+  liquibase:
+    image: liquibase/liquibase
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    command:
+      - --searchPath=/liquibase/changelog
+      - --changelog-file=master.xml
+      - --driver=org.postgresql.Driver
+      - --url=jdbc:postgresql://postgresql:5432/senlaproject
+      - --username=postgres
+      - --password=postgres
+      - update
+    volumes:
+      - ./src/main/resources/migrations:/liquibase/changelog
+
+  postgresql:
     image: postgres:15
     environment:
       POSTGRES_DB: senlaproject
-      POSTGRES_USER: senla_user
-      POSTGRES_PASSWORD: senla_password
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U senla_user -d senlaproject"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d senlaproject" ]
       interval: 5s
       timeout: 5s
       retries: 10
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
 
 volumes:
