@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import ru.senla.socialnetwork.dto.friendRequests.RemoveFriendRequestDTO;
 import ru.senla.socialnetwork.dto.friendRequests.RespondRequestDTO;
 import ru.senla.socialnetwork.dto.friendRequests.SendRequestDTO;
-import ru.senla.socialnetwork.model.enums.FriendStatus;
+import ru.senla.socialnetwork.model.friendRequests.FriendStatus;
 
 public interface FriendRequestController {
 

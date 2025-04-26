@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import ru.senla.socialnetwork.model.enums.Gender;
-import ru.senla.socialnetwork.model.enums.UserRole;
+import ru.senla.socialnetwork.model.users.Gender;
+import ru.senla.socialnetwork.model.users.UserRole;
 
 public record UserResponseDTO(
     Long id,

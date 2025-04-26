@@ -1,14 +1,17 @@
 package ru.senla.socialnetwork.exceptions;
 
-import java.io.EOFException;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.EntityNotFoundException;
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -16,28 +19,54 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import ru.senla.socialnetwork.exceptions.chats.ChatException;
 import ru.senla.socialnetwork.exceptions.friendRequests.FriendRequestException;
-import ru.senla.socialnetwork.exceptions.general.EntitiesNotFoundException;
-import ru.senla.socialnetwork.exceptions.users.EmailAlreadyExistsException;
-import ru.senla.socialnetwork.exceptions.users.UserNotRegisteredException;
+import ru.senla.socialnetwork.exceptions.users.UserException;
 
 @ControllerAdvice
 @Slf4j
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
+  @ExceptionHandler(HttpMessageNotReadableException.class)
+  public ResponseEntity<ProblemDetail> handleHttpMessageNotReadable(
+      HttpMessageNotReadableException ex, WebRequest request) {
+    log.warn("Некорректный JSON: {}", ex.getMessage());
+
+    ProblemDetail problemDetail = problemDetailBuilder(
+        "Некорректный запрос", request, HttpStatus.BAD_REQUEST, ex);
+    problemDetail.setDetail("Проверьте формат и типы данных в теле запроса");
+
+    return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+  public ResponseEntity<ProblemDetail> handleTypeMismatch(
+      MethodArgumentTypeMismatchException ex, WebRequest request) {
+    log.warn("Ошибка парсинга параметра '{}': ожидался тип {}",
+        ex.getName(), ex.getRequiredType());
+
+    ProblemDetail problemDetail = problemDetailBuilder(
+        "Неверный тип параметра", request, HttpStatus.BAD_REQUEST, ex);
+
+    problemDetail.setDetail(String.format(
+        "Параметр '%s' должен быть типа %s", ex.getName(),
+        Objects.requireNonNull(ex.getRequiredType()).getSimpleName()));
+
+    return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
+  }
+
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(
-      MethodArgumentNotValidException ex, HttpHeaders headers,
-      HttpStatusCode status, WebRequest request) {
-
+      MethodArgumentNotValidException ex,
+       @Nullable HttpHeaders headers,
+       @Nullable HttpStatusCode status,
+       @Nullable WebRequest request) {
     log.warn("Ошибка валидации данных: {}", ex.getMessage());
 
-    ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
-        HttpStatus.BAD_REQUEST, "Validation failed");
-    problemDetail.setTitle("Ошибка валидации данных");
-    problemDetail.setProperty("timestamp", Instant.now());
-    problemDetail.setProperty("path", ((ServletWebRequest) request).getRequest().getRequestURI());
+    ProblemDetail problemDetail = problemDetailBuilder("Ошибка валидации данных",
+        request, HttpStatus.BAD_REQUEST, ex);
 
     List<String> errors = ex.getBindingResult()
         .getFieldErrors()
@@ -46,98 +75,83 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         .toList();
     problemDetail.setProperty("errors", errors);
 
-    return new ResponseEntity<>(problemDetail, headers, status);
+    return new ResponseEntity<>(problemDetail, headers, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(AuthenticationException.class)
   protected ResponseEntity<ProblemDetail> handleAuthenticationException(
-      RuntimeException ex, WebRequest request) {
-
+      AuthenticationException ex, WebRequest request) {
     log.warn("Ошибка аутентификации: {}", ex.getMessage());
 
-    ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
-        HttpStatus.UNAUTHORIZED, "Требуется авторизация: " + ex.getMessage());
-    problemDetail.setTitle("Ошибка аутентификации");
-    problemDetail.setProperty("timestamp", Instant.now());
-    problemDetail.setProperty("path", ((ServletWebRequest) request).getRequest().getRequestURI());
+    ProblemDetail problemDetail = problemDetailBuilder("Ошибка аутентификации",
+        request, HttpStatus.UNAUTHORIZED, ex);
 
     return new ResponseEntity<>(problemDetail, HttpStatus.UNAUTHORIZED);
   }
 
-  @ExceptionHandler(EmailAlreadyExistsException.class)
-  protected ResponseEntity<ProblemDetail> handleTakeEmailException(
-      RuntimeException ex, WebRequest request) {
-
-    log.warn("Ошибка при попытке использования email: {}", ex.getMessage());
-
-    ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
-        HttpStatus.CONFLICT, String.format("Email '%s' уже используется", ex.getMessage()));
-    problemDetail.setTitle("Email conflict");
-    problemDetail.setProperty("timestamp", Instant.now());
-    problemDetail.setProperty("path", ((ServletWebRequest) request).getRequest().getRequestURI());
-
-    return new ResponseEntity<>(problemDetail, HttpStatus.CONFLICT);
-  }
-
-  @ExceptionHandler(UserNotRegisteredException.class)
+  @ExceptionHandler(UserException.class)
   protected ResponseEntity<ProblemDetail> handleUserNotRegisteredException(
-      UserNotRegisteredException ex, WebRequest request) {
+      UserException ex, WebRequest request) {
+    log.warn("{}: {}", ex.getAction(), ex.getMessage());
 
-    log.warn("Попытка указания незарегистрированного email: {}", ex.getMessage());
+    ProblemDetail problemDetail = problemDetailBuilder(ex.getAction(),
+        request, HttpStatus.BAD_REQUEST, ex);
 
-    ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
-        HttpStatus.NOT_FOUND, ex.getMessage());
-    problemDetail.setTitle("User Not Found");
-    problemDetail.setProperty("timestamp", Instant.now());
-    problemDetail.setProperty("path", ((ServletWebRequest) request).getRequest().getRequestURI());
-
-    return new ResponseEntity<>(problemDetail, HttpStatus.NOT_FOUND);
+    return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(AccessDeniedException.class)
   protected ResponseEntity<ProblemDetail> handleAccessDeniedException(
       AccessDeniedException ex, WebRequest request) {
-
     log.warn("Доступ запрещен: {}", ex.getMessage());
 
-    ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
-        HttpStatus.FORBIDDEN, "Недостаточно прав для выполнения операции: " + ex.getMessage());
-    problemDetail.setTitle("Доступ запрещен");
-    problemDetail.setProperty("timestamp", Instant.now());
-    problemDetail.setProperty("path", ((ServletWebRequest) request).getRequest().getRequestURI());
+    ProblemDetail problemDetail = problemDetailBuilder("Доступ запрещён",
+        request, HttpStatus.FORBIDDEN, ex);
 
     return new ResponseEntity<>(problemDetail, HttpStatus.FORBIDDEN);
   }
 
-  @ExceptionHandler(EntitiesNotFoundException.class)
-  protected ResponseEntity<ProblemDetail> handleEntityNotFoundException(EntitiesNotFoundException ex,
-                                                                        WebRequest request) {
-    ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-    problemDetail.setTitle("Ошибка при поиске");
-    problemDetail.setProperty("timestamp", Instant.now());
-    problemDetail.setProperty("path", ((ServletWebRequest) request).getRequest().getRequestURI());
+  @ExceptionHandler(EntityNotFoundException.class)
+  protected ResponseEntity<ProblemDetail> handleEntityNotFoundException(
+      EntityNotFoundException ex, WebRequest request) {
+    log.warn("Ошибка при поиске: {}", ex.getMessage());
+
+    ProblemDetail problemDetail = problemDetailBuilder("Ошибка при поиске",
+        request, HttpStatus.NOT_FOUND, ex);
 
     return new ResponseEntity<>(problemDetail, HttpStatus.NOT_FOUND);
   }
 
-//  @ExceptionHandler(EOFException.class)
-//  public ResponseEntity<String> handleEOFException(EOFException e) {
-//    return ResponseEntity
-//        .status(HttpStatus.BAD_REQUEST)
-//        .body("Invalid request body: " + e.getMessage());
-//  }
-
   @ExceptionHandler(FriendRequestException.class)
   protected ResponseEntity<ProblemDetail> handleFriendRequestException(
-      RuntimeException ex, WebRequest request) {
-    log.warn("Ошибка при действии с friendRequest: {}", ex.getMessage());
+      FriendRequestException ex, WebRequest request) {
+    log.warn("Ошибка при действии с заявкой в друзья: {}", ex.getMessage());
 
-    ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
-        HttpStatus.UNAUTHORIZED, ex.getMessage());
-    problemDetail.setTitle("Ошибка при действии с friendRequest");
-    problemDetail.setProperty("timestamp", Instant.now());
-    problemDetail.setProperty("path", ((ServletWebRequest) request).getRequest().getRequestURI());
+    ProblemDetail problemDetail = problemDetailBuilder("Ошибка при действии с заявкой в друзья",
+        request, HttpStatus.BAD_REQUEST, ex);
 
     return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
+  }
+
+
+  @ExceptionHandler(ChatException.class)
+  protected ResponseEntity<ProblemDetail> handleFriendRequestException(
+      ChatException ex, WebRequest request) {
+    log.warn("{}: {}", ex.getAction(), ex.getMessage());
+
+    ProblemDetail problemDetail = problemDetailBuilder(
+        ex.getAction(), request, HttpStatus.BAD_REQUEST, ex);
+
+    return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
+  }
+
+  private ProblemDetail problemDetailBuilder(String title, WebRequest request,
+                                             HttpStatus status, Exception ex) {
+    ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+        status, ex.getMessage());
+    problemDetail.setTitle(title);
+    problemDetail.setProperty("timestamp", Instant.now());
+    problemDetail.setProperty("path", ((ServletWebRequest) request).getRequest().getRequestURI());
+    return problemDetail;
   }
 }

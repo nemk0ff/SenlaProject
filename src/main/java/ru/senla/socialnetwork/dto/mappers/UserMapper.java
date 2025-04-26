@@ -6,7 +6,7 @@ import org.mapstruct.factory.Mappers;
 import ru.senla.socialnetwork.dto.auth.RegisterDTO;
 import ru.senla.socialnetwork.dto.users.UserEditDTO;
 import ru.senla.socialnetwork.dto.users.UserResponseDTO;
-import ru.senla.socialnetwork.model.entities.users.User;
+import ru.senla.socialnetwork.model.users.User;
 
 @Mapper
 public interface UserMapper {
@@ -15,8 +15,6 @@ public interface UserMapper {
   UserResponseDTO toUserResponseDTO(User user);
 
   List<UserResponseDTO> toListUserResponseDTO(List<User> users);
-
-  User userDTOtoUser(UserResponseDTO userDTO);
 
   User registrationDTOtoUser(RegisterDTO registrationDTO);
 
