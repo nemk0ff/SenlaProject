@@ -8,11 +8,13 @@ public interface ChatMemberService {
 
   ChatMemberDTO addUserToChat(Long chatId, String userEmailToAdd);
 
-  void removeUserFromChat(Long chatId, String userEmailToRemove);
+  void removeUserFromChat(Long chatId, String userEmailToRemove, String currentUserEmail);
 
-  ChatMemberDTO muteUser(Long chatId, String userEmailToMute, ZonedDateTime muteUntil);
+  ChatMemberDTO muteUser(Long chatId, String userEmailToMute,
+                         ZonedDateTime muteUntil, String currentUserEmail);
 
   void leaveChat(Long chatId, String userEmail);
 
-  ChatMemberDTO changeMemberRole(Long chatId, String userEmail, MemberRole newRole);
+  ChatMemberDTO changeMemberRole(Long chatId, String userEmail,
+                                 MemberRole newRole, String currentUserEmail);
 }

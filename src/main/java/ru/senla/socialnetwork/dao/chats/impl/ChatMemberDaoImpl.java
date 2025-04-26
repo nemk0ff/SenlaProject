@@ -102,4 +102,24 @@ public class ChatMemberDaoImpl extends HibernateAbstractDao<ChatMember> implemen
           "Ошибка при подсчете участников чата", e);
     }
   }
+
+  @Override
+  public long countByChatId(Long chatId) {
+    log.info("Подсчет общего количества участников чата {}", chatId);
+    try {
+      String hql = "SELECT COUNT(cm) FROM ChatMember cm " +
+          "WHERE cm.chat.id = :chatId";
+
+      Long count = sessionFactory.getCurrentSession()
+          .createQuery(hql, Long.class)
+          .setParameter("chatId", chatId)
+          .getSingleResult();
+
+      log.info("В чате {} найдено {} участников", chatId, count);
+      return count != null ? count : 0L;
+    } catch (Exception e) {
+      throw new DataRetrievalFailureException(
+          "Ошибка при подсчете участников чата", e);
+    }
+  }
 }

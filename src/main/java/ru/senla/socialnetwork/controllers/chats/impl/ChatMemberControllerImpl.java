@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,19 +39,22 @@ public class ChatMemberControllerImpl implements ChatMemberController {
       "AND authentication.name != userEmail")
   public ResponseEntity<Void> removeMember(
       @PathVariable Long chatId,
-      @PathVariable String userEmail) {
-    chatMemberService.removeUserFromChat(chatId, userEmail);
+      @PathVariable String userEmail,
+      Authentication auth) {
+    chatMemberService.removeUserFromChat(chatId, userEmail, auth.getName());
     return ResponseEntity.noContent().build();
   }
 
   @PostMapping("/{userEmail}/mute")
-  @PreAuthorize("@commonChatServiceImpl.isChatMember(#chatId, authentication.name)")
+  @PreAuthorize("@commonChatServiceImpl.isChatMember(#chatId, auth.name)")
   public ResponseEntity<ChatMemberDTO> muteMember(
       @PathVariable Long chatId,
       @PathVariable String userEmail,
       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-      ZonedDateTime muteUntil) {
-    return ResponseEntity.ok(chatMemberService.muteUser(chatId, userEmail, muteUntil));
+      ZonedDateTime muteUntil,
+      Authentication auth) {
+    return ResponseEntity.ok(chatMemberService.muteUser(
+        chatId, userEmail, muteUntil, auth.getName()));
   }
 
   @PostMapping("/leave")

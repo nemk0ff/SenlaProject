@@ -16,4 +16,6 @@ public interface ChatMemberDao extends GenericDao<ChatMember> {
   boolean existsByChatIdAndUserEmail(Long chatId, String userEmail);
 
   long countByChatIdAndRole(Long chatId, MemberRole role);
+
+  long countByChatId(Long chatId);
 }

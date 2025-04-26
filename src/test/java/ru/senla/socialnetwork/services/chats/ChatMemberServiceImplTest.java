@@ -20,6 +20,7 @@ import ru.senla.socialnetwork.dao.chats.ChatMemberDao;
 import ru.senla.socialnetwork.dto.chats.ChatMemberDTO;
 import ru.senla.socialnetwork.dto.mappers.ChatMemberMapper;
 import ru.senla.socialnetwork.exceptions.chats.ChatException;
+import ru.senla.socialnetwork.exceptions.chats.ChatMemberException;
 import ru.senla.socialnetwork.model.chats.Chat;
 import ru.senla.socialnetwork.model.chats.ChatMember;
 import ru.senla.socialnetwork.model.general.MemberRole;
@@ -83,6 +84,7 @@ class ChatMemberServiceImplTest {
     @Test
     void shouldSuccessfullyAddUserToChat() {
       when(commonChatService.getChat(1L)).thenReturn(testChat);
+      when(chatMemberDao.countByChatId(1L)).thenReturn(50L);
       when(commonChatService.isChatMember(1L, "user2@test.com")).thenReturn(false);
       when(commonService.getUserByEmail("user2@test.com")).thenReturn(testUser2);
       when(chatMemberDao.saveOrUpdate(any(ChatMember.class))).thenReturn(testMember2);
@@ -100,7 +102,25 @@ class ChatMemberServiceImplTest {
       when(commonChatService.getChat(1L)).thenReturn(testChat);
       when(commonChatService.isChatMember(1L, "user2@test.com")).thenReturn(true);
 
-      assertThrows(ChatException.class,
+      assertThrows(ChatMemberException.class,
+          () -> chatMemberService.addUserToChat(1L, "user2@test.com"));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenPersonalChat() {
+      testChat.setIsGroup(false);
+      when(commonChatService.getChat(1L)).thenReturn(testChat);
+
+      assertThrows(ChatMemberException.class,
+          () -> chatMemberService.addUserToChat(1L, "user2@test.com"));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTooManyMembers() {
+      when(commonChatService.getChat(1L)).thenReturn(testChat);
+      when(chatMemberDao.countByChatId(1L)).thenReturn(100L);
+
+      assertThrows(ChatMemberException.class,
           () -> chatMemberService.addUserToChat(1L, "user2@test.com"));
     }
   }
@@ -109,13 +129,55 @@ class ChatMemberServiceImplTest {
   class RemoveUserFromChatTests {
     @Test
     void shouldSuccessfullyRemoveUserFromChat() {
+      when(commonChatService.getChat(1L)).thenReturn(testChat);
       when(commonChatService.getMember(1L, "user2@test.com")).thenReturn(testMember2);
+      when(commonChatService.getMember(1L, "admin@test.com")).thenReturn(testMember1);
 
-      chatMemberService.removeUserFromChat(1L, "user2@test.com");
+      chatMemberService.removeUserFromChat(1L, "user2@test.com", "admin@test.com");
 
       verify(chatMemberDao).delete(testMember2);
     }
+
+    @Test
+    void shouldThrowExceptionWhenPersonalChat() {
+      testChat.setIsGroup(false);
+      when(commonChatService.getChat(1L)).thenReturn(testChat);
+
+      assertThrows(ChatMemberException.class,
+          () -> chatMemberService.removeUserFromChat(1L, "user2@test.com", "user1@test.com"));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenRemoveSelf() {
+      when(commonChatService.getChat(1L)).thenReturn(testChat);
+
+      assertThrows(ChatMemberException.class,
+          () -> chatMemberService.removeUserFromChat(1L, "user1@test.com", "user1@test.com"));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenRemoveAdmin() {
+      testMember2.setRole(MemberRole.ADMIN);
+      when(commonChatService.getChat(1L)).thenReturn(testChat);
+      when(commonChatService.getMember(1L, "admin@test.com")).thenReturn(testMember2);
+      when(commonChatService.getMember(1L, "user1@test.com")).thenReturn(testMember1);
+
+      assertThrows(ChatMemberException.class,
+          () -> chatMemberService.removeUserFromChat(1L, "admin@test.com", "user1@test.com"));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenNotEnoughPermissions() {
+      testMember1.setRole(MemberRole.MEMBER);
+      when(commonChatService.getChat(1L)).thenReturn(testChat);
+      when(commonChatService.getMember(1L, "user2@test.com")).thenReturn(testMember2);
+      when(commonChatService.getMember(1L, "user1@test.com")).thenReturn(testMember1);
+
+      assertThrows(ChatMemberException.class,
+          () -> chatMemberService.removeUserFromChat(1L, "user2@test.com", "user1@test.com"));
+    }
   }
+
 
   @Nested
   class MuteUserTests {
@@ -124,14 +186,35 @@ class ChatMemberServiceImplTest {
       ZonedDateTime muteUntil = ZonedDateTime.now().plusHours(1);
 
       when(commonChatService.getMember(1L, "user2@test.com")).thenReturn(testMember2);
+      when(commonChatService.getMember(1L, "admin@test.com")).thenReturn(testMember1);
       when(chatMemberDao.saveOrUpdate(testMember2)).thenReturn(testMember2);
       when(chatMemberMapper.memberToDTO(testMember2)).thenReturn(testMemberDTO);
 
-      ChatMemberDTO result = chatMemberService.muteUser(1L, "user2@test.com", muteUntil);
+      ChatMemberDTO result = chatMemberService.muteUser(1L, "user2@test.com", muteUntil, "admin@test.com");
 
       assertNotNull(result);
       assertEquals(muteUntil, testMember2.getMutedUntil());
       assertEquals(testMemberDTO, result);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenMuteNonMember() {
+      testMember2.setRole(MemberRole.ADMIN);
+      when(commonChatService.getMember(1L, "admin@test.com")).thenReturn(testMember2);
+      when(commonChatService.getMember(1L, "user1@test.com")).thenReturn(testMember1);
+
+      assertThrows(ChatMemberException.class,
+          () -> chatMemberService.muteUser(1L, "admin@test.com", ZonedDateTime.now(), "user1@test.com"));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenNotEnoughPermissions() {
+      testMember1.setRole(MemberRole.MEMBER);
+      when(commonChatService.getMember(1L, "user2@test.com")).thenReturn(testMember2);
+      when(commonChatService.getMember(1L, "user1@test.com")).thenReturn(testMember1);
+
+      assertThrows(ChatMemberException.class,
+          () -> chatMemberService.muteUser(1L, "user2@test.com", ZonedDateTime.now(), "user1@test.com"));
     }
   }
 
@@ -160,16 +243,56 @@ class ChatMemberServiceImplTest {
   @Nested
   class ChangeMemberRoleTests {
     @Test
-    void shouldSuccessfullyChangeRole() {
+    void shouldSuccessfullyChangeRoleByAdmin() {
       when(commonChatService.getMember(1L, "user2@test.com")).thenReturn(testMember2);
+      when(commonChatService.getMember(1L, "admin@test.com")).thenReturn(testMember1);
       when(chatMemberDao.saveOrUpdate(testMember2)).thenReturn(testMember2);
       when(chatMemberMapper.memberToDTO(testMember2)).thenReturn(testMemberDTO);
 
-      ChatMemberDTO result = chatMemberService.changeMemberRole(1L, "user2@test.com", MemberRole.ADMIN);
+      ChatMemberDTO result = chatMemberService.changeMemberRole(1L, "user2@test.com", MemberRole.MODERATOR, "admin@test.com");
 
       assertNotNull(result);
-      assertEquals(MemberRole.ADMIN, testMember2.getRole());
+      assertEquals(MemberRole.MODERATOR, testMember2.getRole());
       assertEquals(testMemberDTO, result);
+    }
+
+    @Test
+    void shouldSuccessfullyChangeRoleByModerator() {
+      testMember1.setRole(MemberRole.MODERATOR);
+      testMember2.setRole(MemberRole.MEMBER);
+
+      when(commonChatService.getMember(1L, "user2@test.com")).thenReturn(testMember2);
+      when(commonChatService.getMember(1L, "moderator@test.com")).thenReturn(testMember1);
+      when(chatMemberDao.saveOrUpdate(testMember2)).thenReturn(testMember2);
+      when(chatMemberMapper.memberToDTO(testMember2)).thenReturn(testMemberDTO);
+
+      ChatMemberDTO result = chatMemberService.changeMemberRole(1L, "user2@test.com", MemberRole.MODERATOR, "moderator@test.com");
+
+      assertNotNull(result);
+      assertEquals(MemberRole.MODERATOR, testMember2.getRole());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenChangeAdminRole() {
+      testMember2.setRole(MemberRole.ADMIN);
+      testMember1.setRole(MemberRole.MODERATOR);
+
+      when(commonChatService.getMember(1L, "admin@test.com")).thenReturn(testMember2);
+      when(commonChatService.getMember(1L, "moderator@test.com")).thenReturn(testMember1);
+
+      assertThrows(ChatMemberException.class,
+          () -> chatMemberService.changeMemberRole(1L, "admin@test.com", MemberRole.MEMBER, "moderator@test.com"));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenNotEnoughPermissions() {
+      testMember1.setRole(MemberRole.MEMBER);
+
+      when(commonChatService.getMember(1L, "user2@test.com")).thenReturn(testMember2);
+      when(commonChatService.getMember(1L, "user1@test.com")).thenReturn(testMember1);
+
+      assertThrows(ChatMemberException.class,
+          () -> chatMemberService.changeMemberRole(1L, "user2@test.com", MemberRole.MODERATOR, "user1@test.com"));
     }
   }
 }
