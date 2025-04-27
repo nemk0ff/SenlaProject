@@ -1,16 +1,12 @@
-package ru.senla.socialnetwork.model.chats;
+package ru.senla.socialnetwork.model.communities;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,25 +20,19 @@ import ru.senla.socialnetwork.model.general.MyEntity;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "chats")
-public final class Chat implements MyEntity {
+@Table(name = "communities")
+public final class Community implements MyEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private Long id;
 
-  @Column(name = "name")
+  @Column(name = "name", nullable = false, length = 32)
   private String name;
 
-  @Column(name = "is_group", nullable = false)
-  private Boolean isGroup;
+  @Column(name = "description", nullable = false, length = 1000)
+  private String description;
 
   @Column(name = "created_at")
-  private ZonedDateTime createdAt;
-
-  @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
-  private List<ChatMessage> messages = new ArrayList<>();
-
-  @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
-  private List<ChatMember> members = new ArrayList<>();
+  private ZonedDateTime created_at;
 }

@@ -21,7 +21,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.senla.socialnetwork.model.general.MyEntity;
 import ru.senla.socialnetwork.model.chats.ChatMember;
-import ru.senla.socialnetwork.model.chats.ChatMessage;
 
 @Getter
 @Setter
@@ -68,7 +67,4 @@ public final class User implements MyEntity {
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
   private List<ChatMember> chatMemberships = new ArrayList<>();
-
-  @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
-  private List<ChatMessage> messages = new ArrayList<>();
 }

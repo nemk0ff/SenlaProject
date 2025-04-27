@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.model.chats;
+package ru.senla.socialnetwork.model.communities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import ru.senla.socialnetwork.model.general.ContentFragment;
 import ru.senla.socialnetwork.model.general.GroupMember;
 
 @Getter
@@ -19,16 +18,15 @@ import ru.senla.socialnetwork.model.general.GroupMember;
 @AllArgsConstructor
 @SuperBuilder
 @Entity
-@DiscriminatorValue("MESSAGE")
-public final class ChatMessage extends ContentFragment {
+@DiscriminatorValue("COMMUNITY")
+public final class CommunityMember extends GroupMember {
   @ManyToOne
-  @JoinColumn(name = "author_id", nullable = false)
-  private ChatMember author;
+  @JoinColumn(name = "community_id")
+  private Community community;
 
-  @ManyToOne
-  @JoinColumn(name = "reply_to_id")
-  private ChatMessage replyTo;
+  @Column(name = "is_banned")
+  private Boolean isBanned;
 
-  @Column(name = "is_pinned")
-  private Boolean isPinned;
+  @Column(name = "banned_reason")
+  private String bannedReason;
 }

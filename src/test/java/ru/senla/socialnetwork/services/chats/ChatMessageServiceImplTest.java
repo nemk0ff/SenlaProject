@@ -1,7 +1,5 @@
 package ru.senla.socialnetwork.services.chats;
 
-import jakarta.validation.ConstraintViolationException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -49,7 +47,6 @@ class ChatMessageServiceImplTest {
   @InjectMocks
   private ChatMessageServiceImpl chatMessageService;
 
-  private User testUser;
   private Chat testChat;
   private ChatMember testMember;
   private ChatMessage testMessage;
@@ -58,7 +55,7 @@ class ChatMessageServiceImplTest {
 
   @BeforeEach
   void setUp() {
-    testUser = new User();
+    User testUser = new User();
     testUser.setEmail("user@test.com");
 
     testChat = new Chat();
@@ -75,16 +72,14 @@ class ChatMessageServiceImplTest {
 
     repliedMessage = ChatMessage.builder()
         .id(2L)
-        .chat(testChat)
-        .author(testUser)
+        .author(testMember)
         .body("Replied message")
         .createdAt(now.minusHours(1))
         .isPinned(false)
         .build();
     testMessage = ChatMessage.builder()
         .id(1L)
-        .chat(testChat)
-        .author(testUser)
+        .author(testMember)
         .body("Test message")
         .createdAt(now)
         .isPinned(false)
@@ -99,8 +94,6 @@ class ChatMessageServiceImplTest {
       CreateMessageDTO request = new CreateMessageDTO(
           "user@test.com", "Test message", null);
 
-      when(commonChatService.getChat(1L)).thenReturn(testChat);
-      when(commonService.getUserByEmail("user@test.com")).thenReturn(testUser);
       when(commonChatService.getMember(1L, "user@test.com")).thenReturn(testMember);
       when(chatMessageDao.saveOrUpdate(any(ChatMessage.class))).thenReturn(testMessage);
       when(chatMessageMapper.toDTO(testMessage)).thenReturn(new ChatMessageDTO(
@@ -120,8 +113,6 @@ class ChatMessageServiceImplTest {
       CreateMessageDTO request = new CreateMessageDTO(
           "user@test.com", "Test reply", 2L);
 
-      when(commonChatService.getChat(1L)).thenReturn(testChat);
-      when(commonService.getUserByEmail("user@test.com")).thenReturn(testUser);
       when(commonChatService.getMember(1L, "user@test.com")).thenReturn(testMember);
       when(chatMessageDao.find(2L)).thenReturn(Optional.of(repliedMessage));
       when(chatMessageDao.saveOrUpdate(any(ChatMessage.class))).thenReturn(testMessage);
@@ -143,8 +134,6 @@ class ChatMessageServiceImplTest {
       CreateMessageDTO request = new CreateMessageDTO(
           "user@test.com", "Test message", null);
 
-      when(commonChatService.getChat(1L)).thenReturn(testChat);
-      when(commonService.getUserByEmail("user@test.com")).thenReturn(testUser);
       when(commonChatService.getMember(1L, "user@test.com")).thenReturn(testMember);
 
       ChatMessageException exception = assertThrows(ChatMessageException.class,
@@ -158,8 +147,6 @@ class ChatMessageServiceImplTest {
       CreateMessageDTO request = new CreateMessageDTO(
           "user@test.com", "Test reply", 999L);
 
-      when(commonChatService.getChat(1L)).thenReturn(testChat);
-      when(commonService.getUserByEmail("user@test.com")).thenReturn(testUser);
       when(commonChatService.getMember(1L, "user@test.com")).thenReturn(testMember);
       when(chatMessageDao.find(999L)).thenReturn(Optional.empty());
 
@@ -220,14 +207,10 @@ class ChatMessageServiceImplTest {
 
     @Test
     void shouldThrowExceptionWhenMessageNotInChat() {
-      Chat otherChat = new Chat();
-      otherChat.setId(2L);
-      testMessage.setChat(otherChat);
-
       when(chatMessageDao.find(1L)).thenReturn(Optional.of(testMessage));
 
       ChatMessageException exception = assertThrows(ChatMessageException.class,
-          () -> chatMessageService.pinMessage(1L, 1L));
+          () -> chatMessageService.pinMessage(2L, 1L));
 
       assertEquals("Сообщение не принадлежит этому чату", exception.getMessage());
     }
@@ -277,7 +260,7 @@ class ChatMessageServiceImplTest {
     @Test
     void shouldSuccessfullyDeleteOwnMessage() {
       String currentUserEmail = "user@test.com";
-      testMessage.setAuthor(testUser);
+      testMessage.setAuthor(testMember);
 
       when(chatMessageDao.find(1L)).thenReturn(Optional.of(testMessage));
       when(commonChatService.getMember(1L, currentUserEmail)).thenReturn(testMember);
@@ -348,14 +331,10 @@ class ChatMessageServiceImplTest {
 
     @Test
     void shouldThrowExceptionWhenMessageNotInChat() {
-      Chat otherChat = new Chat();
-      otherChat.setId(2L);
-      testMessage.setChat(otherChat);
-
       when(chatMessageDao.find(1L)).thenReturn(Optional.of(testMessage));
 
       assertThrows(ChatMessageException.class,
-          () -> chatMessageService.deleteMessage(1L, 1L, "user@test.com"));
+          () -> chatMessageService.deleteMessage(2L, 1L, "user@test.com"));
     }
   }
 }

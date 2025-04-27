@@ -25,7 +25,7 @@ import ru.senla.socialnetwork.model.users.User;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "friendRequests")
+@Table(name = "friend_requests")
 public final class FriendRequest implements MyEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,17 +1,17 @@
-package ru.senla.socialnetwork.model.chats;
+package ru.senla.socialnetwork.model.users;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import ru.senla.socialnetwork.model.general.GroupMember;
+import ru.senla.socialnetwork.model.communities.Community;
+import ru.senla.socialnetwork.model.general.Post;
 
 @Getter
 @Setter
@@ -19,12 +19,15 @@ import ru.senla.socialnetwork.model.general.GroupMember;
 @AllArgsConstructor
 @SuperBuilder
 @Entity
-@DiscriminatorValue("CHAT")
-public final class ChatMember extends GroupMember {
+@DiscriminatorValue("COMMUNITY")
+public final class WallPost extends Post {
   @ManyToOne
-  @JoinColumn(name = "chat_id")
-  private Chat chat;
+  @JoinColumn(name = "community_id", nullable = false)
+  private Community community;
 
-  @Column(name = "muted_until")
-  private ZonedDateTime mutedUntil;
+  @Column(name = "mood")
+  private String mood;
+
+  @Column(name = "location")
+  private String location;
 }

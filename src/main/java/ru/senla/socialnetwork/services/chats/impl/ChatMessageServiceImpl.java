@@ -11,14 +11,11 @@ import ru.senla.socialnetwork.dto.chats.ChatMessageDTO;
 import ru.senla.socialnetwork.dto.chats.CreateMessageDTO;
 import ru.senla.socialnetwork.dto.mappers.ChatMessageMapper;
 import ru.senla.socialnetwork.exceptions.chats.ChatMessageException;
-import ru.senla.socialnetwork.model.chats.Chat;
 import ru.senla.socialnetwork.model.chats.ChatMember;
 import ru.senla.socialnetwork.model.chats.ChatMessage;
 import ru.senla.socialnetwork.model.general.MemberRole;
-import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.services.chats.ChatMessageService;
 import ru.senla.socialnetwork.services.chats.CommonChatService;
-import ru.senla.socialnetwork.services.common.CommonService;
 
 @Slf4j
 @Service
@@ -26,14 +23,11 @@ import ru.senla.socialnetwork.services.common.CommonService;
 @AllArgsConstructor
 public class ChatMessageServiceImpl implements ChatMessageService {
   private final CommonChatService commonChatService;
-  private final CommonService commonService;
   private final ChatMessageDao chatMessageDao;
   private final ChatMessageMapper chatMessageMapper;
 
   @Override
   public ChatMessageDTO sendMessage(Long chatId, String authorEmail, CreateMessageDTO request) {
-    Chat chat = commonChatService.getChat(chatId);
-    User author = commonService.getUserByEmail(authorEmail);
     ChatMember member = commonChatService.getMember(chatId, authorEmail);
 
     if (member.getMutedUntil() != null && member.getMutedUntil().isAfter(ZonedDateTime.now())) {
@@ -41,8 +35,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     }
 
     ChatMessage message = ChatMessage.builder()
-        .chat(chat)
-        .author(author)
+        .author(member)
         .body(request.body())
         .createdAt(ZonedDateTime.now())
         .isPinned(false)
@@ -96,7 +89,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     ChatMessage message = getMessage(chatId, messageId);
     ChatMember member = commonChatService.getMember(chatId, currentUserEmail);
 
-    if (!message.getAuthor().getEmail().equals(currentUserEmail)) {
+    if (!message.getAuthor().getUser().getEmail().equals(currentUserEmail)) {
       if (member.getRole() != MemberRole.ADMIN && member.getRole() != MemberRole.MODERATOR) {
         throw new ChatMessageException("Только автор, модератор или админ могут удалить сообщение");
       }
@@ -110,7 +103,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     ChatMessage message = chatMessageDao.find(messageId)
         .orElseThrow(() -> new ChatMessageException("Сообщение не найдено"));
 
-    if (!message.getChat().getId().equals(chatId)) {
+    if (!message.getAuthor().getChat().getId().equals(chatId)) {
       throw new ChatMessageException("Сообщение не принадлежит этому чату");
     }
     return message;
