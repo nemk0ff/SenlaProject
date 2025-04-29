@@ -18,7 +18,7 @@ import ru.senla.socialnetwork.model.general.Post;
 @AllArgsConstructor
 @SuperBuilder
 @Entity
-@DiscriminatorValue("COMMUNITY")
+@DiscriminatorValue("WALL")
 public final class WallPost extends Post {
   @ManyToOne
   @JoinColumn(name = "wall_owner_id", nullable = false)

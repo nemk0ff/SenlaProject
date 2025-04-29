@@ -39,9 +39,9 @@ public final class Chat implements MyEntity {
 
   @Column(name = "created_at")
   private ZonedDateTime createdAt;
-
-  @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
-  private List<ChatMessage> messages = new ArrayList<>();
+//
+//  @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
+//  private List<ChatMessage> messages = new ArrayList<>();
 
   @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
   private List<ChatMember> members = new ArrayList<>();

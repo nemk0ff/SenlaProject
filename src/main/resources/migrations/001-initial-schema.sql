@@ -70,35 +70,16 @@ CREATE TABLE IF NOT EXISTS posts (
 CREATE TABLE IF NOT EXISTS communities (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255),
+    owner_id INTEGER REFERENCES users(id),
     description VARCHAR(1000),
     type VARCHAR(32),
     created_at TIMESTAMP WITH TIME ZONE
     );
 
-ALTER TABLE group_members
-    ADD CONSTRAINT fk_group_members_chat
-        FOREIGN KEY (chat_id) REFERENCES chats(id);
-
-ALTER TABLE group_members
-    ADD CONSTRAINT fk_group_members_community
-        FOREIGN KEY (community_id) REFERENCES communities(id);
-
-ALTER TABLE content_fragments
-    ADD CONSTRAINT fk_content_fragments_chat
-        FOREIGN KEY (chat_id) REFERENCES chats(id);
-
-ALTER TABLE content_fragments
-    ADD CONSTRAINT fk_content_fragments_community
-        FOREIGN KEY (community_id) REFERENCES communities(id);
-
-ALTER TABLE posts
-    ADD CONSTRAINT fk_posts_community
-        FOREIGN KEY (community_id) REFERENCES communities(id);
-
---DROP TABLE content_fragments;
---DROP TABLE posts;
---DROP TABLE group_members;
---DROP TABLE chats;
+--DROP TABLE users CASCADE;
+--DROP TABLE content_fragments CASCADE;
+--DROP TABLE posts CASCADE;
+--DROP TABLE group_members CASCADE;
+--DROP TABLE chats CASCADE;
 --DROP TABLE communities;
 --DROP TABLE friend_requests;
---DROP TABLE users;

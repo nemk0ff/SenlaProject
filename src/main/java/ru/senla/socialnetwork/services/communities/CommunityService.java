@@ -1,12 +1,11 @@
 package ru.senla.socialnetwork.services.communities;
 
-import ru.senla.socialnetwork.dto.communitites.CommunityDTO;
-import ru.senla.socialnetwork.dto.communitites.CreateCommunityDTO;
+import ru.senla.socialnetwork.model.communities.Community;
 
 public interface CommunityService {
-  CommunityDTO create(CreateCommunityDTO communityDTO);
+  Community get(Long communityId);
 
-  void delete(Long communityId);
+  Community save(Community communityToSave);
 
-  CommunityDTO get(Long communityId);
+  void delete(Community communityToDelete);
 }
