@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.controllers;
+package ru.senla.socialnetwork.controllers.friendRequests;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;

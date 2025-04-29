@@ -33,7 +33,7 @@ public class ChatMessageControllerImpl implements ChatMessageController {
       @RequestBody @Valid CreateMessageDTO request) {
     log.info("Отправка сообщения в чат {} пользователем {}", chatId, request.senderEmail());
     return ResponseEntity.status(HttpStatus.CREATED)
-        .body(chatMessageService.sendMessage(chatId, request.senderEmail(), request));
+        .body(chatMessageService.send(chatId, request.senderEmail(), request));
   }
 
   @Override
@@ -41,7 +41,7 @@ public class ChatMessageControllerImpl implements ChatMessageController {
   @PreAuthorize("@commonChatServiceImpl.isChatMember(#chatId, authentication.name)")
   public ResponseEntity<?> getMessages(@PathVariable Long chatId) {
     log.info("Получение сообщений из чата {}", chatId);
-    return ResponseEntity.ok(chatMessageService.getMessages(chatId));
+    return ResponseEntity.ok(chatMessageService.getAll(chatId));
   }
 
   @Override
@@ -52,7 +52,7 @@ public class ChatMessageControllerImpl implements ChatMessageController {
       @PathVariable Long chatId,
       @PathVariable Long messageId) {
     log.info("Закрепление сообщения {} в чате {}", messageId, chatId);
-    return ResponseEntity.ok(chatMessageService.pinMessage(chatId, messageId));
+    return ResponseEntity.ok(chatMessageService.pin(chatId, messageId));
   }
 
   @Override
@@ -63,7 +63,7 @@ public class ChatMessageControllerImpl implements ChatMessageController {
       @PathVariable Long chatId,
       @PathVariable Long messageId) {
     log.info("Открепление сообщения {} в чате {}", messageId, chatId);
-    return ResponseEntity.ok(chatMessageService.unpinMessage(chatId, messageId));
+    return ResponseEntity.ok(chatMessageService.unpin(chatId, messageId));
   }
 
   @Override
@@ -75,7 +75,7 @@ public class ChatMessageControllerImpl implements ChatMessageController {
       Authentication authentication) {
     log.info("Удаление сообщения {} в чате {} пользователем {}",
         messageId, chatId, authentication.getName());
-    chatMessageService.deleteMessage(chatId, messageId, authentication.getName());
+    chatMessageService.delete(chatId, messageId, authentication.getName());
     return ResponseEntity.noContent().build();
   }
 }

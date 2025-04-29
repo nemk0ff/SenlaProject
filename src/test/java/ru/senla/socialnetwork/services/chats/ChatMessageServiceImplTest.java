@@ -99,7 +99,7 @@ class ChatMessageServiceImplTest {
       when(chatMessageMapper.toDTO(testMessage)).thenReturn(new ChatMessageDTO(
           1L, "Test message", "user@test.com", now, null, false));
 
-      ChatMessageDTO result = chatMessageService.sendMessage(
+      ChatMessageDTO result = chatMessageService.send(
           1L, "user@test.com", request);
 
       assertNotNull(result);
@@ -119,7 +119,7 @@ class ChatMessageServiceImplTest {
       when(chatMessageMapper.toDTO(testMessage)).thenReturn(new ChatMessageDTO
           (1L, "Test reply", "user@test.com", now, 2L, false));
 
-      ChatMessageDTO result = chatMessageService.sendMessage(
+      ChatMessageDTO result = chatMessageService.send(
           1L, "user@test.com", request);
 
       assertNotNull(result);
@@ -137,7 +137,7 @@ class ChatMessageServiceImplTest {
       when(commonChatService.getMember(1L, "user@test.com")).thenReturn(testMember);
 
       ChatMessageException exception = assertThrows(ChatMessageException.class,
-          () -> chatMessageService.sendMessage(1L, "user@test.com", request));
+          () -> chatMessageService.send(1L, "user@test.com", request));
 
       assertEquals("Вы замьючены до " + now.plusHours(1), exception.getMessage());
     }
@@ -151,7 +151,7 @@ class ChatMessageServiceImplTest {
       when(chatMessageDao.find(999L)).thenReturn(Optional.empty());
 
       assertThrows(ChatMessageException.class,
-          () -> chatMessageService.sendMessage(1L, "user@test.com", request));
+          () -> chatMessageService.send(1L, "user@test.com", request));
     }
   }
 
@@ -167,7 +167,7 @@ class ChatMessageServiceImplTest {
       when(chatMessageMapper.toDTO(repliedMessage)).thenReturn(new ChatMessageDTO(
           2L, "Replied message", "user@test.com", now.minusHours(1), null, false));
 
-      List<ChatMessageDTO> result = chatMessageService.getMessages(1L);
+      List<ChatMessageDTO> result = chatMessageService.getAll(1L);
 
       assertNotNull(result);
       assertEquals(2, result.size());
@@ -188,7 +188,7 @@ class ChatMessageServiceImplTest {
       when(chatMessageDao.saveOrUpdate(testMessage)).thenReturn(testMessage);
       when(chatMessageMapper.toDTO(testMessage)).thenReturn(pinnedMessageDTO);
 
-      ChatMessageDTO result = chatMessageService.pinMessage(1L, 1L);
+      ChatMessageDTO result = chatMessageService.pin(1L, 1L);
 
       assertTrue(result.isPinned());
       assertTrue(testMessage.getIsPinned());
@@ -201,7 +201,7 @@ class ChatMessageServiceImplTest {
       when(chatMessageDao.find(1L)).thenReturn(Optional.of(testMessage));
 
       ChatMessageException exception = assertThrows(ChatMessageException.class,
-          () -> chatMessageService.pinMessage(1L, 1L));
+          () -> chatMessageService.pin(1L, 1L));
       assertEquals("Это сообщение уже закреплено.", exception.getMessage());
     }
 
@@ -210,7 +210,7 @@ class ChatMessageServiceImplTest {
       when(chatMessageDao.find(1L)).thenReturn(Optional.of(testMessage));
 
       ChatMessageException exception = assertThrows(ChatMessageException.class,
-          () -> chatMessageService.pinMessage(2L, 1L));
+          () -> chatMessageService.pin(2L, 1L));
 
       assertEquals("Сообщение не принадлежит этому чату", exception.getMessage());
     }
@@ -228,7 +228,7 @@ class ChatMessageServiceImplTest {
       when(chatMessageDao.saveOrUpdate(testMessage)).thenReturn(testMessage);
       when(chatMessageMapper.toDTO(testMessage)).thenReturn(unpinnedMessageDTO);
 
-      ChatMessageDTO result = chatMessageService.unpinMessage(1L, 1L);
+      ChatMessageDTO result = chatMessageService.unpin(1L, 1L);
 
       assertFalse(result.isPinned());
       assertFalse(testMessage.getIsPinned());
@@ -241,7 +241,7 @@ class ChatMessageServiceImplTest {
       when(chatMessageDao.find(1L)).thenReturn(Optional.of(testMessage));
 
       ChatMessageException exception = assertThrows(ChatMessageException.class,
-          () -> chatMessageService.unpinMessage(1L, 1L));
+          () -> chatMessageService.unpin(1L, 1L));
 
       assertEquals("Это сообщение не закреплено.", exception.getMessage());
     }
@@ -251,7 +251,7 @@ class ChatMessageServiceImplTest {
       when(chatMessageDao.find(1L)).thenReturn(Optional.empty());
 
       assertThrows(ChatMessageException.class,
-          () -> chatMessageService.unpinMessage(1L, 1L));
+          () -> chatMessageService.unpin(1L, 1L));
     }
   }
 
@@ -265,7 +265,7 @@ class ChatMessageServiceImplTest {
       when(chatMessageDao.find(1L)).thenReturn(Optional.of(testMessage));
       when(commonChatService.getMember(1L, currentUserEmail)).thenReturn(testMember);
 
-      chatMessageService.deleteMessage(1L, 1L, currentUserEmail);
+      chatMessageService.delete(1L, 1L, currentUserEmail);
 
       verify(chatMessageDao).delete(testMessage);
     }
@@ -284,7 +284,7 @@ class ChatMessageServiceImplTest {
       when(chatMessageDao.find(1L)).thenReturn(Optional.of(testMessage));
       when(commonChatService.getMember(1L, adminEmail)).thenReturn(adminMember);
 
-      chatMessageService.deleteMessage(1L, 1L, adminEmail);
+      chatMessageService.delete(1L, 1L, adminEmail);
 
       verify(chatMessageDao).delete(testMessage);
     }
@@ -303,7 +303,7 @@ class ChatMessageServiceImplTest {
       when(chatMessageDao.find(1L)).thenReturn(Optional.of(testMessage));
       when(commonChatService.getMember(1L, adminEmail)).thenReturn(adminMember);
 
-      chatMessageService.deleteMessage(1L, 1L, adminEmail);
+      chatMessageService.delete(1L, 1L, adminEmail);
 
       verify(chatMessageDao).delete(testMessage);
     }
@@ -323,7 +323,7 @@ class ChatMessageServiceImplTest {
       when(commonChatService.getMember(1L, otherUserEmail)).thenReturn(otherMember);
 
       ChatMessageException exception = assertThrows(ChatMessageException.class,
-          () -> chatMessageService.deleteMessage(1L, 1L, otherUserEmail));
+          () -> chatMessageService.delete(1L, 1L, otherUserEmail));
 
       assertEquals("Только автор, модератор или админ могут удалить сообщение",
           exception.getMessage());
@@ -334,7 +334,7 @@ class ChatMessageServiceImplTest {
       when(chatMessageDao.find(1L)).thenReturn(Optional.of(testMessage));
 
       assertThrows(ChatMessageException.class,
-          () -> chatMessageService.deleteMessage(2L, 1L, "user@test.com"));
+          () -> chatMessageService.delete(2L, 1L, "user@test.com"));
     }
   }
 }

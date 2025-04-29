@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.controllers.impl;
+package ru.senla.socialnetwork.controllers.users.impl;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.senla.socialnetwork.controllers.UserController;
+import ru.senla.socialnetwork.controllers.users.UserController;
 import ru.senla.socialnetwork.dto.users.ChangeEmailDTO;
 import ru.senla.socialnetwork.dto.users.UserEditDTO;
 import ru.senla.socialnetwork.dto.mappers.UserMapper;

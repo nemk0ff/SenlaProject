@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.services.user;
+package ru.senla.socialnetwork.services.user.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.senla.socialnetwork.dao.UserDao;
+import ru.senla.socialnetwork.dao.users.UserDao;
 import ru.senla.socialnetwork.dto.users.UserEditDTO;
 import ru.senla.socialnetwork.dto.mappers.UserMapper;
 import ru.senla.socialnetwork.exceptions.users.EmailAlreadyExistsException;
@@ -16,6 +16,7 @@ import ru.senla.socialnetwork.exceptions.users.UserNotRegisteredException;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.model.users.Gender;
 import ru.senla.socialnetwork.services.common.CommonService;
+import ru.senla.socialnetwork.services.user.UserService;
 
 @Slf4j
 @Service

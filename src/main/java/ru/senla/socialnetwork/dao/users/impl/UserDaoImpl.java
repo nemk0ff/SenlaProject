@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.dao.impl;
+package ru.senla.socialnetwork.dao.users.impl;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -11,9 +11,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Repository;
+import ru.senla.socialnetwork.dao.HibernateAbstractDao;
+import ru.senla.socialnetwork.dao.users.UserDao;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.model.users.Gender;
-import ru.senla.socialnetwork.dao.UserDao;
 
 @Repository
 @Slf4j

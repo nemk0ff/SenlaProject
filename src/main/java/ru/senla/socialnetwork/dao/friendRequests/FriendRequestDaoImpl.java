@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.dao.impl;
+package ru.senla.socialnetwork.dao.friendRequests;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,10 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Repository;
+import ru.senla.socialnetwork.dao.HibernateAbstractDao;
 import ru.senla.socialnetwork.model.friendRequests.FriendRequest;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.model.friendRequests.FriendStatus;
-import ru.senla.socialnetwork.dao.FriendRequestDao;
 
 @Repository
 @Slf4j

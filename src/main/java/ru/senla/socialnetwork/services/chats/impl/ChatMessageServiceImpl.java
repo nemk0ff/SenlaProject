@@ -27,7 +27,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
   private final ChatMessageMapper chatMessageMapper;
 
   @Override
-  public ChatMessageDTO sendMessage(Long chatId, String authorEmail, CreateMessageDTO request) {
+  public ChatMessageDTO send(Long chatId, String authorEmail, CreateMessageDTO request) {
     ChatMember member = commonChatService.getMember(chatId, authorEmail);
 
     if (member.getMutedUntil() != null && member.getMutedUntil().isAfter(ZonedDateTime.now())) {
@@ -52,7 +52,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
   }
 
   @Override
-  public List<ChatMessageDTO> getMessages(Long chatId) {
+  public List<ChatMessageDTO> getAll(Long chatId) {
     List<ChatMessage> messages = chatMessageDao.findByChatId(chatId);
     return messages.stream()
         .map(chatMessageMapper::toDTO)
@@ -60,7 +60,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
   }
 
   @Override
-  public ChatMessageDTO pinMessage(Long chatId, Long messageId) {
+  public ChatMessageDTO pin(Long chatId, Long messageId) {
     ChatMessage message = getMessage(chatId, messageId);
 
     if (message.getIsPinned()) {
@@ -72,7 +72,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
   }
 
   @Override
-  public ChatMessageDTO unpinMessage(Long chatId, Long messageId) {
+  public ChatMessageDTO unpin(Long chatId, Long messageId) {
     ChatMessage message = getMessage(chatId, messageId);
 
     if (!message.getIsPinned()) {
@@ -85,7 +85,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
   }
 
   @Override
-  public void deleteMessage(Long chatId, Long messageId, String currentUserEmail) {
+  public void delete(Long chatId, Long messageId, String currentUserEmail) {
     ChatMessage message = getMessage(chatId, messageId);
     ChatMember member = commonChatService.getMember(chatId, currentUserEmail);
 

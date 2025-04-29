@@ -1,8 +1,8 @@
-package ru.senla.socialnetwork.dao;
+package ru.senla.socialnetwork.dao.friendRequests;
 
 import java.util.List;
 import java.util.Optional;
-import ru.senla.socialnetwork.model.chats.ChatMessage;
+import ru.senla.socialnetwork.dao.GenericDao;
 import ru.senla.socialnetwork.model.friendRequests.FriendRequest;
 import ru.senla.socialnetwork.model.users.User;
 

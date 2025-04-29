@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.senla.socialnetwork.dao.UserDao;
+import ru.senla.socialnetwork.dao.users.UserDao;
 import ru.senla.socialnetwork.dto.auth.AuthRequestDTO;
 import ru.senla.socialnetwork.dto.auth.AuthResponseDTO;
 import ru.senla.socialnetwork.dto.auth.RegisterDTO;

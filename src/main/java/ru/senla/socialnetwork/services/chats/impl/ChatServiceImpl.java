@@ -52,7 +52,7 @@ public class ChatServiceImpl implements ChatService {
     addMembersToChat(chat, request);
 
     log.info("Создан групповой чат {} пользователем {}", request.name(), request.creatorEmail());
-    return getChat(chat.getId());
+    return get(chat.getId());
   }
 
   @Override
@@ -80,12 +80,12 @@ public class ChatServiceImpl implements ChatService {
     chat.getMembers().addAll(chatMembers);
 
     log.info("Создан личный чат между {} и {}", creator.getEmail(), friend.getEmail());
-    return getChat(chat.getId());
+    return get(chat.getId());
   }
 
   @Override
   @Transactional
-  public void deleteChat(Long chatId) {
+  public void delete(Long chatId) {
     Chat chat = commonChatService.getChat(chatId);
 
     List<ChatMember> members = chatMemberDao.findMembersByChatId(chatId);
@@ -96,7 +96,7 @@ public class ChatServiceImpl implements ChatService {
 
   @Override
   @Transactional(readOnly = true)
-  public ChatDTO getChat(Long chatId) {
+  public ChatDTO get(Long chatId) {
     return chatMapper.chatToChatDTO(commonChatService.getChat(chatId));
   }
 

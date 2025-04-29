@@ -49,8 +49,8 @@ public class ChatControllerImpl implements ChatController {
       "or @chatMemberServiceImpl.isChatCreator(#chatId, authentication.name)")
   public ResponseEntity<?> deleteChat(@PathVariable Long chatId) {
     log.info("Удаление чата с ID {}", chatId);
-    String chatName = chatService.getChat(chatId).name();
-    chatService.deleteChat(chatId);
+    String chatName = chatService.get(chatId).name();
+    chatService.delete(chatId);
     return ResponseEntity.ok("Чат " + chatName + " удалён");
   }
 
@@ -58,6 +58,6 @@ public class ChatControllerImpl implements ChatController {
   @GetMapping("/{chatId}")
   public ResponseEntity<?> getChat(@PathVariable Long chatId) {
     log.info("Получение информации о чате с ID {}", chatId);
-    return ResponseEntity.ok(chatService.getChat(chatId));
+    return ResponseEntity.ok(chatService.get(chatId));
   }
 }

@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.controllers;
+package ru.senla.socialnetwork.controllers.auth;
 
 import org.springframework.http.ResponseEntity;
 import ru.senla.socialnetwork.dto.auth.AuthRequestDTO;

@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.controllers;
+package ru.senla.socialnetwork.controllers.users;
 
 import java.time.LocalDate;
 import org.springframework.http.ResponseEntity;

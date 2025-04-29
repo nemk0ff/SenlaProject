@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import ru.senla.socialnetwork.model.communities.Community;
 import ru.senla.socialnetwork.model.general.Post;
 
 @Getter
@@ -22,8 +21,8 @@ import ru.senla.socialnetwork.model.general.Post;
 @DiscriminatorValue("COMMUNITY")
 public final class WallPost extends Post {
   @ManyToOne
-  @JoinColumn(name = "community_id", nullable = false)
-  private Community community;
+  @JoinColumn(name = "wall_owner_id", nullable = false)
+  private User wall_owner;
 
   @Column(name = "mood")
   private String mood;

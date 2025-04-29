@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.controllers.impl;
+package ru.senla.socialnetwork.controllers.auth;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.senla.socialnetwork.controllers.AuthController;
 import ru.senla.socialnetwork.dto.auth.AuthRequestDTO;
 import ru.senla.socialnetwork.dto.auth.RegisterDTO;
 import ru.senla.socialnetwork.dto.mappers.UserMapper;

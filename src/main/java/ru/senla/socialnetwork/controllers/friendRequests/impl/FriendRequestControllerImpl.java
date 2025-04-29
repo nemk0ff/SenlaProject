@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.controllers.impl;
+package ru.senla.socialnetwork.controllers.friendRequests.impl;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.senla.socialnetwork.controllers.FriendRequestController;
+import ru.senla.socialnetwork.controllers.friendRequests.FriendRequestController;
 import ru.senla.socialnetwork.dto.friendRequests.RespondRequestDTO;
 import ru.senla.socialnetwork.dto.friendRequests.SendRequestDTO;
 import ru.senla.socialnetwork.dto.friendRequests.RemoveFriendRequestDTO;
