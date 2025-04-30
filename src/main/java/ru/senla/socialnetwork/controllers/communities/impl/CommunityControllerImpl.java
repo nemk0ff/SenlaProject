@@ -18,7 +18,6 @@ import ru.senla.socialnetwork.controllers.communities.CommunityController;
 import ru.senla.socialnetwork.dto.communitites.ChangeCommunityDTO;
 import ru.senla.socialnetwork.dto.communitites.CommunityDTO;
 import ru.senla.socialnetwork.dto.communitites.CreateCommunityDTO;
-import ru.senla.socialnetwork.dto.mappers.CommunityMapper;
 import ru.senla.socialnetwork.facade.communities.CommunityFacade;
 
 
@@ -48,7 +47,7 @@ public class CommunityControllerImpl implements CommunityController {
   @Override
   @GetMapping("/{id}")
   public ResponseEntity<CommunityDTO> get(@PathVariable Long id) {
-    CommunityDTO community = communityFacade.get(id);
+    CommunityDTO community = communityFacade.getAll(id);
     return ResponseEntity.ok(community);
   }
 

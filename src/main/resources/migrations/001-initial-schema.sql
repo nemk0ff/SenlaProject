@@ -76,10 +76,10 @@ CREATE TABLE IF NOT EXISTS communities (
     created_at TIMESTAMP WITH TIME ZONE
     );
 
---DROP TABLE users CASCADE;
---DROP TABLE content_fragments CASCADE;
---DROP TABLE posts CASCADE;
---DROP TABLE group_members CASCADE;
---DROP TABLE chats CASCADE;
---DROP TABLE communities;
---DROP TABLE friend_requests;
+-- DROP TABLE users CASCADE;
+-- DROP TABLE friend_requests CASCADE;
+-- DROP TABLE group_members CASCADE;
+-- DROP TABLE content_fragments CASCADE;
+-- DROP TABLE chats CASCADE;
+-- DROP TABLE communities CASCADE;
+-- DROP TABLE posts;

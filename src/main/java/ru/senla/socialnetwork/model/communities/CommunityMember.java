@@ -25,7 +25,7 @@ public final class CommunityMember extends GroupMember {
   private Community community;
 
   @Column(name = "is_banned")
-  private Boolean isBanned;
+  private Boolean isBanned = false;
 
   @Column(name = "banned_reason")
   private String bannedReason;

@@ -2,11 +2,9 @@ package ru.senla.socialnetwork.dto.communitites;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import ru.senla.socialnetwork.model.communities.CommunityType;
 
 public record CreateCommunityDTO(
     @Email @NotBlank String owner,
     @NotBlank(message = "Введите название сообщества") String name,
-    String description,
-    CommunityType type) {
+    String description) {
 }

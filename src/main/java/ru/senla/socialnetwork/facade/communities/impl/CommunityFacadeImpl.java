@@ -1,6 +1,7 @@
 package ru.senla.socialnetwork.facade.communities.impl;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,6 @@ import ru.senla.socialnetwork.dto.communitites.CreateCommunityDTO;
 import ru.senla.socialnetwork.dto.mappers.CommunityMapper;
 import ru.senla.socialnetwork.facade.communities.CommunityFacade;
 import ru.senla.socialnetwork.model.communities.Community;
-import ru.senla.socialnetwork.model.communities.CommunityType;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.services.common.CommonService;
 import ru.senla.socialnetwork.services.communities.CommunityService;
@@ -32,8 +32,6 @@ public class CommunityFacadeImpl implements CommunityFacade {
         .owner(owner)
         .name(communityDTO.name())
         .description(communityDTO.description())
-        .type(communityDTO.type() == null ?
-            CommunityType.OPEN : communityDTO.type())
         .created_at(ZonedDateTime.now())
         .build();
 
@@ -50,19 +48,23 @@ public class CommunityFacadeImpl implements CommunityFacade {
   }
 
   @Override
-  public CommunityDTO get(Long communityId) {
+  public CommunityDTO getAll(Long communityId) {
     log.debug("Получение сообщества #{}", communityId);
 
     return CommunityMapper.INSTANCE.toDTO(communityService.get(communityId));
   }
 
   @Override
+  public List<CommunityDTO> getAll() {
+    List<Community> communities = communityService.getAll();
+    return CommunityMapper.INSTANCE.toListDTO(communities);
+  }
+  @Override
   public CommunityDTO change(ChangeCommunityDTO communityDTO) {
     Community community = communityService.get(communityDTO.id());
 
     community.setName(communityDTO.name());
     community.setDescription(communityDTO.description());
-    community.setType(communityDTO.type());
 
     Community updatedCommunity = communityService.save(community);
     return CommunityMapper.INSTANCE.toDTO(updatedCommunity);

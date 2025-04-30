@@ -2,6 +2,7 @@ package ru.senla.socialnetwork.services.communities.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.time.ZonedDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,11 @@ public class CommunityServiceImpl implements CommunityService {
   public Community get(Long communityId) {
     return communityDao.find(communityId).orElseThrow(
         () -> new EntityNotFoundException("Сообщество не найдено"));
+  }
+
+  @Override
+  public List<Community> getAll() {
+    return communityDao.getAll();
   }
 
   @Override
