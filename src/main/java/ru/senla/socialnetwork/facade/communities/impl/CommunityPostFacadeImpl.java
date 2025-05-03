@@ -9,7 +9,7 @@ import ru.senla.socialnetwork.dto.communitites.CommunityPostDTO;
 import ru.senla.socialnetwork.dto.communitites.CreateCommunityPostDTO;
 import ru.senla.socialnetwork.dto.communitites.UpdateCommunityPostDTO;
 import ru.senla.socialnetwork.dto.mappers.CommunityPostMapper;
-import ru.senla.socialnetwork.exceptions.communities.CommunityException;
+import ru.senla.socialnetwork.exceptions.communities.CommunityPostException;
 import ru.senla.socialnetwork.facade.communities.CommunityPostFacade;
 import ru.senla.socialnetwork.model.communities.CommunityMember;
 import ru.senla.socialnetwork.model.communities.CommunityPost;
@@ -61,7 +61,7 @@ public class CommunityPostFacadeImpl implements CommunityPostFacade {
     CommunityPost post = communityPostService.getPost(communityId, postId);
 
     if(member.getRole().equals(MemberRole.MEMBER) && post.getAuthor().equals(member)) {
-      throw new CommunityException("Недостаточно прав для управления этим постом");
+      throw new CommunityPostException("Недостаточно прав для управления этим постом");
     }
   }
 

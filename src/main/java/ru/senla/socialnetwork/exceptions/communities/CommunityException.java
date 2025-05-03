@@ -1,18 +1,13 @@
 package ru.senla.socialnetwork.exceptions.communities;
 
-import lombok.Getter;
+import ru.senla.socialnetwork.exceptions.SocialNetworkException;
 
-@Getter
-public class CommunityException extends RuntimeException {
-  private final String action;
-
-  public CommunityException(String message, String action) {
-    super(message);
-    this.action = action;
+public class CommunityException extends SocialNetworkException {
+  public CommunityException(String message) {
+    super(message, "Ошибка при действии с сообществом");
   }
 
-  public CommunityException(String message) {
-    super(message);
-    action = "Ошибка при действии с сообществом";
+  public CommunityException(String message, String action) {
+    super(message, action);
   }
 }

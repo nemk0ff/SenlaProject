@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import ru.senla.socialnetwork.dao.communities.CommunityPostDao;
 import ru.senla.socialnetwork.dto.communitites.CreateCommunityPostDTO;
 import ru.senla.socialnetwork.dto.communitites.UpdateCommunityPostDTO;
-import ru.senla.socialnetwork.exceptions.communities.CommunityException;
+import ru.senla.socialnetwork.exceptions.communities.CommunityPostException;
 import ru.senla.socialnetwork.model.communities.CommunityMember;
 import ru.senla.socialnetwork.model.communities.CommunityPost;
 import ru.senla.socialnetwork.services.communities.CommunityPostService;
@@ -19,7 +19,6 @@ import ru.senla.socialnetwork.services.communities.CommunityPostService;
 @AllArgsConstructor
 public class CommunityPostServiceImpl implements CommunityPostService {
   private final CommunityPostDao communityPostDao;
-  private final CommunityServiceImpl communityServiceImpl;
 
   @Override
   public List<CommunityPost> getAllPosts(Long communityId) {
@@ -32,7 +31,7 @@ public class CommunityPostServiceImpl implements CommunityPostService {
         .orElseThrow(() -> new EntityNotFoundException("Пост не найден"));
 
     if (!post.getCommunity().getId().equals(communityId)) {
-      throw new CommunityException("Пост не принадлежит этому сообществу");
+      throw new CommunityPostException("Пост не принадлежит этому сообществу");
     }
     return post;
   }

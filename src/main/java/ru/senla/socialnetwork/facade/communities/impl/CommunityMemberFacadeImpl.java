@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.senla.socialnetwork.dto.communitites.CommunityMemberDTO;
 import ru.senla.socialnetwork.dto.mappers.CommunityMemberMapper;
-import ru.senla.socialnetwork.exceptions.communities.CommunityException;
+import ru.senla.socialnetwork.exceptions.communities.CommunityMemberException;
 import ru.senla.socialnetwork.facade.communities.CommunityMemberFacade;
 import ru.senla.socialnetwork.model.communities.Community;
 import ru.senla.socialnetwork.model.communities.CommunityMember;
@@ -41,7 +41,7 @@ public class CommunityMemberFacadeImpl implements CommunityMemberFacade {
     log.info("Найдены user={} и community={}", user.getId(), community.getId());
 
     if(communityMemberService.isMember(communityId, user.getId())) {
-      throw new CommunityException(userEmail + " уже является участником сообщества");
+      throw new CommunityMemberException(userEmail + " уже является участником сообщества");
     }
     return CommunityMemberMapper.INSTANCE
         .toDTO(communityMemberService.joinCommunity(community, user));
