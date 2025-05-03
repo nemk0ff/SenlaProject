@@ -6,17 +6,17 @@ import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.model.friendRequests.FriendStatus;
 
 public interface FriendRequestService {
-  List<FriendRequest> getAllByUser(String userEmail);
+  List<FriendRequest> getAllByUser(Long userId);
 
-  List<User> getFriendsByUser(String userEmail);
+  List<User> getFriendsByUser(Long userId);
 
-  List<FriendRequest> getIncomingRequests(String userEmail, FriendStatus status);
+  List<FriendRequest> getIncomingRequests(Long userId, FriendStatus status);
 
-  List<FriendRequest> getOutgoingRequests(String userEmail);
+  List<FriendRequest> getOutgoingRequests(Long userId);
 
-  FriendRequest sendRequest(String senderEmail, String recipientEmail);
+  FriendRequest sendRequest(User sender, User recipient);
 
-  FriendRequest replyToRequest(String senderEmail, String recipientEmail, FriendStatus status);
+  FriendRequest replyToRequest(User sender, User recipient, FriendStatus status);
 
-  void unfriend(String userEmail, String unfriendEmail);
+  void unfriend(User user, User unfriend);
 }

@@ -15,59 +15,49 @@ import ru.senla.socialnetwork.exceptions.friendRequests.SelfFriendshipException;
 import ru.senla.socialnetwork.model.friendRequests.FriendRequest;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.model.friendRequests.FriendStatus;
-import ru.senla.socialnetwork.services.common.CommonService;
 
 @Slf4j
 @Service
 @Transactional
 @AllArgsConstructor
 public class FriendRequestServiceImpl implements FriendRequestService {
-  private final CommonService commonService;
   private final FriendRequestDao friendRequestDao;
 
   @Transactional(readOnly = true)
   @Override
-  public List<FriendRequest> getAllByUser(String userEmail) {
-    User user = commonService.getUserByEmail(userEmail);
-    return friendRequestDao.getAllByUserId(user.getId());
+  public List<FriendRequest> getAllByUser(Long userId) {
+    return friendRequestDao.getAllByUserId(userId);
   }
 
   @Transactional(readOnly = true)
   @Override
-  public List<User> getFriendsByUser(String userEmail) {
-    User user = commonService.getUserByEmail(userEmail);
-    return friendRequestDao.findFriendsByUserId(user.getId());
+  public List<User> getFriendsByUser(Long userId) {
+    return friendRequestDao.findFriendsByUserId(userId);
   }
 
   @Transactional(readOnly = true)
   @Override
-  public List<FriendRequest> getIncomingRequests(String userEmail, FriendStatus status) {
-    return getAllByUser(userEmail)
+  public List<FriendRequest> getIncomingRequests(Long userId, FriendStatus status) {
+    return getAllByUser(userId)
         .stream()
-        .filter(request -> request.getRecipient().getEmail().equals(userEmail)
+        .filter(request -> request.getRecipient().getId().equals(userId)
             && request.getStatus().equals(status))
         .toList();
   }
 
   @Transactional(readOnly = true)
   @Override
-  public List<FriendRequest> getOutgoingRequests(String userEmail) {
-    return getAllByUser(userEmail)
+  public List<FriendRequest> getOutgoingRequests(Long userId) {
+    return getAllByUser(userId)
         .stream()
-        .filter(request -> request.getSender().getEmail().equals(userEmail)
+        .filter(request -> request.getSender().getId().equals(userId)
             && !request.getStatus().equals(FriendStatus.ACCEPTED))
         .toList();
   }
 
   @Transactional
   @Override
-  public FriendRequest sendRequest(String senderEmail, String recipientEmail) {
-    if (senderEmail.equals(recipientEmail)) {
-      throw new SelfFriendshipException();
-    }
-    User sender = commonService.getUserByEmail(senderEmail);
-    User recipient = commonService.getUserByEmail(recipientEmail);
-
+  public FriendRequest sendRequest(User sender, User recipient) {
     Optional<FriendRequest> optionalRequest = friendRequestDao.getByUsersIds(sender.getId(),
         recipient.getId(), false);
     if (optionalRequest.isEmpty()) {
@@ -78,9 +68,8 @@ public class FriendRequestServiceImpl implements FriendRequestService {
           .createdAt(LocalDateTime.now())
           .build());
     }
-
     FriendRequest request = handleExistingRequest(optionalRequest.get(),
-        senderEmail, recipientEmail);
+        sender.getEmail(), recipient.getEmail());
     return friendRequestDao.saveOrUpdate(request);
   }
 
@@ -102,20 +91,14 @@ public class FriendRequestServiceImpl implements FriendRequestService {
 
   @Transactional
   @Override
-  public FriendRequest replyToRequest(String senderEmail, String recipientEmail, FriendStatus status) {
-    if (status != FriendStatus.ACCEPTED && status != FriendStatus.REJECTED) {
-      throw new IllegalArgumentException("Недопустимый статус для ответа: " + status);
-    }
-    User sender = commonService.getUserByEmail(senderEmail);
-    User recipient = commonService.getUserByEmail(recipientEmail);
-
+  public FriendRequest replyToRequest(User sender, User recipient, FriendStatus status) {
     Optional<FriendRequest> optionalRequest = friendRequestDao.getByUsersIds(sender.getId(),
         recipient.getId(), true);
     if (optionalRequest.isEmpty()) {
       throw new FriendRequestException(
-          "У вас нет активных запросов на дружбу от " + senderEmail);
+          "У вас нет активных запросов на дружбу от " + sender.getEmail());
     } else if (optionalRequest.get().getStatus().equals(FriendStatus.ACCEPTED)) {
-      throw new AlreadyFriendsException(recipientEmail);
+      throw new AlreadyFriendsException(recipient.getEmail());
     }
 
     FriendRequest repliedRequest = optionalRequest.get();
@@ -125,14 +108,11 @@ public class FriendRequestServiceImpl implements FriendRequestService {
 
   @Transactional
   @Override
-  public void unfriend(String userEmail, String unfriendEmail) {
-    User user = commonService.getUserByEmail(userEmail);
-    User unfriend = commonService.getUserByEmail(unfriendEmail);
-
+  public void unfriend(User user, User unfriend) {
     Optional<FriendRequest> friendship = friendRequestDao.getByUsersIds(
         user.getId(), unfriend.getId(), false);
     if (friendship.isEmpty() || !friendship.get().getStatus().equals(FriendStatus.ACCEPTED)) {
-      throw new FriendRequestException(unfriendEmail + " не является другом " + userEmail);
+      throw new FriendRequestException(unfriend.getEmail() + " не является другом " + user.getEmail());
     }
     friendRequestDao.delete(friendship.get());
   }

@@ -13,8 +13,8 @@ import ru.senla.socialnetwork.dto.mappers.CommunityMapper;
 import ru.senla.socialnetwork.facades.communities.CommunityFacade;
 import ru.senla.socialnetwork.model.communities.Community;
 import ru.senla.socialnetwork.model.users.User;
-import ru.senla.socialnetwork.services.common.CommonService;
 import ru.senla.socialnetwork.services.communities.CommunityService;
+import ru.senla.socialnetwork.services.user.UserService;
 
 @Service
 @Transactional
@@ -22,14 +22,14 @@ import ru.senla.socialnetwork.services.communities.CommunityService;
 @Slf4j
 public class CommunityFacadeImpl implements CommunityFacade {
   private final CommunityService communityService;
-  private final CommonService commonService;
+  private final UserService userService;
 
   @Override
   @Transactional
   public CommunityDTO create(CreateCommunityDTO communityDTO) {
     log.debug("Создание нового сообщества #{}", communityDTO);
 
-    User owner = commonService.getUserByEmail(communityDTO.owner());
+    User owner = userService.getUserByEmail(communityDTO.owner());
 
     Community community = Community.builder()
         .owner(owner)

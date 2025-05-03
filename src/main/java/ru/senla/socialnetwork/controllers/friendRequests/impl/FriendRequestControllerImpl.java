@@ -18,29 +18,27 @@ import ru.senla.socialnetwork.controllers.friendRequests.FriendRequestController
 import ru.senla.socialnetwork.dto.friendRequests.RespondRequestDTO;
 import ru.senla.socialnetwork.dto.friendRequests.SendRequestDTO;
 import ru.senla.socialnetwork.dto.friendRequests.RemoveFriendRequestDTO;
-import ru.senla.socialnetwork.dto.mappers.FriendRequestMapper;
+import ru.senla.socialnetwork.facades.friendRequests.FriendRequestFacade;
 import ru.senla.socialnetwork.model.friendRequests.FriendStatus;
-import ru.senla.socialnetwork.services.friendRequest.FriendRequestService;
 
 @Slf4j
 @RestController
 @AllArgsConstructor
 @RequestMapping("/friends")
 public class FriendRequestControllerImpl implements FriendRequestController {
-  private final FriendRequestService friendRequestService;
+  private final FriendRequestFacade friendRequestFacade;
 
   @Override
   @GetMapping
   public ResponseEntity<?> showFriends(String userEmail) {
-    return ResponseEntity.ok(friendRequestService.getFriendsByUser(userEmail));
+    return ResponseEntity.ok(friendRequestFacade.getFriendsByUser(userEmail));
   }
 
   @Override
   @GetMapping("/outgoing_requests")
   @PreAuthorize("hasRole('ADMIN') or #userEmail == authentication.name")
   public ResponseEntity<?> showOutgoingRequests(String userEmail) {
-    return ResponseEntity.ok(FriendRequestMapper.INSTANCE
-        .toListDTO(friendRequestService.getOutgoingRequests(userEmail)));
+    return ResponseEntity.ok(friendRequestFacade.getOutgoingRequests(userEmail));
   }
 
   @Override
@@ -49,26 +47,23 @@ public class FriendRequestControllerImpl implements FriendRequestController {
   public ResponseEntity<?> showIncomingRequests(
       @RequestParam @Email String recipientEmail,
       @RequestParam @NotNull FriendStatus status) {
-    return ResponseEntity.ok(FriendRequestMapper.INSTANCE
-        .toListDTO(friendRequestService.getIncomingRequests(recipientEmail, status)));
+    return ResponseEntity.ok(friendRequestFacade.getIncomingRequests(recipientEmail, status));
   }
 
   @Override
   @PostMapping("/send")
   @PreAuthorize("hasRole('ADMIN') or #request.senderEmail == authentication.name")
   public ResponseEntity<?> sendRequest(@RequestBody @Valid SendRequestDTO request) {
-    return ResponseEntity.ok(FriendRequestMapper.INSTANCE
-        .toDto(friendRequestService.sendRequest(request.senderEmail(),
-            request.recipientEmail())));
+    return ResponseEntity.ok(friendRequestFacade.sendRequest(request.senderEmail(),
+        request.recipientEmail()));
   }
 
   @Override
   @PostMapping("/respond")
   @PreAuthorize("hasRole('ADMIN') or #request.recipientEmail == authentication.name")
   public ResponseEntity<?> respondRequest(@RequestBody @Valid RespondRequestDTO request) {
-    return ResponseEntity.ok(FriendRequestMapper.INSTANCE
-        .toDto(friendRequestService.replyToRequest(request.senderEmail(),
-            request.recipientEmail(), request.status())));
+    return ResponseEntity.ok(friendRequestFacade.replyToRequest(request.senderEmail(),
+            request.recipientEmail(), request.status()));
   }
 
   @Override
@@ -76,7 +71,7 @@ public class FriendRequestControllerImpl implements FriendRequestController {
   @PreAuthorize("hasRole('ADMIN') or #request.userEmail == authentication.name")
   public ResponseEntity<?> removeFriend(
       @RequestBody @Valid RemoveFriendRequestDTO request) {
-    friendRequestService.unfriend(request.userEmail(), request.friendEmail());
+    friendRequestFacade.unfriend(request.userEmail(), request.friendEmail());
     return ResponseEntity.ok(request.friendEmail() + " удалён из списка друзей "
         + request.userEmail());
   }
