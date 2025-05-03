@@ -16,5 +16,5 @@ public interface CommunityPostService {
 
   List<CommunityPost> getAllPosts(Long communityId);
 
-
+  CommunityPost getPost(Long communityId, Long postId);
 }

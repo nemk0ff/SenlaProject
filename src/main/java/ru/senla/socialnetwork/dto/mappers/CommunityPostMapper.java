@@ -12,7 +12,8 @@ import ru.senla.socialnetwork.model.communities.CommunityPost;
 public interface CommunityPostMapper {
   CommunityPostMapper INSTANCE = Mappers.getMapper(CommunityPostMapper.class);
 
-  @Mapping(target = "community", source = "community.email")
+  @Mapping(target = "communityId", source = "community.id")
+  @Mapping(target = "authorId", source = "author.id")
   CommunityPostDTO toDTO(CommunityPost post);
 
   List<CommunityPostDTO> toListDTO(List<CommunityPost> posts);

@@ -18,7 +18,7 @@ public class CommunityPostDaoImpl extends HibernateAbstractDao<CommunityPost> im
   @Override
   public List<CommunityPost> findAllByCommunity(Long communityId) {
     return sessionFactory.getCurrentSession()
-        .createQuery("FROM CommunityPost cp WHERE cp.author_id.community.id = :communityId",
+        .createQuery("FROM CommunityPost cp WHERE cp.community.id = :communityId",
             CommunityPost.class)
         .setParameter("communityId", communityId)
         .getResultList();

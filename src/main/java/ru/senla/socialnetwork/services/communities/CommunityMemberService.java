@@ -17,6 +17,8 @@ public interface CommunityMemberService {
 
   CommunityMember banMember(CommunityMember member, String reason);
 
+  CommunityMember unbanMember(CommunityMember member);
+
   CommunityMember changeMemberRole(CommunityMember member, MemberRole role);
 
   boolean isMember(Long communityId, Long userId);

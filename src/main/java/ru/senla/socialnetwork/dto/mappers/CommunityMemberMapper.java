@@ -11,7 +11,8 @@ import ru.senla.socialnetwork.model.communities.CommunityMember;
 public interface CommunityMemberMapper {
   CommunityMemberMapper INSTANCE = Mappers.getMapper(CommunityMemberMapper.class);
 
-  @Mapping(target = "community", source = "community.email")
+  @Mapping(target = "communityId", source = "community.id")
+  @Mapping(target = "email", source = "user.email")
   CommunityMemberDTO toDTO(CommunityMember member);
 
   List<CommunityMemberDTO> toListDTO(List<CommunityMember> members);

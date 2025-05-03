@@ -43,10 +43,6 @@ public final class Community implements MyEntity {
   @Column(name = "description", nullable = false, length = 1000)
   private String description;
 
-//  @Enumerated(EnumType.STRING)
-//  @Column(nullable = false)
-//  private CommunityType type;
-
   @Column(name = "created_at")
   private ZonedDateTime created_at;
 }

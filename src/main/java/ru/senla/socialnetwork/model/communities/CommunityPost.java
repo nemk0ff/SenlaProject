@@ -3,6 +3,7 @@ package ru.senla.socialnetwork.model.communities;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
@@ -26,7 +27,11 @@ import ru.senla.socialnetwork.model.general.Post;
 public final class CommunityPost extends Post {
   @OneToOne
   @JoinColumn(name = "author_id", nullable = false)
-  private CommunityMember author_id;
+  private CommunityMember author;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "community_id", nullable = false)
+  private Community community;
 
   @JdbcTypeCode(SqlTypes.ARRAY)
   @Column(name = "tags", columnDefinition = "text[]")

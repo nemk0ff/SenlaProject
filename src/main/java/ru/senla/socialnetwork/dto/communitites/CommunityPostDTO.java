@@ -6,10 +6,9 @@ import java.util.List;
 public record CommunityPostDTO(
     Long id,
     Long authorId,
-    String authorName,
+    Long communityId,
     String body,
     List<String> tags,
     ZonedDateTime createdAt,
-    boolean isPinned
-) {
+    boolean isPinned) {
 }

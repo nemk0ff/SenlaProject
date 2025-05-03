@@ -1,16 +1,14 @@
 package ru.senla.socialnetwork.dto.communitites;
 
 import java.time.ZonedDateTime;
-import ru.senla.socialnetwork.model.communities.Community;
 import ru.senla.socialnetwork.model.general.MemberRole;
-import ru.senla.socialnetwork.model.users.User;
 
 public record CommunityMemberDTO(
     Long id,
-    User user,
+    String email,
     ZonedDateTime joinDate,
     MemberRole role,
-    Community community,
+    Long communityId,
     Boolean isBanned,
     String bannedReason) {
 }

@@ -13,7 +13,13 @@ public interface CommunityMemberFacade {
 
   CommunityMemberDTO banMember(Long communityId, String userEmail, String reason);
 
+  CommunityMemberDTO unbanMember(Long communityId, String userEmail);
+
   CommunityMemberDTO changeMemberRole(Long communityId, String userEmail, MemberRole role);
 
   boolean isBanned(Long communityId, String userEmail);
+
+  boolean isAdmin(Long communityId, String userEmail);
+
+  boolean isModerator(Long communityId, String userEmail);
 }

@@ -10,7 +10,7 @@ public interface CommunityFacade {
 
   void delete(Long communityId);
 
-  CommunityDTO getAll(Long communityId);
+  CommunityDTO get(Long communityId);
 
   List<CommunityDTO> getAll();
 

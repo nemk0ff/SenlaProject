@@ -10,9 +10,11 @@ public interface CommunityMemberController {
 
   ResponseEntity<CommunityMemberDTO> joinCommunity(Long communityId, String userEmail);
 
-  ResponseEntity<Void> leaveCommunity(Long communityId, String userEmail);
+  ResponseEntity<String> leaveCommunity(Long communityId, String userEmail);
 
   ResponseEntity<CommunityMemberDTO> banMember(Long communityId, String userEmail, String reason);
+
+  ResponseEntity<CommunityMemberDTO> unbanMember(Long communityId, String email);
 
   ResponseEntity<CommunityMemberDTO> changeMemberRole(Long communityId, String userEmail, MemberRole role);
 }

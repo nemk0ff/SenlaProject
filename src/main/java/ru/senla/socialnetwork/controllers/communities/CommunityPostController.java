@@ -10,7 +10,7 @@ public interface CommunityPostController {
   ResponseEntity<CommunityPostDTO> create(
       Long communityId, CreateCommunityPostDTO dto, String authorEmail);
 
-  ResponseEntity<Void> delete(Long communityId, Long postId, String memberEmail);
+  ResponseEntity<String> delete(Long communityId, Long postId, String memberEmail);
 
   ResponseEntity<CommunityPostDTO> update(Long communityId, Long postId,
       UpdateCommunityPostDTO dto, String memberEmail);

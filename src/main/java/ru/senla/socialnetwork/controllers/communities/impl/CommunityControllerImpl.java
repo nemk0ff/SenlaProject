@@ -30,7 +30,7 @@ public class CommunityControllerImpl implements CommunityController {
 
   @Override
   @PostMapping
-  @PreAuthorize("hasRole('ADMIN') or #dto.owner() == authentication.name")
+  @PreAuthorize("#dto.owner() == authentication.name")
   public ResponseEntity<CommunityDTO> create(@Valid @RequestBody CreateCommunityDTO dto) {
     CommunityDTO created = communityFacade.create(dto);
     return ResponseEntity.status(HttpStatus.CREATED).body(created);
@@ -38,23 +38,22 @@ public class CommunityControllerImpl implements CommunityController {
 
   @Override
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasRole('ADMIN') or #communityServiceImpl.get(id).owner() == authentication.name")
-  public ResponseEntity<Void> delete(@PathVariable Long id) {
+  @PreAuthorize("hasRole('ADMIN') or @communityFacadeImpl.get(#id).owner() == authentication.name")
+  public ResponseEntity<String> delete(@PathVariable Long id) {
     communityFacade.delete(id);
-    return ResponseEntity.noContent().build();
+    return ResponseEntity.ok("Сообщество " + id + " удалено");
   }
 
   @Override
   @GetMapping("/{id}")
   public ResponseEntity<CommunityDTO> get(@PathVariable Long id) {
-    CommunityDTO community = communityFacade.getAll(id);
+    CommunityDTO community = communityFacade.get(id);
     return ResponseEntity.ok(community);
   }
 
   @Override
-  @PatchMapping("/{id}")
-  @PreAuthorize("hasRole('ADMIN') or " +
-      "#communityServiceImpl.get(changeCommunityDTO.id()).owner() == authentication.name")
+  @PatchMapping
+  @PreAuthorize("@communityFacadeImpl.get(#changeCommunityDTO.id()).owner() == authentication.name")
   public ResponseEntity<CommunityDTO> change(@Valid @RequestBody
                                              ChangeCommunityDTO changeCommunityDTO) {
     return ResponseEntity.ok(communityFacade.change(changeCommunityDTO));

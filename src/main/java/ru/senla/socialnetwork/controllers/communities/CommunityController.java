@@ -8,7 +8,7 @@ import ru.senla.socialnetwork.dto.communitites.CreateCommunityDTO;
 public interface CommunityController {
   ResponseEntity<CommunityDTO> create(CreateCommunityDTO dto);
 
-  ResponseEntity<Void> delete(Long id);
+  ResponseEntity<String> delete(Long id);
 
   ResponseEntity<CommunityDTO> get(Long id);
 

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,35 +31,49 @@ public class CommunityMemberControllerImpl implements CommunityMemberController 
   }
 
   @Override
-  @PostMapping("/join")
+  @PostMapping
   public ResponseEntity<CommunityMemberDTO> joinCommunity(@PathVariable Long communityId,
-                                            @RequestParam String userEmail) {
-    return ResponseEntity.ok(communityMemberFacade.joinCommunity(communityId, userEmail));
+                                                          @RequestParam String email) {
+    return ResponseEntity.ok(communityMemberFacade.joinCommunity(communityId, email));
   }
 
   @Override
-  @PostMapping("/leave")
-  public ResponseEntity<Void> leaveCommunity(@PathVariable Long communityId,
-                                             @RequestParam String userEmail) {
-    communityMemberFacade.leaveCommunity(communityId, userEmail);
-    return ResponseEntity.ok().build();
+  @DeleteMapping
+  public ResponseEntity<String> leaveCommunity(@PathVariable Long communityId,
+                                             @RequestParam String email) {
+    communityMemberFacade.leaveCommunity(communityId, email);
+    return ResponseEntity.ok("Пользователь " + email + " вышел из сообщества " + communityId);
   }
 
   @Override
   @PostMapping("/ban")
-  @PreAuthorize("@communityServiceImpl.isOwner(#communityId, authentication.name)")
-  public ResponseEntity<CommunityMemberDTO> banMember(@PathVariable Long communityId,
-                                        @RequestParam String userEmail,
-                                        @RequestParam String reason) {
-    return ResponseEntity.ok(communityMemberFacade.banMember(communityId, userEmail, reason));
+  @PreAuthorize("@communityMemberFacadeImpl.isAdmin(#communityId, authentication.name) OR " +
+      "@communityMemberFacadeImpl.isModerator(#communityId, authentication.name)")
+  public ResponseEntity<CommunityMemberDTO> banMember(
+      @PathVariable Long communityId,
+      @RequestParam String email,
+      @RequestParam String reason) {
+    return ResponseEntity.ok(communityMemberFacade.banMember(communityId, email, reason));
+  }
+
+  @Override
+  @PostMapping("/unban")
+  @PreAuthorize("@communityMemberFacadeImpl.isAdmin(#communityId, authentication.name) OR " +
+      "@communityMemberFacadeImpl.isModerator(#communityId, authentication.name)")
+  public ResponseEntity<CommunityMemberDTO> unbanMember(
+      @PathVariable Long communityId,
+      @RequestParam String email) {
+    return ResponseEntity.ok(communityMemberFacade.unbanMember(communityId, email));
   }
 
   @Override
   @PostMapping("/role")
-  @PreAuthorize("@communityServiceImpl.isOwner(#communityId, authentication.name)")
-  public ResponseEntity<CommunityMemberDTO> changeMemberRole(@PathVariable Long communityId,
-                                               @RequestParam String userEmail,
-                                               @RequestParam MemberRole role) {
-    return ResponseEntity.ok(communityMemberFacade.changeMemberRole(communityId, userEmail, role));
+  @PreAuthorize("@communityMemberFacadeImpl.isAdmin(#communityId, authentication.name) " +
+      "AND !authentication.name.equals(#email)")
+  public ResponseEntity<CommunityMemberDTO> changeMemberRole(
+      @PathVariable Long communityId,
+      @RequestParam String email,
+      @RequestParam MemberRole role) {
+    return ResponseEntity.ok(communityMemberFacade.changeMemberRole(communityId, email, role));
   }
 }

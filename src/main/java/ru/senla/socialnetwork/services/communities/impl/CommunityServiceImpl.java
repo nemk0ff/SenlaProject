@@ -1,26 +1,16 @@
 package ru.senla.socialnetwork.services.communities.impl;
 
 import jakarta.persistence.EntityNotFoundException;
-import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.senla.socialnetwork.dao.communities.CommunityDao;
-import ru.senla.socialnetwork.dto.communitites.CommunityDTO;
-import ru.senla.socialnetwork.dto.communitites.CreateCommunityDTO;
-import ru.senla.socialnetwork.dto.mappers.CommunityMapper;
 import ru.senla.socialnetwork.model.communities.Community;
-import ru.senla.socialnetwork.model.communities.CommunityType;
-import ru.senla.socialnetwork.model.users.User;
-import ru.senla.socialnetwork.services.chats.CommonChatService;
-import ru.senla.socialnetwork.services.common.CommonService;
 import ru.senla.socialnetwork.services.communities.CommunityService;
 
 @Slf4j
 @Service
-@Transactional
 @AllArgsConstructor
 public class CommunityServiceImpl implements CommunityService {
   private final CommunityDao communityDao;
