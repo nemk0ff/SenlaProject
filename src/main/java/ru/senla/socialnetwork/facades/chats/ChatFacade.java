@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.facade.chats;
+package ru.senla.socialnetwork.facades.chats;
 
 import ru.senla.socialnetwork.dto.chats.ChatDTO;
 import ru.senla.socialnetwork.dto.chats.CreateGroupChatDTO;

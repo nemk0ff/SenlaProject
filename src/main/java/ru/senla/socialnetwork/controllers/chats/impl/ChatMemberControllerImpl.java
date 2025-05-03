@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.chats.ChatMemberController;
 import ru.senla.socialnetwork.dto.chats.ChatMemberDTO;
-import ru.senla.socialnetwork.facade.chats.ChatMemberFacade;
+import ru.senla.socialnetwork.facades.chats.ChatMemberFacade;
 import ru.senla.socialnetwork.model.general.MemberRole;
 
 @Slf4j
@@ -35,37 +35,34 @@ public class ChatMemberControllerImpl implements ChatMemberController {
   }
 
   @Override
-  @DeleteMapping("/{userEmail}")
-  @PreAuthorize("@chatMemberFacadeImpl.isChatMember(#chatId, authentication.name) " +
-      "AND authentication.name != userEmail")
+  @DeleteMapping("/{email}")
+  @PreAuthorize("authentication.name != #email")
   public ResponseEntity<Void> removeMember(
       @PathVariable Long chatId,
-      @PathVariable String userEmail,
+      @PathVariable String email,
       Authentication auth) {
-    chatMemberFacade.removeUserFromChat(chatId, userEmail, auth.getName());
+    chatMemberFacade.removeUserFromChat(chatId, email, auth.getName());
     return ResponseEntity.noContent().build();
   }
 
   @Override
-  @PostMapping("/{userEmail}/mute")
-  @PreAuthorize("@chatMemberFacadeImpl.isChatMember(#chatId, auth.name)")
+  @PostMapping("/{email}/mute")
+  @PreAuthorize("@chatMemberFacadeImpl.isChatAdminOrModerator(#chatId, #email)")
   public ResponseEntity<ChatMemberDTO> muteMember(
       @PathVariable Long chatId,
-      @PathVariable String userEmail,
+      @PathVariable String email,
       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-      ZonedDateTime muteUntil,
-      Authentication auth) {
-    return ResponseEntity.ok(chatMemberFacade.mute(chatId, userEmail, muteUntil, auth.getName()));
+      ZonedDateTime muteUntil) {
+    return ResponseEntity.ok(chatMemberFacade.mute(chatId, email, muteUntil));
   }
 
   @Override
-  @PostMapping("/{userEmail}/unmute")
-  @PreAuthorize("@chatMemberFacadeImpl.isChatMember(#chatId, auth.name)")
+  @PostMapping("/{email}/unmute")
+  @PreAuthorize("@chatMemberFacadeImpl.isChatAdminOrModerator(#chatId, #email)")
   public ResponseEntity<ChatMemberDTO> unmuteMember(
       @PathVariable Long chatId,
-      @PathVariable String userEmail,
-      Authentication auth) {
-    return ResponseEntity.ok(chatMemberFacade.unmute(chatId, userEmail, auth.getName()));
+      @PathVariable String email) {
+    return ResponseEntity.ok(chatMemberFacade.unmute(chatId, email));
   }
 
   @Override
@@ -80,12 +77,12 @@ public class ChatMemberControllerImpl implements ChatMemberController {
 
   @Override
   @PostMapping("/role")
-  @PreAuthorize("!authentication.name.equals(#email)")
+  @PreAuthorize("!authentication.name.equals(#email) " +
+      "AND @chatMemberFacadeImpl.isChatAdmin(#chatId, #email)")
   public ResponseEntity<ChatMemberDTO> changeMemberRole(
       @PathVariable Long chatId,
       @RequestParam String email,
-      @RequestParam MemberRole role,
-      Authentication auth) {
-    return ResponseEntity.ok(chatMemberFacade.changeRole(chatId, email, role, auth.getName()));
+      @RequestParam MemberRole role) {
+    return ResponseEntity.ok(chatMemberFacade.changeRole(chatId, email, role));
   }
 }

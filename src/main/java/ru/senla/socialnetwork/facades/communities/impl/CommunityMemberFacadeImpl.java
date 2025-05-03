@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.facade.communities.impl;
+package ru.senla.socialnetwork.facades.communities.impl;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.senla.socialnetwork.dto.communitites.CommunityMemberDTO;
 import ru.senla.socialnetwork.dto.mappers.CommunityMemberMapper;
 import ru.senla.socialnetwork.exceptions.communities.CommunityMemberException;
-import ru.senla.socialnetwork.facade.communities.CommunityMemberFacade;
+import ru.senla.socialnetwork.facades.communities.CommunityMemberFacade;
 import ru.senla.socialnetwork.model.communities.Community;
 import ru.senla.socialnetwork.model.communities.CommunityMember;
 import ru.senla.socialnetwork.model.general.MemberRole;

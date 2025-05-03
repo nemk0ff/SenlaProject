@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.chats.ChatController;
 import ru.senla.socialnetwork.dto.chats.CreateGroupChatDTO;
 import ru.senla.socialnetwork.dto.chats.CreatePersonalChatDTO;
-import ru.senla.socialnetwork.facade.chats.ChatFacade;
+import ru.senla.socialnetwork.facades.chats.ChatFacade;
 
 @Slf4j
 @RestController
@@ -46,7 +46,7 @@ public class ChatControllerImpl implements ChatController {
   @Override
   @DeleteMapping("/{chatId}")
   @PreAuthorize("hasRole('ADMIN') " +
-      "or @chatMemberServiceImpl.isChatCreator(#chatId, authentication.name)")
+      "or @chatMemberFacadeImpl.isChatAdmin(#chatId, authentication.name)")
   public ResponseEntity<?> deleteChat(@PathVariable Long chatId) {
     log.info("Удаление чата с ID {}", chatId);
     String chatName = chatFacade.get(chatId).name();

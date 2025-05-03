@@ -7,17 +7,15 @@ import ru.senla.socialnetwork.dto.chats.ChatMemberDTO;
 import ru.senla.socialnetwork.model.general.MemberRole;
 
 public interface ChatMemberController {
-  ResponseEntity<ChatMemberDTO> addMember(Long chatId, String userEmail);
+  ResponseEntity<ChatMemberDTO> addMember(Long chatId, String email);
 
-  ResponseEntity<Void> removeMember(Long chatId, String userEmail, Authentication auth);
+  ResponseEntity<Void> removeMember(Long chatId, String email, Authentication auth);
 
-  ResponseEntity<ChatMemberDTO> muteMember(
-      Long chatId, String userEmail, ZonedDateTime muteUntil, Authentication auth);
+  ResponseEntity<ChatMemberDTO> muteMember(Long chatId, String email, ZonedDateTime muteUntil);
 
-  ResponseEntity<ChatMemberDTO> unmuteMember(Long chatId, String userEmail, Authentication auth);
+  ResponseEntity<ChatMemberDTO> unmuteMember(Long chatId, String email);
 
-  ResponseEntity<Void> leaveChat(Long chatId, String userEmail);
+  ResponseEntity<Void> leaveChat(Long chatId, String email);
 
-  ResponseEntity<ChatMemberDTO> changeMemberRole(
-      Long chatId, String email, MemberRole role, Authentication auth);
+  ResponseEntity<ChatMemberDTO> changeMemberRole(Long chatId, String email, MemberRole role);
 }

@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.facade.communities;
+package ru.senla.socialnetwork.facades.communities;
 
 import java.util.List;
 import ru.senla.socialnetwork.dto.communitites.CommunityMemberDTO;

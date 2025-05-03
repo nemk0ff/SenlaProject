@@ -18,7 +18,7 @@ import ru.senla.socialnetwork.controllers.communities.CommunityController;
 import ru.senla.socialnetwork.dto.communitites.ChangeCommunityDTO;
 import ru.senla.socialnetwork.dto.communitites.CommunityDTO;
 import ru.senla.socialnetwork.dto.communitites.CreateCommunityDTO;
-import ru.senla.socialnetwork.facade.communities.CommunityFacade;
+import ru.senla.socialnetwork.facades.communities.CommunityFacade;
 
 
 @Slf4j

@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.facade.communities.impl;
+package ru.senla.socialnetwork.facades.communities.impl;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -10,7 +10,7 @@ import ru.senla.socialnetwork.dto.communitites.ChangeCommunityDTO;
 import ru.senla.socialnetwork.dto.communitites.CommunityDTO;
 import ru.senla.socialnetwork.dto.communitites.CreateCommunityDTO;
 import ru.senla.socialnetwork.dto.mappers.CommunityMapper;
-import ru.senla.socialnetwork.facade.communities.CommunityFacade;
+import ru.senla.socialnetwork.facades.communities.CommunityFacade;
 import ru.senla.socialnetwork.model.communities.Community;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.services.common.CommonService;

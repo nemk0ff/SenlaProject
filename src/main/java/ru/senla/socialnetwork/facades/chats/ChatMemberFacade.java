@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.facade.chats;
+package ru.senla.socialnetwork.facades.chats;
 
 
 import java.time.ZonedDateTime;
@@ -10,15 +10,20 @@ public interface ChatMemberFacade {
 
   void removeUserFromChat(Long chatId, String userEmailToRemove, String currentUserEmail);
 
-  ChatMemberDTO mute(Long chatId, String userEmailToMute,
-                     ZonedDateTime muteUntil, String currentUserEmail);
+  ChatMemberDTO mute(Long chatId, String userEmailToMute, ZonedDateTime muteUntil);
 
-  ChatMemberDTO unmute(Long chatId, String userEmailToMute, String currentUserEmail);
+  ChatMemberDTO unmute(Long chatId, String userEmailToMute);
 
   void leave(Long chatId, String userEmail);
 
   ChatMemberDTO changeRole(Long chatId, String email,
-                           MemberRole role, String currentUserEmail);
+                           MemberRole role);
 
   boolean isChatMember(Long chatId, String email);
+
+  boolean isChatAdmin(Long chatId, String requesterEmail);
+
+  boolean isChatModerator(Long chatId, String requesterEmail);
+
+  boolean isChatAdminOrModerator(Long chatId, String requesterEmail);
 }

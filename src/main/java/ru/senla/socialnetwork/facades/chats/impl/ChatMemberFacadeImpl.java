@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.facade.chats.impl;
+package ru.senla.socialnetwork.facades.chats.impl;
 
 import java.time.ZonedDateTime;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.senla.socialnetwork.dto.chats.ChatMemberDTO;
 import ru.senla.socialnetwork.dto.mappers.ChatMemberMapper;
 import ru.senla.socialnetwork.exceptions.chats.ChatMemberException;
-import ru.senla.socialnetwork.facade.chats.ChatMemberFacade;
+import ru.senla.socialnetwork.facades.chats.ChatMemberFacade;
 import ru.senla.socialnetwork.model.chats.Chat;
 import ru.senla.socialnetwork.model.chats.ChatMember;
 import ru.senla.socialnetwork.model.general.MemberRole;
@@ -67,15 +67,12 @@ public class ChatMemberFacadeImpl implements ChatMemberFacade {
   }
 
   @Override
-  public ChatMemberDTO mute(Long chatId, String userEmailToMute,
-                            ZonedDateTime muteUntil, String currentUserEmail) {
-    checkAccess(chatId, currentUserEmail);
+  public ChatMemberDTO mute(Long chatId, String userEmailToMute, ZonedDateTime muteUntil) {
     return chatMemberMapper.memberToDTO(chatMemberService.mute(chatId, userEmailToMute, muteUntil));
   }
 
   @Override
-  public ChatMemberDTO unmute(Long chatId, String userEmailToMute, String currentUserEmail) {
-    checkAccess(chatId, currentUserEmail);
+  public ChatMemberDTO unmute(Long chatId, String userEmailToMute) {
     return chatMemberMapper.memberToDTO(chatMemberService.unmute(chatId, userEmailToMute));
   }
 
@@ -85,12 +82,7 @@ public class ChatMemberFacadeImpl implements ChatMemberFacade {
   }
 
   @Override
-  public ChatMemberDTO changeRole(Long chatId, String email,
-                                  MemberRole role, String currentUserEmail) {
-    ChatMember currentMember = chatMemberService.getMember(chatId, currentUserEmail);
-    if (!currentMember.getRole().equals(MemberRole.ADMIN)) {
-      throw new ChatMemberException("Только админ чата может изменять роли и права участников");
-    }
+  public ChatMemberDTO changeRole(Long chatId, String email, MemberRole role) {
     return chatMemberMapper.memberToDTO(chatMemberService.changeRole(chatId, email, role));
   }
 
@@ -99,11 +91,16 @@ public class ChatMemberFacadeImpl implements ChatMemberFacade {
     return chatMemberService.isChatMember(chatId, email);
   }
 
-  private void checkAccess(Long chatId, String requesterEmail) {
+  @Override
+  public boolean isChatAdmin(Long chatId, String requesterEmail) {
     ChatMember currentMember = chatMemberService.getMember(chatId, requesterEmail);
-    if (currentMember.getRole() != MemberRole.ADMIN &&
-        currentMember.getRole() != MemberRole.MODERATOR) {
-      throw new ChatMemberException("У вас недостаточно прав, чтобы выполнить это действие");
-    }
+    return currentMember.getRole().equals(MemberRole.ADMIN);
+  }
+
+  @Override
+  public boolean isChatAdminOrModerator(Long chatId, String requesterEmail) {
+    ChatMember currentMember = chatMemberService.getMember(chatId, requesterEmail);
+    return currentMember.getRole().equals(MemberRole.MODERATOR)
+        || currentMember.getRole().equals(MemberRole.ADMIN);
   }
 }

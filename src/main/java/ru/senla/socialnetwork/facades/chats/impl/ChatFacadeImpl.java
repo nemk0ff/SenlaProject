@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.facade.chats.impl;
+package ru.senla.socialnetwork.facades.chats.impl;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import ru.senla.socialnetwork.dto.chats.ChatDTO;
 import ru.senla.socialnetwork.dto.chats.CreateGroupChatDTO;
 import ru.senla.socialnetwork.dto.chats.CreatePersonalChatDTO;
 import ru.senla.socialnetwork.dto.mappers.ChatMapper;
-import ru.senla.socialnetwork.facade.chats.ChatFacade;
+import ru.senla.socialnetwork.facades.chats.ChatFacade;
 import ru.senla.socialnetwork.model.chats.Chat;
 import ru.senla.socialnetwork.model.chats.ChatMember;
 import ru.senla.socialnetwork.model.general.MemberRole;

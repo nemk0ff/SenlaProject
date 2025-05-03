@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.facade.communities.impl;
+package ru.senla.socialnetwork.facades.communities.impl;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,7 @@ import ru.senla.socialnetwork.dto.communitites.CreateCommunityPostDTO;
 import ru.senla.socialnetwork.dto.communitites.UpdateCommunityPostDTO;
 import ru.senla.socialnetwork.dto.mappers.CommunityPostMapper;
 import ru.senla.socialnetwork.exceptions.communities.CommunityPostException;
-import ru.senla.socialnetwork.facade.communities.CommunityPostFacade;
+import ru.senla.socialnetwork.facades.communities.CommunityPostFacade;
 import ru.senla.socialnetwork.model.communities.CommunityMember;
 import ru.senla.socialnetwork.model.communities.CommunityPost;
 import ru.senla.socialnetwork.model.general.MemberRole;
