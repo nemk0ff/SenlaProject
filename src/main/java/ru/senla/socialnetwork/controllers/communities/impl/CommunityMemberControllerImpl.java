@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.communities.CommunityMemberController;
 import ru.senla.socialnetwork.dto.communitites.CommunityMemberDTO;
-import ru.senla.socialnetwork.facade.communities.CommunityMemberFacade;
+import ru.senla.socialnetwork.facades.communities.CommunityMemberFacade;
 import ru.senla.socialnetwork.model.general.MemberRole;
 
 @Slf4j

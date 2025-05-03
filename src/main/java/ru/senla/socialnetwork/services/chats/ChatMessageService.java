@@ -1,17 +1,20 @@
 package ru.senla.socialnetwork.services.chats;
 
 import java.util.List;
-import ru.senla.socialnetwork.dto.chats.ChatMessageDTO;
 import ru.senla.socialnetwork.dto.chats.CreateMessageDTO;
+import ru.senla.socialnetwork.model.chats.ChatMember;
+import ru.senla.socialnetwork.model.chats.ChatMessage;
 
 public interface ChatMessageService {
-  ChatMessageDTO send(Long chatId, String authorEmail, CreateMessageDTO request);
+  ChatMessage send(ChatMember member, CreateMessageDTO request);
 
-  List<ChatMessageDTO> getAll(Long chatId);
+  List<ChatMessage> getAll(Long chatId);
 
-  ChatMessageDTO pin(Long chatId, Long messageId);
+  ChatMessage pin(Long chatId, Long messageId);
 
-  ChatMessageDTO unpin(Long chatId, Long messageId);
+  ChatMessage unpin(Long chatId, Long messageId);
 
-  void delete(Long chatId, Long messageId, String currentUserEmail);
+  void delete(ChatMessage message);
+
+  ChatMessage get(Long chatId, Long messageId);
 }

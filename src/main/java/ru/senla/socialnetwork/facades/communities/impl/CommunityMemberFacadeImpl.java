@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.facade.communities.impl;
+package ru.senla.socialnetwork.facades.communities.impl;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -8,14 +8,14 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.senla.socialnetwork.dto.communitites.CommunityMemberDTO;
 import ru.senla.socialnetwork.dto.mappers.CommunityMemberMapper;
 import ru.senla.socialnetwork.exceptions.communities.CommunityMemberException;
-import ru.senla.socialnetwork.facade.communities.CommunityMemberFacade;
+import ru.senla.socialnetwork.facades.communities.CommunityMemberFacade;
 import ru.senla.socialnetwork.model.communities.Community;
 import ru.senla.socialnetwork.model.communities.CommunityMember;
 import ru.senla.socialnetwork.model.general.MemberRole;
 import ru.senla.socialnetwork.model.users.User;
-import ru.senla.socialnetwork.services.common.CommonService;
 import ru.senla.socialnetwork.services.communities.CommunityMemberService;
 import ru.senla.socialnetwork.services.communities.CommunityService;
+import ru.senla.socialnetwork.services.user.UserService;
 
 @Service
 @Transactional
@@ -24,7 +24,7 @@ import ru.senla.socialnetwork.services.communities.CommunityService;
 public class CommunityMemberFacadeImpl implements CommunityMemberFacade {
   private final CommunityService communityService;
   private final CommunityMemberService communityMemberService;
-  private final CommonService commonService;
+  private final UserService userService;
 
   @Override
   @Transactional(readOnly = true)
@@ -36,7 +36,7 @@ public class CommunityMemberFacadeImpl implements CommunityMemberFacade {
   @Transactional
   public CommunityMemberDTO joinCommunity(Long communityId, String userEmail) {
     log.info("(Facade) создание участника сообщества: id={}, email={}", communityId, userEmail);
-    User user = commonService.getUserByEmail(userEmail);
+    User user = userService.getUserByEmail(userEmail);
     Community community = communityService.get(communityId);
     log.info("Найдены user={} и community={}", user.getId(), community.getId());
 
@@ -50,7 +50,7 @@ public class CommunityMemberFacadeImpl implements CommunityMemberFacade {
   @Override
   @Transactional
   public void leaveCommunity(Long communityId, String userEmail) {
-    User user = commonService.getUserByEmail(userEmail);
+    User user = userService.getUserByEmail(userEmail);
     CommunityMember member = communityMemberService.get(communityId, user.getId());
     communityMemberService.leaveCommunity(member);
   }
@@ -58,7 +58,7 @@ public class CommunityMemberFacadeImpl implements CommunityMemberFacade {
   @Override
   @Transactional
   public CommunityMemberDTO banMember(Long communityId, String userEmail, String reason) {
-    User user = commonService.getUserByEmail(userEmail);
+    User user = userService.getUserByEmail(userEmail);
     CommunityMember member = communityMemberService.get(communityId, user.getId());
     return CommunityMemberMapper.INSTANCE
         .toDTO(communityMemberService.banMember(member, reason));
@@ -67,7 +67,7 @@ public class CommunityMemberFacadeImpl implements CommunityMemberFacade {
   @Override
   @Transactional
   public CommunityMemberDTO unbanMember(Long communityId, String userEmail) {
-    User user = commonService.getUserByEmail(userEmail);
+    User user = userService.getUserByEmail(userEmail);
     CommunityMember member = communityMemberService.get(communityId, user.getId());
     return CommunityMemberMapper.INSTANCE
         .toDTO(communityMemberService.unbanMember(member));
@@ -76,7 +76,7 @@ public class CommunityMemberFacadeImpl implements CommunityMemberFacade {
   @Override
   @Transactional
   public CommunityMemberDTO changeMemberRole(Long communityId, String userEmail, MemberRole role) {
-    User user = commonService.getUserByEmail(userEmail);
+    User user = userService.getUserByEmail(userEmail);
     CommunityMember member = communityMemberService.get(communityId, user.getId());
     return CommunityMemberMapper.INSTANCE
         .toDTO(communityMemberService.changeMemberRole(member, role));
@@ -85,7 +85,7 @@ public class CommunityMemberFacadeImpl implements CommunityMemberFacade {
   @Override
   @Transactional
   public boolean isBanned(Long communityId, String userEmail) {
-    User user = commonService.getUserByEmail(userEmail);
+    User user = userService.getUserByEmail(userEmail);
     CommunityMember member = communityMemberService.get(communityId, user.getId());
     return member.getIsBanned();
   }
@@ -103,7 +103,7 @@ public class CommunityMemberFacadeImpl implements CommunityMemberFacade {
   }
 
   private boolean hasRight(Long communityId, String userEmail, MemberRole role) {
-    User user = commonService.getUserByEmail(userEmail);
+    User user = userService.getUserByEmail(userEmail);
     CommunityMember member = communityMemberService.get(communityId, user.getId());
     return member.getRole().equals(role);
   }

@@ -14,4 +14,8 @@ public interface UserService {
   User edit(UserEditDTO editDTO);
 
   User changeEmail(String oldEmail, String newEmail);
+
+  User getUserByEmail(String email);
+
+  boolean existsByEmail(String email);
 }

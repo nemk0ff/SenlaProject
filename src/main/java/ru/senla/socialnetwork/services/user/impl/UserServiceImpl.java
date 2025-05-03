@@ -15,7 +15,6 @@ import ru.senla.socialnetwork.exceptions.users.UserException;
 import ru.senla.socialnetwork.exceptions.users.UserNotRegisteredException;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.model.users.Gender;
-import ru.senla.socialnetwork.services.common.CommonService;
 import ru.senla.socialnetwork.services.user.UserService;
 
 @Slf4j
@@ -23,7 +22,6 @@ import ru.senla.socialnetwork.services.user.UserService;
 @Transactional
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
-  private final CommonService commonService;
   private final UserDao userDao;
 
   @Override
@@ -47,7 +45,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public User edit(UserEditDTO editDTO) {
     User mergedUser = UserMapper.INSTANCE.userEditDTOtoUser(editDTO);
-    User oldUser = commonService.getUserByEmail(editDTO.email());
+    User oldUser = getUserByEmail(editDTO.email());
     mergedUser.setId(oldUser.getId());
     return userDao.saveOrUpdate(mergedUser);
   }
@@ -55,14 +53,27 @@ public class UserServiceImpl implements UserService {
   @Transactional
   @Override
   public User changeEmail(String oldEmail, String newEmail) {
-    User user = commonService.getUserByEmail(oldEmail);
+    User user = getUserByEmail(oldEmail);
     if (oldEmail.equals(newEmail)) {
       throw new UserException("Старый и новый email овпадают");
     }
-    if (commonService.existsByEmail(newEmail)) {
+    if (existsByEmail(newEmail)) {
       throw new EmailAlreadyExistsException(newEmail);
     }
     user.setEmail(newEmail);
     return userDao.saveOrUpdate(user);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public User getUserByEmail(String email) {
+    return userDao.findByEmail(email).orElseThrow(
+        () -> new UserNotRegisteredException(email));
+  }
+
+  @Transactional
+  @Override
+  public boolean existsByEmail(String email) {
+    return userDao.findByEmail(email).isPresent();
   }
 }

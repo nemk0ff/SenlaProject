@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.facade.communities.impl;
+package ru.senla.socialnetwork.facades.communities.impl;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -10,14 +10,14 @@ import ru.senla.socialnetwork.dto.communitites.CreateCommunityPostDTO;
 import ru.senla.socialnetwork.dto.communitites.UpdateCommunityPostDTO;
 import ru.senla.socialnetwork.dto.mappers.CommunityPostMapper;
 import ru.senla.socialnetwork.exceptions.communities.CommunityPostException;
-import ru.senla.socialnetwork.facade.communities.CommunityPostFacade;
+import ru.senla.socialnetwork.facades.communities.CommunityPostFacade;
 import ru.senla.socialnetwork.model.communities.CommunityMember;
 import ru.senla.socialnetwork.model.communities.CommunityPost;
 import ru.senla.socialnetwork.model.general.MemberRole;
 import ru.senla.socialnetwork.model.users.User;
-import ru.senla.socialnetwork.services.common.CommonService;
 import ru.senla.socialnetwork.services.communities.CommunityMemberService;
 import ru.senla.socialnetwork.services.communities.CommunityPostService;
+import ru.senla.socialnetwork.services.user.UserService;
 
 @Service
 @Transactional
@@ -26,12 +26,12 @@ import ru.senla.socialnetwork.services.communities.CommunityPostService;
 public class CommunityPostFacadeImpl implements CommunityPostFacade {
   private final CommunityPostService communityPostService;
   private final CommunityMemberService communityMemberService;
-  private final CommonService commonService;
+  private final UserService userService;
 
   @Override
   @Transactional
   public CommunityPostDTO createPost(Long communityId, CreateCommunityPostDTO dto, String authorEmail) {
-    User author = commonService.getUserByEmail(authorEmail);
+    User author = userService.getUserByEmail(authorEmail);
     CommunityMember member = communityMemberService.get(communityId, author.getId());
 
     return CommunityPostMapper.INSTANCE
@@ -56,7 +56,7 @@ public class CommunityPostFacadeImpl implements CommunityPostFacade {
   }
 
   private void checkAccess(Long communityId, Long postId, String requesterEmail) {
-    User user = commonService.getUserByEmail(requesterEmail);
+    User user = userService.getUserByEmail(requesterEmail);
     CommunityMember member = communityMemberService.get(communityId, user.getId());
     CommunityPost post = communityPostService.getPost(communityId, postId);
 

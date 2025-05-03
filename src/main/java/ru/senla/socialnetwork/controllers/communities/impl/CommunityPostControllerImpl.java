@@ -20,7 +20,7 @@ import ru.senla.socialnetwork.controllers.communities.CommunityPostController;
 import ru.senla.socialnetwork.dto.communitites.CommunityPostDTO;
 import ru.senla.socialnetwork.dto.communitites.CreateCommunityPostDTO;
 import ru.senla.socialnetwork.dto.communitites.UpdateCommunityPostDTO;
-import ru.senla.socialnetwork.facade.communities.CommunityPostFacade;
+import ru.senla.socialnetwork.facades.communities.CommunityPostFacade;
 
 @Slf4j
 @RestController

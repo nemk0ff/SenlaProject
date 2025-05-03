@@ -16,66 +16,69 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.chats.ChatMessageController;
 import ru.senla.socialnetwork.dto.chats.CreateMessageDTO;
-import ru.senla.socialnetwork.services.chats.ChatMessageService;
+import ru.senla.socialnetwork.facades.chats.ChatMessageFacade;
 
 @Slf4j
 @RestController
 @AllArgsConstructor
 @RequestMapping("/chats/{chatId}/messages")
 public class ChatMessageControllerImpl implements ChatMessageController {
-  private final ChatMessageService chatMessageService;
+  private final ChatMessageFacade chatMessageFacade;
 
   @Override
   @PostMapping
-  @PreAuthorize("@commonChatServiceImpl.isChatMember(#chatId, authentication.name)")
+  @PreAuthorize("@chatMemberFacadeImpl.isChatMember(#chatId, authentication.name)")
   public ResponseEntity<?> sendMessage(
       @PathVariable Long chatId,
       @RequestBody @Valid CreateMessageDTO request) {
     log.info("Отправка сообщения в чат {} пользователем {}", chatId, request.senderEmail());
     return ResponseEntity.status(HttpStatus.CREATED)
-        .body(chatMessageService.send(chatId, request.senderEmail(), request));
+        .body(chatMessageFacade.send(chatId, request.senderEmail(), request));
   }
 
   @Override
   @GetMapping
-  @PreAuthorize("@commonChatServiceImpl.isChatMember(#chatId, authentication.name)")
+  @PreAuthorize("@chatMemberFacadeImpl.isChatMember(#chatId, authentication.name)")
   public ResponseEntity<?> getMessages(@PathVariable Long chatId) {
     log.info("Получение сообщений из чата {}", chatId);
-    return ResponseEntity.ok(chatMessageService.getAll(chatId));
+    return ResponseEntity.ok(chatMessageFacade.getAll(chatId));
+  }
+
+  @Override
+  public ResponseEntity<?> getMessage(Long chatId, Long messageId) {
+    return null;
   }
 
   @Override
   @PostMapping("/{messageId}/pin")
-  @PreAuthorize("@commonChatServiceImpl.isModerator(#chatId, authentication.name) " +
-      "OR @commonChatServiceImpl.isAdmin(#chatId, authentication.name)")
+  @PreAuthorize("@chatMemberFacadeImpl.isChatAdminOrModerator(#chatId, #email)")
   public ResponseEntity<?> pinMessage(
       @PathVariable Long chatId,
       @PathVariable Long messageId) {
     log.info("Закрепление сообщения {} в чате {}", messageId, chatId);
-    return ResponseEntity.ok(chatMessageService.pin(chatId, messageId));
+    return ResponseEntity.ok(chatMessageFacade.pin(chatId, messageId));
   }
 
   @Override
   @DeleteMapping("/{messageId}/pin")
-  @PreAuthorize("@commonChatServiceImpl.isModerator(#chatId, authentication.name) " +
-      "OR @commonChatServiceImpl.isAdmin(#chatId, authentication.name)")
+  @PreAuthorize("@chatMemberFacadeImpl.isChatAdminOrModerator(#chatId, #email)")
   public ResponseEntity<?> unpinMessage(
       @PathVariable Long chatId,
       @PathVariable Long messageId) {
     log.info("Открепление сообщения {} в чате {}", messageId, chatId);
-    return ResponseEntity.ok(chatMessageService.unpin(chatId, messageId));
+    return ResponseEntity.ok(chatMessageFacade.unpin(chatId, messageId));
   }
 
   @Override
   @DeleteMapping("/{messageId}")
-  @PreAuthorize("@commonChatServiceImpl.isChatMember(#chatId, authentication.name)")
+  @PreAuthorize("@chatMemberFacadeImpl.isChatMember(#chatId, authentication.name)")
   public ResponseEntity<?> deleteMessage(
       @PathVariable Long chatId,
       @PathVariable Long messageId,
       Authentication authentication) {
     log.info("Удаление сообщения {} в чате {} пользователем {}",
         messageId, chatId, authentication.getName());
-    chatMessageService.delete(chatId, messageId, authentication.getName());
+    chatMessageFacade.delete(chatId, messageId, authentication.getName());
     return ResponseEntity.noContent().build();
   }
 }
