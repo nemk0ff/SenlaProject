@@ -1,15 +1,15 @@
 package ru.senla.socialnetwork.services.chats;
 
-import ru.senla.socialnetwork.dto.chats.ChatDTO;
 import ru.senla.socialnetwork.dto.chats.CreateGroupChatDTO;
 import ru.senla.socialnetwork.dto.chats.CreatePersonalChatDTO;
+import ru.senla.socialnetwork.model.chats.Chat;
 
 public interface ChatService {
-  ChatDTO create(CreateGroupChatDTO chatDTO);
+  Chat create(CreateGroupChatDTO chatDTO);
 
-  ChatDTO create(CreatePersonalChatDTO chatDTO);
+  Chat create(CreatePersonalChatDTO chatDTO, String chatName);
 
-  void delete(Long chatId);
+  void delete(Chat chat);
 
-  ChatDTO get(Long chatId);
+  Chat get(Long chatId);
 }

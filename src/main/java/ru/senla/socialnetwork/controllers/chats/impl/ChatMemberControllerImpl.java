@@ -15,54 +15,77 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.chats.ChatMemberController;
 import ru.senla.socialnetwork.dto.chats.ChatMemberDTO;
-import ru.senla.socialnetwork.services.chats.ChatMemberService;
+import ru.senla.socialnetwork.facade.chats.ChatMemberFacade;
+import ru.senla.socialnetwork.model.general.MemberRole;
 
 @Slf4j
 @RestController
 @AllArgsConstructor
 @RequestMapping("/chats/{chatId}/members")
 public class ChatMemberControllerImpl implements ChatMemberController {
-  private final ChatMemberService chatMemberService;
+  private final ChatMemberFacade chatMemberFacade;
 
+  @Override
   @PostMapping
-  @PreAuthorize("hasRole('ADMIN') " +
-      "OR @commonChatServiceImpl.isChatMember(#chatId, authentication.name)")
+  @PreAuthorize("@chatMemberFacadeImpl.isChatMember(#chatId, authentication.name)")
   public ResponseEntity<ChatMemberDTO> addMember(
       @PathVariable Long chatId,
       @RequestParam String userEmail) {
-    return ResponseEntity.ok(chatMemberService.addUserToChat(chatId, userEmail));
+    return ResponseEntity.ok(chatMemberFacade.addUserToChat(chatId, userEmail));
   }
 
+  @Override
   @DeleteMapping("/{userEmail}")
-  @PreAuthorize("(hasRole('ADMIN') " +
-      "OR @commonChatServiceImpl.isChatMember(#chatId, authentication.name)) " +
+  @PreAuthorize("@chatMemberFacadeImpl.isChatMember(#chatId, authentication.name) " +
       "AND authentication.name != userEmail")
   public ResponseEntity<Void> removeMember(
       @PathVariable Long chatId,
       @PathVariable String userEmail,
       Authentication auth) {
-    chatMemberService.removeUserFromChat(chatId, userEmail, auth.getName());
+    chatMemberFacade.removeUserFromChat(chatId, userEmail, auth.getName());
     return ResponseEntity.noContent().build();
   }
 
+  @Override
   @PostMapping("/{userEmail}/mute")
-  @PreAuthorize("@commonChatServiceImpl.isChatMember(#chatId, auth.name)")
+  @PreAuthorize("@chatMemberFacadeImpl.isChatMember(#chatId, auth.name)")
   public ResponseEntity<ChatMemberDTO> muteMember(
       @PathVariable Long chatId,
       @PathVariable String userEmail,
       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
       ZonedDateTime muteUntil,
       Authentication auth) {
-    return ResponseEntity.ok(chatMemberService.mute(
-        chatId, userEmail, muteUntil, auth.getName()));
+    return ResponseEntity.ok(chatMemberFacade.mute(chatId, userEmail, muteUntil, auth.getName()));
   }
 
+  @Override
+  @PostMapping("/{userEmail}/unmute")
+  @PreAuthorize("@chatMemberFacadeImpl.isChatMember(#chatId, auth.name)")
+  public ResponseEntity<ChatMemberDTO> unmuteMember(
+      @PathVariable Long chatId,
+      @PathVariable String userEmail,
+      Authentication auth) {
+    return ResponseEntity.ok(chatMemberFacade.unmute(chatId, userEmail, auth.getName()));
+  }
+
+  @Override
   @PostMapping("/leave")
-  @PreAuthorize("@commonChatServiceImpl.isChatMember(#chatId, authentication.name)")
+  @PreAuthorize("@chatMemberFacadeImpl.isChatMember(#chatId, authentication.name)")
   public ResponseEntity<Void> leaveChat(
       @PathVariable Long chatId,
       String userEmail) {
-    chatMemberService.leave(chatId, userEmail);
+    chatMemberFacade.leave(chatId, userEmail);
     return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  @PostMapping("/role")
+  @PreAuthorize("!authentication.name.equals(#email)")
+  public ResponseEntity<ChatMemberDTO> changeMemberRole(
+      @PathVariable Long chatId,
+      @RequestParam String email,
+      @RequestParam MemberRole role,
+      Authentication auth) {
+    return ResponseEntity.ok(chatMemberFacade.changeRole(chatId, email, role, auth.getName()));
   }
 }

@@ -1,118 +1,75 @@
 package ru.senla.socialnetwork.services.chats.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import java.time.ZonedDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.senla.socialnetwork.dao.chats.ChatMemberDao;
-import ru.senla.socialnetwork.dto.chats.ChatMemberDTO;
-import ru.senla.socialnetwork.dto.mappers.ChatMemberMapper;
 import ru.senla.socialnetwork.exceptions.chats.ChatMemberException;
 import ru.senla.socialnetwork.model.chats.Chat;
 import ru.senla.socialnetwork.model.chats.ChatMember;
 import ru.senla.socialnetwork.model.general.MemberRole;
-import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.services.chats.ChatMemberService;
-import ru.senla.socialnetwork.services.chats.CommonChatService;
-import ru.senla.socialnetwork.services.common.CommonService;
 
 @Slf4j
 @Service
-@Transactional
 @AllArgsConstructor
 public class ChatMemberServiceImpl implements ChatMemberService {
-  private static final int MAX_GROUP_CHAT_MEMBERS = 100;
+  private static final int MAX_CHAT_SIZE = 100;
+  private static final int MAX_MODERATORS_NUMBER = 10;
+  private static final int MAX_ADMINS_NUMBER = 3;
 
-  private final CommonChatService commonChatService;
-  private final CommonService commonService;
+
   private final ChatMemberDao chatMemberDao;
-  private final ChatMemberMapper chatMemberMapper;
 
   @Override
-  public ChatMemberDTO addUserToChat(Long chatId, String userEmailToAdd) {
-    Chat chat = commonChatService.getChat(chatId);
-
+  public ChatMember addUserToChat(Chat chat, ChatMember newMember) {
     if (!chat.getIsGroup()) {
       throw new ChatMemberException("Нельзя добавить участника в личный чат");
     }
 
-    long membersCount = chatMemberDao.countByChatId(chatId);
-    if (membersCount >= MAX_GROUP_CHAT_MEMBERS) {
+    long membersCount = chatMemberDao.countByChatId(chat.getId());
+    if (membersCount >= MAX_CHAT_SIZE) {
       throw new ChatMemberException("Превышено максимальное количество участников в чате");
     }
 
-    if (commonChatService.isChatMember(chatId, userEmailToAdd)) {
-      throw new ChatMemberException("Пользователь уже в чате");
-    }
-
-    User userToAdd = commonService.getUserByEmail(userEmailToAdd);
-    ChatMember newMember = ChatMember.builder()
-        .chat(chat)
-        .user(userToAdd)
-        .role(MemberRole.MEMBER)
-        .joinDate(ZonedDateTime.now())
-        .build();
-
     ChatMember savedMember = chatMemberDao.saveOrUpdate(newMember);
-    log.info("Пользователь {} добавлен в чат {}", userEmailToAdd, chatId);
-    return chatMemberMapper.memberToDTO(savedMember);
+    log.info("В чат {} добавлен участник {}", chat.getId(), newMember);
+    return savedMember;
   }
 
   @Override
-  public void removeUserFromChat(Long chatId, String userEmailToRemove, String currentUserEmail) {
-    Chat chat = commonChatService.getChat(chatId);
+  public ChatMember mute(Long chatId, String userEmailToMute, ZonedDateTime muteUntil) {
+    log.info("Установка mute на пользователя {} в чате {}", userEmailToMute, chatId);
 
-    if (!chat.getIsGroup()) {
-      throw new ChatMemberException("Нельзя удалить участника из личного чата. Удалите весь чат.");
-    }
-    if (currentUserEmail.equals(userEmailToRemove)) {
-      throw new ChatMemberException("Нельзя удалить самого себя. Используйте выход из чата");
-    }
-
-    ChatMember memberToRemove = commonChatService.getMember(chatId, userEmailToRemove);
-    ChatMember currentMember = commonChatService.getMember(chatId, currentUserEmail);
-
-    if (memberToRemove.getRole() == MemberRole.ADMIN) {
-      throw new ChatMemberException("Нельзя удалить администратора");
-    }
-    if (memberToRemove.getRole() == MemberRole.MODERATOR &&
-        currentMember.getRole() != MemberRole.ADMIN) {
-      throw new ChatMemberException("Только администратор может удалить модератора");
-    }
-    if (currentMember.getRole() != MemberRole.ADMIN &&
-        currentMember.getRole() != MemberRole.MODERATOR) {
-      throw new ChatMemberException("Только администратор или модератор могут удалять участников");
-    }
-
-    chatMemberDao.delete(memberToRemove);
-    log.info("Пользователь {} удален из чата {}", userEmailToRemove, chatId);
-  }
-
-  @Override
-  public ChatMemberDTO mute(Long chatId, String userEmailToMute,
-                            ZonedDateTime muteUntil, String currentUserEmail) {
-    ChatMember memberToMute = commonChatService.getMember(chatId, userEmailToMute);
-    ChatMember currentMember = commonChatService.getMember(chatId, currentUserEmail);
-
-    if (currentMember.getRole() != MemberRole.ADMIN &&
-        currentMember.getRole() != MemberRole.MODERATOR) {
-      throw new ChatMemberException("Только администратор или модератор могут мьютить участников");
-    }
+    ChatMember memberToMute = getMember(chatId, userEmailToMute);
     if (memberToMute.getRole() != MemberRole.MEMBER) {
       throw new ChatMemberException("Можно мьютить только обычных участников");
     }
-
     memberToMute.setMutedUntil(muteUntil);
     ChatMember updatedMember = chatMemberDao.saveOrUpdate(memberToMute);
     log.info("Пользователь {} замьючен в чате {} до {}", userEmailToMute, chatId, muteUntil);
-    return chatMemberMapper.memberToDTO(updatedMember);
+    return updatedMember;
+  }
+
+  @Override
+  public ChatMember unmute(Long chatId, String userEmail) {
+    log.info("Снятие mute с пользователя {} в чате {}", userEmail, chatId);
+    ChatMember memberToMute = getMember(chatId, userEmail);
+    if (memberToMute.getMutedUntil().isBefore(ZonedDateTime.now())) {
+      throw new ChatMemberException("Пользователь не является замьюченным");
+    }
+    memberToMute.setMutedUntil(ZonedDateTime.now());
+    ChatMember updatedMember = chatMemberDao.saveOrUpdate(memberToMute);
+    log.info("Пользователь {} размьючен в чате {}", userEmail, chatId);
+    return updatedMember;
   }
 
   @Override
   public void leave(Long chatId, String userEmail) {
-    ChatMember member = commonChatService.getMember(chatId, userEmail);
-
+    ChatMember member = getMember(chatId, userEmail);
     if (member.getRole() == MemberRole.ADMIN && countAdminsInChat(chatId) == 1) {
       throw new ChatMemberException("Нельзя покинуть чат, так как вы единственный админ. " +
           "Необходимо назначить какого-нибудь участника админом перед выходом из чата.");
@@ -124,33 +81,58 @@ public class ChatMemberServiceImpl implements ChatMemberService {
 
 
   @Override
-  public ChatMemberDTO changeRole(Long chatId, String userEmail,
-                                  MemberRole newRole, String currentUserEmail) {
-    ChatMember targetMember = commonChatService.getMember(chatId, userEmail);
-    ChatMember currentMember = commonChatService.getMember(chatId, currentUserEmail);
-
-    if (currentMember.getRole() == MemberRole.ADMIN) {
-      targetMember.setRole(newRole);
-    }
-    else if (currentMember.getRole() == MemberRole.MODERATOR) {
-      if (newRole != MemberRole.MODERATOR && newRole != MemberRole.MEMBER) {
-        throw new ChatMemberException("Модератор может назначать только роль модератора или участника");
-      }
-      if (targetMember.getRole() == MemberRole.ADMIN) {
-        throw new ChatMemberException("Модератор не может изменять роль администратора");
-      }
-      targetMember.setRole(newRole);
-    }
-    else {
-      throw new ChatMemberException("Только администратор или модератор могут изменять роли");
+  public ChatMember changeRole(Long chatId, String userEmail,
+                               MemberRole newRole) {
+    ChatMember member = getMember(chatId, userEmail);
+    if (member.getRole().equals(newRole)) {
+      return member;
     }
 
-    ChatMember updatedMember = chatMemberDao.saveOrUpdate(targetMember);
+    if (newRole.equals(MemberRole.ADMIN) && (countAdminsInChat(chatId) > MAX_ADMINS_NUMBER)) {
+      throw new ChatMemberException("В чате слишком много админов, роль пользователя не изменена");
+    } else if (newRole.equals(MemberRole.MODERATOR)
+        && (countModeratorsInChat(chatId) > MAX_MODERATORS_NUMBER)) {
+      throw new ChatMemberException("В чате слишком много модераторов, роль пользователя не " +
+          "изменена");
+    }
+    member.setRole(newRole);
+
+    ChatMember updatedMember = chatMemberDao.saveOrUpdate(member);
     log.info("Роль пользователя {} в чате {} изменена на {}", userEmail, chatId, newRole);
-    return chatMemberMapper.memberToDTO(updatedMember);
+    return updatedMember;
+  }
+
+  @Override
+  public ChatMember getMember(Long chatId, String email) {
+    return chatMemberDao.findByChatIdAndUserEmail(chatId, email)
+        .orElseThrow(() -> new EntityNotFoundException("Участник не найден"));
+  }
+
+  @Override
+  public List<ChatMember> getMembers(Long chatId) {
+    return chatMemberDao.findMembersByChatId(chatId);
+  }
+
+  @Override
+  public void removeMember(ChatMember member) {
+    chatMemberDao.delete(member);
+  }
+
+  @Override
+  public boolean isChatMember(Long chatId, String userEmail) {
+    return chatMemberDao.existsByChatIdAndUserEmail(chatId, userEmail);
+  }
+
+  @Override
+  public void saveMembers(List<ChatMember> members) {
+    chatMemberDao.saveAll(members);
   }
 
   private long countAdminsInChat(Long chatId) {
     return chatMemberDao.countByChatIdAndRole(chatId, MemberRole.ADMIN);
+  }
+
+  private long countModeratorsInChat(Long chatId) {
+    return chatMemberDao.countByChatIdAndRole(chatId, MemberRole.MODERATOR);
   }
 }

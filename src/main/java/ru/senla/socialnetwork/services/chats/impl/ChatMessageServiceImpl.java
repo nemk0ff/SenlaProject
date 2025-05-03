@@ -22,9 +22,7 @@ import ru.senla.socialnetwork.services.chats.CommonChatService;
 @Transactional
 @AllArgsConstructor
 public class ChatMessageServiceImpl implements ChatMessageService {
-  private final CommonChatService commonChatService;
   private final ChatMessageDao chatMessageDao;
-  private final ChatMessageMapper chatMessageMapper;
 
   @Override
   public ChatMessageDTO send(Long chatId, String authorEmail, CreateMessageDTO request) {
@@ -48,7 +46,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     }
 
     ChatMessage savedMessage = chatMessageDao.saveOrUpdate(message);
-    return chatMessageMapper.toDTO(savedMessage);
+    return savedMessage;
   }
 
   @Override

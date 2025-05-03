@@ -1,20 +1,30 @@
 package ru.senla.socialnetwork.services.chats;
 
 import java.time.ZonedDateTime;
-import ru.senla.socialnetwork.dto.chats.ChatMemberDTO;
+import java.util.List;
+import ru.senla.socialnetwork.model.chats.Chat;
+import ru.senla.socialnetwork.model.chats.ChatMember;
 import ru.senla.socialnetwork.model.general.MemberRole;
 
 public interface ChatMemberService {
 
-  ChatMemberDTO addUserToChat(Long chatId, String userEmailToAdd);
+  ChatMember addUserToChat(Chat chat, ChatMember newMember);
 
-  void removeUserFromChat(Long chatId, String userEmailToRemove, String currentUserEmail);
+  ChatMember mute(Long chatId, String userEmailToMute, ZonedDateTime muteUntil);
 
-  ChatMemberDTO mute(Long chatId, String userEmailToMute,
-                     ZonedDateTime muteUntil, String currentUserEmail);
+  ChatMember unmute(Long chatId, String userEmail);
 
   void leave(Long chatId, String userEmail);
 
-  ChatMemberDTO changeRole(Long chatId, String userEmail,
-                           MemberRole newRole, String currentUserEmail);
+  ChatMember changeRole(Long chatId, String userEmail, MemberRole newRole);
+
+  ChatMember getMember(Long chatId, String email);
+
+  List<ChatMember> getMembers(Long chatId);
+
+  void removeMember(ChatMember member);
+
+  boolean isChatMember(Long chatId, String email);
+
+  void saveMembers(List<ChatMember> members);
 }
