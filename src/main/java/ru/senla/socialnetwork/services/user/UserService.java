@@ -9,7 +9,6 @@ import ru.senla.socialnetwork.model.users.Gender;
 public interface UserService {
   User get(long userId);
 
-
   List<User> find(String name, String surname, Gender gender, LocalDate birthdate);
 
   User edit(UserEditDTO editDTO);

@@ -90,8 +90,8 @@ public class ChatMemberServiceImpl implements ChatMemberService {
   }
 
   @Override
-  public ChatMemberDTO muteUser(Long chatId, String userEmailToMute,
-                                ZonedDateTime muteUntil, String currentUserEmail) {
+  public ChatMemberDTO mute(Long chatId, String userEmailToMute,
+                            ZonedDateTime muteUntil, String currentUserEmail) {
     ChatMember memberToMute = commonChatService.getMember(chatId, userEmailToMute);
     ChatMember currentMember = commonChatService.getMember(chatId, currentUserEmail);
 
@@ -110,7 +110,7 @@ public class ChatMemberServiceImpl implements ChatMemberService {
   }
 
   @Override
-  public void leaveChat(Long chatId, String userEmail) {
+  public void leave(Long chatId, String userEmail) {
     ChatMember member = commonChatService.getMember(chatId, userEmail);
 
     if (member.getRole() == MemberRole.ADMIN && countAdminsInChat(chatId) == 1) {
@@ -124,8 +124,8 @@ public class ChatMemberServiceImpl implements ChatMemberService {
 
 
   @Override
-  public ChatMemberDTO changeMemberRole(Long chatId, String userEmail,
-                                        MemberRole newRole, String currentUserEmail) {
+  public ChatMemberDTO changeRole(Long chatId, String userEmail,
+                                  MemberRole newRole, String currentUserEmail) {
     ChatMember targetMember = commonChatService.getMember(chatId, userEmail);
     ChatMember currentMember = commonChatService.getMember(chatId, currentUserEmail);
 

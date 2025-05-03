@@ -5,13 +5,13 @@ import ru.senla.socialnetwork.dto.chats.ChatMessageDTO;
 import ru.senla.socialnetwork.dto.chats.CreateMessageDTO;
 
 public interface ChatMessageService {
-  ChatMessageDTO sendMessage(Long chatId, String authorEmail, CreateMessageDTO request);
+  ChatMessageDTO send(Long chatId, String authorEmail, CreateMessageDTO request);
 
-  List<ChatMessageDTO> getMessages(Long chatId);
+  List<ChatMessageDTO> getAll(Long chatId);
 
-  ChatMessageDTO pinMessage(Long chatId, Long messageId);
+  ChatMessageDTO pin(Long chatId, Long messageId);
 
-  ChatMessageDTO unpinMessage(Long chatId, Long messageId);
+  ChatMessageDTO unpin(Long chatId, Long messageId);
 
-  void deleteMessage(Long chatId, Long messageId, String currentUserEmail);
+  void delete(Long chatId, Long messageId, String currentUserEmail);
 }

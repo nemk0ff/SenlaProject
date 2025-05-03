@@ -190,7 +190,7 @@ class ChatMemberServiceImplTest {
       when(chatMemberDao.saveOrUpdate(testMember2)).thenReturn(testMember2);
       when(chatMemberMapper.memberToDTO(testMember2)).thenReturn(testMemberDTO);
 
-      ChatMemberDTO result = chatMemberService.muteUser(1L, "user2@test.com", muteUntil, "admin@test.com");
+      ChatMemberDTO result = chatMemberService.mute(1L, "user2@test.com", muteUntil, "admin@test.com");
 
       assertNotNull(result);
       assertEquals(muteUntil, testMember2.getMutedUntil());
@@ -204,7 +204,7 @@ class ChatMemberServiceImplTest {
       when(commonChatService.getMember(1L, "user1@test.com")).thenReturn(testMember1);
 
       assertThrows(ChatMemberException.class,
-          () -> chatMemberService.muteUser(1L, "admin@test.com", ZonedDateTime.now(), "user1@test.com"));
+          () -> chatMemberService.mute(1L, "admin@test.com", ZonedDateTime.now(), "user1@test.com"));
     }
 
     @Test
@@ -214,7 +214,7 @@ class ChatMemberServiceImplTest {
       when(commonChatService.getMember(1L, "user1@test.com")).thenReturn(testMember1);
 
       assertThrows(ChatMemberException.class,
-          () -> chatMemberService.muteUser(1L, "user2@test.com", ZonedDateTime.now(), "user1@test.com"));
+          () -> chatMemberService.mute(1L, "user2@test.com", ZonedDateTime.now(), "user1@test.com"));
     }
   }
 
@@ -225,7 +225,7 @@ class ChatMemberServiceImplTest {
       when(commonChatService.getMember(1L, "user1@test.com")).thenReturn(testMember1);
       when(chatMemberDao.countByChatIdAndRole(1L, MemberRole.ADMIN)).thenReturn(2L);
 
-      chatMemberService.leaveChat(1L, "user1@test.com");
+      chatMemberService.leave(1L, "user1@test.com");
 
       verify(chatMemberDao).delete(testMember1);
     }
@@ -236,7 +236,7 @@ class ChatMemberServiceImplTest {
       when(chatMemberDao.countByChatIdAndRole(1L, MemberRole.ADMIN)).thenReturn(1L);
 
       assertThrows(ChatException.class,
-          () -> chatMemberService.leaveChat(1L, "user1@test.com"));
+          () -> chatMemberService.leave(1L, "user1@test.com"));
     }
   }
 
@@ -249,7 +249,7 @@ class ChatMemberServiceImplTest {
       when(chatMemberDao.saveOrUpdate(testMember2)).thenReturn(testMember2);
       when(chatMemberMapper.memberToDTO(testMember2)).thenReturn(testMemberDTO);
 
-      ChatMemberDTO result = chatMemberService.changeMemberRole(1L, "user2@test.com", MemberRole.MODERATOR, "admin@test.com");
+      ChatMemberDTO result = chatMemberService.changeRole(1L, "user2@test.com", MemberRole.MODERATOR, "admin@test.com");
 
       assertNotNull(result);
       assertEquals(MemberRole.MODERATOR, testMember2.getRole());
@@ -266,7 +266,7 @@ class ChatMemberServiceImplTest {
       when(chatMemberDao.saveOrUpdate(testMember2)).thenReturn(testMember2);
       when(chatMemberMapper.memberToDTO(testMember2)).thenReturn(testMemberDTO);
 
-      ChatMemberDTO result = chatMemberService.changeMemberRole(1L, "user2@test.com", MemberRole.MODERATOR, "moderator@test.com");
+      ChatMemberDTO result = chatMemberService.changeRole(1L, "user2@test.com", MemberRole.MODERATOR, "moderator@test.com");
 
       assertNotNull(result);
       assertEquals(MemberRole.MODERATOR, testMember2.getRole());
@@ -281,7 +281,7 @@ class ChatMemberServiceImplTest {
       when(commonChatService.getMember(1L, "moderator@test.com")).thenReturn(testMember1);
 
       assertThrows(ChatMemberException.class,
-          () -> chatMemberService.changeMemberRole(1L, "admin@test.com", MemberRole.MEMBER, "moderator@test.com"));
+          () -> chatMemberService.changeRole(1L, "admin@test.com", MemberRole.MEMBER, "moderator@test.com"));
     }
 
     @Test
@@ -292,7 +292,7 @@ class ChatMemberServiceImplTest {
       when(commonChatService.getMember(1L, "user1@test.com")).thenReturn(testMember1);
 
       assertThrows(ChatMemberException.class,
-          () -> chatMemberService.changeMemberRole(1L, "user2@test.com", MemberRole.MODERATOR, "user1@test.com"));
+          () -> chatMemberService.changeRole(1L, "user2@test.com", MemberRole.MODERATOR, "user1@test.com"));
     }
   }
 }

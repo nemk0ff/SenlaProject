@@ -8,7 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,9 +39,9 @@ public final class Chat implements MyEntity {
 
   @Column(name = "created_at")
   private ZonedDateTime createdAt;
-
-  @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
-  private List<ChatMessage> messages = new ArrayList<>();
+//
+//  @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
+//  private List<ChatMessage> messages = new ArrayList<>();
 
   @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
   private List<ChatMember> members = new ArrayList<>();

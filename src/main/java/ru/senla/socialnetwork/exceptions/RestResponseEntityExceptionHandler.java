@@ -21,6 +21,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.senla.socialnetwork.exceptions.chats.ChatException;
+import ru.senla.socialnetwork.exceptions.communities.CommunityException;
 import ru.senla.socialnetwork.exceptions.friendRequests.FriendRequestException;
 import ru.senla.socialnetwork.exceptions.users.UserException;
 
@@ -133,6 +134,17 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
   @ExceptionHandler(ChatException.class)
   protected ResponseEntity<ProblemDetail> handleFriendRequestException(
       ChatException ex, WebRequest request) {
+    log.warn("{}: {}", ex.getAction(), ex.getMessage());
+
+    ProblemDetail problemDetail = problemDetailBuilder(
+        ex.getAction(), request, HttpStatus.BAD_REQUEST, ex);
+
+    return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(CommunityException.class)
+  protected ResponseEntity<ProblemDetail> handleFriendRequestException(
+      CommunityException ex, WebRequest request) {
     log.warn("{}: {}", ex.getAction(), ex.getMessage());
 
     ProblemDetail problemDetail = problemDetailBuilder(

@@ -186,7 +186,7 @@ class ChatServiceImplTest {
     when(commonChatService.getChat(1L)).thenReturn(testChat);
     when(chatMemberDao.findMembersByChatId(1L)).thenReturn(List.of(testMember1, testMember2));
 
-    chatService.deleteChat(1L);
+    chatService.delete(1L);
 
     verify(chatMemberDao).delete(testMember1);
     verify(chatMemberDao).delete(testMember2);
@@ -198,7 +198,7 @@ class ChatServiceImplTest {
     when(commonChatService.getChat(1L)).thenReturn(testChat);
     when(chatMapper.chatToChatDTO(testChat)).thenReturn(testChatDTO);
 
-    ChatDTO result = chatService.getChat(1L);
+    ChatDTO result = chatService.get(1L);
 
     assertNotNull(result);
     assertEquals(testChatDTO, result);

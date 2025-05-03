@@ -33,10 +33,6 @@ public abstract class ContentFragment implements MyEntity {
   @Column(name = "id")
   private Long id;
 
-  @ManyToOne
-  @JoinColumn(name = "author_id", nullable = false)
-  private User author;
-
   @Column(name = "body", nullable = false, length = 2000)
   private String body;
 

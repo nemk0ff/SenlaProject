@@ -10,11 +10,11 @@ public interface ChatMemberService {
 
   void removeUserFromChat(Long chatId, String userEmailToRemove, String currentUserEmail);
 
-  ChatMemberDTO muteUser(Long chatId, String userEmailToMute,
-                         ZonedDateTime muteUntil, String currentUserEmail);
+  ChatMemberDTO mute(Long chatId, String userEmailToMute,
+                     ZonedDateTime muteUntil, String currentUserEmail);
 
-  void leaveChat(Long chatId, String userEmail);
+  void leave(Long chatId, String userEmail);
 
-  ChatMemberDTO changeMemberRole(Long chatId, String userEmail,
-                                 MemberRole newRole, String currentUserEmail);
+  ChatMemberDTO changeRole(Long chatId, String userEmail,
+                           MemberRole newRole, String currentUserEmail);
 }

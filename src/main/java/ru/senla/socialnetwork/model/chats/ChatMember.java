@@ -1,11 +1,12 @@
 package ru.senla.socialnetwork.model.chats;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,8 +20,11 @@ import ru.senla.socialnetwork.model.general.GroupMember;
 @SuperBuilder
 @Entity
 @DiscriminatorValue("CHAT")
-public class ChatMember extends GroupMember {
+public final class ChatMember extends GroupMember {
   @ManyToOne
   @JoinColumn(name = "chat_id")
   private Chat chat;
+
+  @Column(name = "muted_until")
+  private ZonedDateTime mutedUntil;
 }

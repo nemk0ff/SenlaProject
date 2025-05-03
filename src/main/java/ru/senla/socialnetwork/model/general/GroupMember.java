@@ -39,15 +39,6 @@ public abstract class GroupMember implements MyEntity {
   @JoinColumn(name = "user_id", nullable = false)
   protected User user;
 
-  @Column(name = "muted_until")
-  protected ZonedDateTime mutedUntil;
-
-  @Column(name = "is_banned")
-  protected Boolean isBanned;
-
-  @Column(name = "banned_reason")
-  protected String bannedReason;
-
   @Column(name = "join_date", nullable = false)
   protected ZonedDateTime joinDate;
 

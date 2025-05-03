@@ -7,7 +7,7 @@ import ru.senla.socialnetwork.model.chats.ChatMessage;
 
 @Mapper(componentModel = "spring")
 public interface ChatMessageMapper {
-  @Mapping(target = "authorEmail", source = "author.email")
+  @Mapping(target = "authorEmail", source = "author.user.email")
   @Mapping(target = "replyToId", source = "replyTo.id")
   ChatMessageDTO toDTO(ChatMessage message);
 }

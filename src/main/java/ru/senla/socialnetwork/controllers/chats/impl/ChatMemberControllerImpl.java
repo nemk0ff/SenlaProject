@@ -53,7 +53,7 @@ public class ChatMemberControllerImpl implements ChatMemberController {
       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
       ZonedDateTime muteUntil,
       Authentication auth) {
-    return ResponseEntity.ok(chatMemberService.muteUser(
+    return ResponseEntity.ok(chatMemberService.mute(
         chatId, userEmail, muteUntil, auth.getName()));
   }
 
@@ -62,7 +62,7 @@ public class ChatMemberControllerImpl implements ChatMemberController {
   public ResponseEntity<Void> leaveChat(
       @PathVariable Long chatId,
       String userEmail) {
-    chatMemberService.leaveChat(chatId, userEmail);
+    chatMemberService.leave(chatId, userEmail);
     return ResponseEntity.noContent().build();
   }
 }

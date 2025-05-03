@@ -9,7 +9,7 @@ public interface ChatService {
 
   ChatDTO create(CreatePersonalChatDTO chatDTO);
 
-  void deleteChat(Long chatId);
+  void delete(Long chatId);
 
-  ChatDTO getChat(Long chatId);
+  ChatDTO get(Long chatId);
 }
