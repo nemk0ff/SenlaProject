@@ -21,7 +21,6 @@ public class ChatMemberServiceImpl implements ChatMemberService {
   private static final int MAX_MODERATORS_NUMBER = 10;
   private static final int MAX_ADMINS_NUMBER = 3;
 
-
   private final ChatMemberDao chatMemberDao;
 
   @Override

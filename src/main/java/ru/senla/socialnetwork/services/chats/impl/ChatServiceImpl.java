@@ -5,7 +5,6 @@ import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.senla.socialnetwork.dao.chats.ChatDao;
 import ru.senla.socialnetwork.dto.chats.CreateGroupChatDTO;
 import ru.senla.socialnetwork.dto.chats.CreatePersonalChatDTO;
@@ -15,13 +14,11 @@ import ru.senla.socialnetwork.services.chats.ChatService;
 
 @Slf4j
 @Service
-@Transactional
 @AllArgsConstructor
 public class ChatServiceImpl implements ChatService {
   private final ChatDao chatDao;
 
   @Override
-  @Transactional
   public Chat create(CreateGroupChatDTO request) {
     if (request.membersEmails().isEmpty()) {
       throw new ChatException("Групповой чат должен иметь хотя бы одного участника");
@@ -37,7 +34,6 @@ public class ChatServiceImpl implements ChatService {
   }
 
   @Override
-  @Transactional
   public Chat create(CreatePersonalChatDTO request, String chatName) {
     if (chatDao.existsByMembers(request.creatorEmail(), request.friendEmail())) {
       throw new ChatException("Личный чат " + chatName + " уже существует");
@@ -53,16 +49,13 @@ public class ChatServiceImpl implements ChatService {
   }
 
   @Override
-  @Transactional
   public void delete(Chat chat) {
     chatDao.delete(chat);
   }
 
   @Override
-  @Transactional(readOnly = true)
   public Chat get(Long chatId) {
     return chatDao.findWithMembersAndUsers(chatId)
         .orElseThrow(() -> new EntityNotFoundException("Чат не найден."));
   }
-
 }

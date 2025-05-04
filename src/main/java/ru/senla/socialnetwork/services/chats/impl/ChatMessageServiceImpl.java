@@ -1,12 +1,10 @@
 package ru.senla.socialnetwork.services.chats.impl;
 
-import jakarta.persistence.EntityNotFoundException;
 import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.senla.socialnetwork.dao.chats.ChatMessageDao;
 import ru.senla.socialnetwork.dto.chats.CreateMessageDTO;
 import ru.senla.socialnetwork.exceptions.chats.ChatMemberException;
@@ -17,7 +15,6 @@ import ru.senla.socialnetwork.services.chats.ChatMessageService;
 
 @Slf4j
 @Service
-@Transactional
 @AllArgsConstructor
 public class ChatMessageServiceImpl implements ChatMessageService {
   private final ChatMessageDao chatMessageDao;
