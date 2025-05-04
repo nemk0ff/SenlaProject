@@ -23,7 +23,5 @@ public interface ChatMemberFacade {
 
   boolean isChatAdmin(Long chatId, String requesterEmail);
 
-  boolean isChatModerator(Long chatId, String requesterEmail);
-
   boolean isChatAdminOrModerator(Long chatId, String requesterEmail);
 }

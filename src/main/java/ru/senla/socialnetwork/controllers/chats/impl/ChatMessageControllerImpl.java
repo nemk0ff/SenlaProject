@@ -45,13 +45,34 @@ public class ChatMessageControllerImpl implements ChatMessageController {
   }
 
   @Override
-  public ResponseEntity<?> getMessage(Long chatId, Long messageId) {
-    return null;
+  @GetMapping("/{messageId}")
+  @PreAuthorize("@chatMemberFacadeImpl.isChatMember(#chatId, authentication.name)")
+  public ResponseEntity<?> getMessage(@PathVariable Long chatId,
+                                      @PathVariable Long messageId) {
+    log.info("Получение сообщения {} из чата {}", messageId, chatId);
+    return ResponseEntity.ok(chatMessageFacade.get(chatId, messageId));
+  }
+
+  @Override
+  @GetMapping("/{messageId}/answers")
+  @PreAuthorize("@chatMemberFacadeImpl.isChatMember(#chatId, authentication.name)")
+  public ResponseEntity<?> getAnswers(@PathVariable Long chatId,
+                                      @PathVariable Long messageId) {
+    log.info("Получение ответов на сообщение {} из чата {}", messageId, chatId);
+    return ResponseEntity.ok(chatMessageFacade.getAnswers(chatId, messageId));
+  }
+
+  @Override
+  @GetMapping("/pinned")
+  @PreAuthorize("@chatMemberFacadeImpl.isChatMember(#chatId, authentication.name)")
+  public ResponseEntity<?> getPinnedMessages(@PathVariable Long chatId) {
+    log.info("Получение закрепленных сообщений из чата {}", chatId);
+    return ResponseEntity.ok(chatMessageFacade.getPinned(chatId));
   }
 
   @Override
   @PostMapping("/{messageId}/pin")
-  @PreAuthorize("@chatMemberFacadeImpl.isChatAdminOrModerator(#chatId, #email)")
+  @PreAuthorize("@chatMemberFacadeImpl.isChatAdminOrModerator(#chatId, authentication.name)")
   public ResponseEntity<?> pinMessage(
       @PathVariable Long chatId,
       @PathVariable Long messageId) {
@@ -61,7 +82,7 @@ public class ChatMessageControllerImpl implements ChatMessageController {
 
   @Override
   @DeleteMapping("/{messageId}/pin")
-  @PreAuthorize("@chatMemberFacadeImpl.isChatAdminOrModerator(#chatId, #email)")
+  @PreAuthorize("@chatMemberFacadeImpl.isChatAdminOrModerator(#chatId, authentication.name)")
   public ResponseEntity<?> unpinMessage(
       @PathVariable Long chatId,
       @PathVariable Long messageId) {

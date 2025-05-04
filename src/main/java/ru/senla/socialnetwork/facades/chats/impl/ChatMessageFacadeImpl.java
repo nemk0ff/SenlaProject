@@ -15,8 +15,6 @@ import ru.senla.socialnetwork.model.chats.ChatMessage;
 import ru.senla.socialnetwork.model.general.MemberRole;
 import ru.senla.socialnetwork.services.chats.ChatMemberService;
 import ru.senla.socialnetwork.services.chats.ChatMessageService;
-import ru.senla.socialnetwork.services.chats.ChatService;
-import ru.senla.socialnetwork.services.user.UserService;
 
 @Service
 @Transactional
@@ -24,10 +22,8 @@ import ru.senla.socialnetwork.services.user.UserService;
 @Slf4j
 public class ChatMessageFacadeImpl implements ChatMessageFacade {
   private final ChatMessageMapper chatMessageMapper;
-  private final ChatService chatService;
   private final ChatMemberService chatMemberService;
   private final ChatMessageService chatMessageService;
-  private final UserService userService;
 
   @Override
   public ChatMessageDTO send(Long chatId, String authorEmail, CreateMessageDTO request) {
@@ -38,6 +34,25 @@ public class ChatMessageFacadeImpl implements ChatMessageFacade {
   @Override
   public List<ChatMessageDTO> getAll(Long chatId) {
     return chatMessageService.getAll(chatId).stream()
+        .map(chatMessageMapper::toDTO)
+        .toList();
+  }
+
+  @Override
+  public ChatMessageDTO get(Long chatId, Long messageId) {
+    return chatMessageMapper.toDTO(chatMessageService.get(chatId, messageId));
+  }
+
+  @Override
+  public List<ChatMessageDTO> getAnswers(Long chatId, Long messageId) {
+    return chatMessageService.getAnswers(chatId, messageId).stream()
+        .map(chatMessageMapper::toDTO)
+        .toList();
+  }
+
+  @Override
+  public List<ChatMessageDTO> getPinned(Long chatId) {
+    return chatMessageService.getPinned(chatId).stream()
         .map(chatMessageMapper::toDTO)
         .toList();
   }

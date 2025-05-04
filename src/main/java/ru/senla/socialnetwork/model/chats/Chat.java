@@ -3,6 +3,7 @@ package ru.senla.socialnetwork.model.chats;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -39,10 +40,10 @@ public final class Chat implements MyEntity {
 
   @Column(name = "created_at")
   private ZonedDateTime createdAt;
-//
-//  @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
-//  private List<ChatMessage> messages = new ArrayList<>();
 
-  @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<ChatMessage> messages = new ArrayList<>();
+
+  @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<ChatMember> members = new ArrayList<>();
 }

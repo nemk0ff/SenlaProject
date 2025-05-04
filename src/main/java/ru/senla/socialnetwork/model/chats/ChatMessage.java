@@ -3,6 +3,7 @@ package ru.senla.socialnetwork.model.chats;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,10 @@ public final class ChatMessage extends ContentFragment {
   @ManyToOne
   @JoinColumn(name = "author_id", nullable = false)
   private ChatMember author;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "chat_id", nullable = false)
+  private Chat chat;
 
   @ManyToOne
   @JoinColumn(name = "reply_to_id")

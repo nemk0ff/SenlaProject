@@ -12,6 +12,10 @@ public interface ChatMessageController {
 
   ResponseEntity<?> getMessage(Long chatId, Long messageId);
 
+  ResponseEntity<?> getAnswers(Long chatId, Long messageId);
+
+  ResponseEntity<?> getPinnedMessages(Long chatId);
+
   ResponseEntity<?> pinMessage(Long chatId, Long messageId);
 
   ResponseEntity<?> unpinMessage(Long chatId, Long messageId);

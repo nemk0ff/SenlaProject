@@ -1,5 +1,6 @@
 package ru.senla.socialnetwork.services.chats.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -52,6 +53,35 @@ public class ChatMessageServiceImpl implements ChatMessageService {
   }
 
   @Override
+  public ChatMessage get(Long chatId, Long messageId) {
+    ChatMessage message = chatMessageDao.find(messageId)
+        .orElseThrow(() -> new ChatMessageException("Сообщение не найдено"));
+
+    if (!message.getAuthor().getChat().getId().equals(chatId)) {
+      throw new ChatMessageException("Сообщение не принадлежит этому чату");
+    }
+    return message;
+  }
+
+  @Override
+  public List<ChatMessage> getAnswers(Long chatId, Long messageId) {
+    List<ChatMessage> messages = chatMessageDao.findAnswers(chatId, messageId);
+    if(messages.isEmpty()){
+      throw new ChatMemberException("Ответов на сообщение не найдено");
+    }
+    return messages;
+  }
+
+  @Override
+  public List<ChatMessage> getPinned(Long chatId) {
+    List<ChatMessage> messages = chatMessageDao.findPinnedByChatId(chatId);
+    if(messages.isEmpty()){
+      throw new ChatMemberException("В чате нет закреплённых сообщений");
+    }
+    return messages;
+  }
+
+  @Override
   public ChatMessage pin(Long chatId, Long messageId) {
     ChatMessage message = get(chatId, messageId);
 
@@ -76,17 +106,6 @@ public class ChatMessageServiceImpl implements ChatMessageService {
   @Override
   public void delete(ChatMessage message) {
     chatMessageDao.delete(message);
-  }
-
-  @Override
-  public ChatMessage get(Long chatId, Long messageId) {
-    ChatMessage message = chatMessageDao.find(messageId)
-        .orElseThrow(() -> new ChatMessageException("Сообщение не найдено"));
-
-    if (!message.getAuthor().getChat().getId().equals(chatId)) {
-      throw new ChatMessageException("Сообщение не принадлежит этому чату");
-    }
-    return message;
   }
 }
 

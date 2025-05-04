@@ -9,6 +9,12 @@ public interface ChatMessageFacade {
 
   List<ChatMessageDTO> getAll(Long chatId);
 
+  ChatMessageDTO get(Long chatId, Long messageId);
+
+  List<ChatMessageDTO> getAnswers(Long chatId, Long messageId);
+
+  List<ChatMessageDTO> getPinned(Long chatId);
+
   ChatMessageDTO pin(Long chatId, Long messageId);
 
   ChatMessageDTO unpin(Long chatId, Long messageId);

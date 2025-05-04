@@ -29,4 +29,35 @@ public class ChatMessageDaoImpl extends HibernateAbstractDao<ChatMessage> implem
       throw new DataRetrievalFailureException("Ошибка при поиске сообщений чата", e);
     }
   }
+
+  @Override
+  public List<ChatMessage> findAnswers(Long chatId, Long messageId) {
+    log.info("Поиск ответов на сообщение {} из чата {}", messageId, chatId);
+    try {
+      String hql = "FROM ChatMessage m WHERE m.chat.id = :chatId " +
+          "AND m.replyTo.id = :messageId ORDER BY m.createdAt DESC";
+      return sessionFactory.getCurrentSession()
+          .createQuery(hql, ChatMessage.class)
+          .setParameter("chatId", chatId)
+          .setParameter("messageId", messageId)
+          .getResultList();
+    } catch (Exception e) {
+      throw new DataRetrievalFailureException("Ошибка при поиске ответов на сообщение в чате", e);
+    }
+  }
+
+  @Override
+  public List<ChatMessage> findPinnedByChatId(Long chatId) {
+    log.info("Поиск закрепленных сообщений чата {}", chatId);
+    try {
+      String hql = "FROM ChatMessage m WHERE m.chat.id = :chatId AND m.isPinned = true " +
+          "ORDER BY m.createdAt DESC";
+      return sessionFactory.getCurrentSession()
+          .createQuery(hql, ChatMessage.class)
+          .setParameter("chatId", chatId)
+          .getResultList();
+    } catch (Exception e) {
+      throw new DataRetrievalFailureException("Ошибка при поиске закрепленных сообщений чата", e);
+    }
+  }
 }
