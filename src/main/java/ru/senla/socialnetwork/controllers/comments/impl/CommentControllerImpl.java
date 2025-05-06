@@ -1,36 +1,38 @@
-package ru.senla.socialnetwork.controllers.comments;
+package ru.senla.socialnetwork.controllers.comments.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.senla.socialnetwork.model.comment.Reaction;
+import ru.senla.socialnetwork.controllers.comments.CommentController;
+import ru.senla.socialnetwork.facades.comments.CommentFacade;
 
 @Slf4j
 @RestController
 @AllArgsConstructor
 @RequestMapping("/comments")
 public class CommentControllerImpl implements CommentController {
+  private final CommentFacade commentFacade;
 
   @Override
   @GetMapping
-  public ResponseEntity<?> getAllComments() {
+  public ResponseEntity<?> getAll() {
   }
 
   @Override
   @GetMapping("/{id}")
-  public ResponseEntity<?> getComment(Long id) {
+  public ResponseEntity<?> get(@PathVariable("id") Long id) {
   }
 
   @Override
   @GetMapping("/post/{id}")
-  public ResponseEntity<?> getAllPostComments(Long postId) {
+  public ResponseEntity<?> getPostComments(@PathVariable("id") Long postId) {
   }
 
   @Override
@@ -40,27 +42,13 @@ public class CommentControllerImpl implements CommentController {
 
   @Override
   @PutMapping("/{id}")
-  public ResponseEntity<?> updateComment(UpdateCommentDTO request) {
+  public ResponseEntity<?> updateComment(
+      @PathVariable("id") Long id,
+      UpdateCommentDTO request) {
   }
 
   @Override
   @DeleteMapping("/{id}")
-  public ResponseEntity<?> deleteComment(Long id) {
-  }
-
-  @Override
-  @PostMapping("/{id}/reaction")
-  public ResponseEntity<?> react(Long Id,
-      @RequestParam Reaction reaction) {
-  }
-
-  @Override
-  @DeleteMapping("/{id}/reaction")
-  public ResponseEntity<?> unreact(Long id) {
-  }
-
-  @Override
-  @GetMapping("/{id}/reactions")
-  public ResponseEntity<?> getAllReactions(Long id) {
+  public ResponseEntity<?> deleteComment(@PathVariable("id") Long id) {
   }
 }

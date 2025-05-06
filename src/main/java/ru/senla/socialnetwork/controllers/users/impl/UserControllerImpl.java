@@ -71,4 +71,6 @@ public class UserControllerImpl implements UserController {
         "token", newToken,
         "updatedUser", UserMapper.INSTANCE.toUserResponseDTO(updatedUser)));
   }
+
+
 }
