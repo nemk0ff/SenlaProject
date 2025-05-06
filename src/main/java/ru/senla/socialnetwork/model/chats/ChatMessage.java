@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.model.content;
+package ru.senla.socialnetwork.model.chats;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import ru.senla.socialnetwork.model.chats.Chat;
+import ru.senla.socialnetwork.model.general.ContentFragment;
 
 @Getter
 @Setter

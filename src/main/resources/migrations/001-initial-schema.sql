@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS content_fragments (
     id SERIAL PRIMARY KEY,
     author_id INTEGER NOT NULL REFERENCES users(id),
     chat_id INTEGER REFERENCES chats(id),
-    community_id INTEGER,
+    post_id INTEGER REFERENCES posts(id),
     body VARCHAR(2000) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL,
     cf_type VARCHAR(32),

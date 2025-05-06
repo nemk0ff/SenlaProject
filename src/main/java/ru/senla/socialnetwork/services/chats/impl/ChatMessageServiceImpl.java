@@ -10,7 +10,7 @@ import ru.senla.socialnetwork.dto.chats.CreateMessageDTO;
 import ru.senla.socialnetwork.exceptions.chats.ChatMemberException;
 import ru.senla.socialnetwork.exceptions.chats.ChatMessageException;
 import ru.senla.socialnetwork.model.chats.ChatMember;
-import ru.senla.socialnetwork.model.content.ChatMessage;
+import ru.senla.socialnetwork.model.chats.ChatMessage;
 import ru.senla.socialnetwork.services.chats.ChatMessageService;
 
 @Slf4j

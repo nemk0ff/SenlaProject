@@ -11,7 +11,7 @@ import ru.senla.socialnetwork.dto.mappers.ChatMessageMapper;
 import ru.senla.socialnetwork.exceptions.chats.ChatMessageException;
 import ru.senla.socialnetwork.facades.chats.ChatMessageFacade;
 import ru.senla.socialnetwork.model.chats.ChatMember;
-import ru.senla.socialnetwork.model.content.ChatMessage;
+import ru.senla.socialnetwork.model.chats.ChatMessage;
 import ru.senla.socialnetwork.model.general.MemberRole;
 import ru.senla.socialnetwork.services.chats.ChatMemberService;
 import ru.senla.socialnetwork.services.chats.ChatMessageService;

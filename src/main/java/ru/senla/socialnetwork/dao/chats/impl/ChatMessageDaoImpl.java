@@ -7,7 +7,7 @@ import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 import ru.senla.socialnetwork.dao.chats.ChatMessageDao;
 import ru.senla.socialnetwork.dao.HibernateAbstractDao;
-import ru.senla.socialnetwork.model.content.ChatMessage;
+import ru.senla.socialnetwork.model.chats.ChatMessage;
 
 @Slf4j
 @Repository

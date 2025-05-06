@@ -25,7 +25,7 @@ public final class WallPost extends Post {
   private User wall_owner;
 
   @Column(name = "mood")
-  private String mood;
+  private Mood mood;
 
   @Column(name = "location")
   private String location;
