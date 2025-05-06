@@ -11,7 +11,7 @@ import ru.senla.socialnetwork.dto.mappers.ChatMessageMapper;
 import ru.senla.socialnetwork.exceptions.chats.ChatMessageException;
 import ru.senla.socialnetwork.facades.chats.ChatMessageFacade;
 import ru.senla.socialnetwork.model.chats.ChatMember;
-import ru.senla.socialnetwork.model.chats.ChatMessage;
+import ru.senla.socialnetwork.model.content.ChatMessage;
 import ru.senla.socialnetwork.model.general.MemberRole;
 import ru.senla.socialnetwork.services.chats.ChatMemberService;
 import ru.senla.socialnetwork.services.chats.ChatMessageService;
@@ -72,7 +72,7 @@ public class ChatMessageFacadeImpl implements ChatMessageFacade {
     ChatMessage message = chatMessageService.get(chatId, messageId);
     ChatMember member = chatMemberService.getMember(chatId, currentUserEmail);
 
-    if (!message.getAuthor().getUser().getEmail().equals(currentUserEmail)) {
+    if (!message.getAuthor().getEmail().equals(currentUserEmail)) {
       if (member.getRole() != MemberRole.ADMIN && member.getRole() != MemberRole.MODERATOR) {
         throw new ChatMessageException("Вы не можете удалить данное сообщение");
       }

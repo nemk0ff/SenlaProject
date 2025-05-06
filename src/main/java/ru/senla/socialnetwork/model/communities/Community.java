@@ -36,10 +36,6 @@ public final class Community implements MyEntity {
   @Column(name = "name", nullable = false, length = 32)
   private String name;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "owner_id", nullable = false)
-  private User owner;
-
   @Column(name = "description", nullable = false, length = 1000)
   private String description;
 

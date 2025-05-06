@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.model.chats;
+package ru.senla.socialnetwork.model.content;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import ru.senla.socialnetwork.model.general.ContentFragment;
+import ru.senla.socialnetwork.model.general.Post;
 
 @Getter
 @Setter
@@ -19,15 +19,12 @@ import ru.senla.socialnetwork.model.general.ContentFragment;
 @AllArgsConstructor
 @SuperBuilder
 @Entity
-@DiscriminatorValue("MESSAGE")
-public final class ChatMessage extends ContentFragment {
-  @ManyToOne
-  @JoinColumn(name = "author_id", nullable = false)
-  private ChatMember author;
+@DiscriminatorValue("COMMENT")
+public final class Comment extends ContentFragment {
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "chat_id", nullable = false)
-  private Chat chat;
+  @JoinColumn(name = "post_id", nullable = false)
+  private Post post;
 
   @ManyToOne
   @JoinColumn(name = "reply_to_id")

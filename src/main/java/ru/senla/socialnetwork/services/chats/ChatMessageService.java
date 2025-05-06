@@ -3,7 +3,7 @@ package ru.senla.socialnetwork.services.chats;
 import java.util.List;
 import ru.senla.socialnetwork.dto.chats.CreateMessageDTO;
 import ru.senla.socialnetwork.model.chats.ChatMember;
-import ru.senla.socialnetwork.model.chats.ChatMessage;
+import ru.senla.socialnetwork.model.content.ChatMessage;
 
 public interface ChatMessageService {
   ChatMessage send(ChatMember member, CreateMessageDTO request);

@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.model.general;
+package ru.senla.socialnetwork.model.content;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
@@ -17,6 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import ru.senla.socialnetwork.model.general.MyEntity;
 import ru.senla.socialnetwork.model.users.User;
 
 @Getter
@@ -32,6 +33,10 @@ public abstract class ContentFragment implements MyEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private Long id;
+
+  @ManyToOne
+  @JoinColumn(name = "author_id", nullable = false)
+  private User author;
 
   @Column(name = "body", nullable = false, length = 2000)
   private String body;

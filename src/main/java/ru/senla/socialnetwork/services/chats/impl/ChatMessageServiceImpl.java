@@ -10,7 +10,7 @@ import ru.senla.socialnetwork.dto.chats.CreateMessageDTO;
 import ru.senla.socialnetwork.exceptions.chats.ChatMemberException;
 import ru.senla.socialnetwork.exceptions.chats.ChatMessageException;
 import ru.senla.socialnetwork.model.chats.ChatMember;
-import ru.senla.socialnetwork.model.chats.ChatMessage;
+import ru.senla.socialnetwork.model.content.ChatMessage;
 import ru.senla.socialnetwork.services.chats.ChatMessageService;
 
 @Slf4j
@@ -26,7 +26,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     }
 
     ChatMessage message = ChatMessage.builder()
-        .author(member)
+        .author(member.getUser())
         .body(request.body())
         .createdAt(ZonedDateTime.now())
         .isPinned(false)
@@ -54,7 +54,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     ChatMessage message = chatMessageDao.find(messageId)
         .orElseThrow(() -> new ChatMessageException("Сообщение не найдено"));
 
-    if (!message.getAuthor().getChat().getId().equals(chatId)) {
+    if (!message.getChat().getId().equals(chatId)) {
       throw new ChatMessageException("Сообщение не принадлежит этому чату");
     }
     return message;
