@@ -1,5 +1,6 @@
 package ru.senla.socialnetwork.dao.chats.impl;
 
+import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
@@ -70,6 +71,26 @@ public class ChatDaoImpl extends HibernateAbstractDao<Chat> implements ChatDao {
           .uniqueResultOptional();
     } catch (Exception e) {
       throw new DataRetrievalFailureException("Ошибка при расширенном поиске чата по id " + id, e);
+    }
+  }
+
+  @Override
+  public List<Chat> findAllByUserId(Long userId) {
+    log.info("Поиск всех чатов для пользователя с id: {}", userId);
+    try {
+      String hql = "SELECT DISTINCT c FROM Chat c " +
+          "LEFT JOIN FETCH c.members m " +
+          "LEFT JOIN FETCH m.user " +
+          "WHERE m.user.id = :userId " +
+          "ORDER BY c.createdAt DESC";
+
+      return sessionFactory.getCurrentSession()
+          .createQuery(hql, Chat.class)
+          .setParameter("userId", userId)
+          .getResultList();
+    } catch (Exception e) {
+      throw new DataRetrievalFailureException(
+          "Ошибка при поиске чатов для пользователя с id " + userId, e);
     }
   }
 }

@@ -7,7 +7,6 @@ import ru.senla.socialnetwork.model.chats.ChatMember;
 import ru.senla.socialnetwork.model.general.MemberRole;
 
 public interface ChatMemberService {
-
   ChatMember addUserToChat(Chat chat, ChatMember newMember);
 
   ChatMember mute(Long chatId, String userEmailToMute, ZonedDateTime muteUntil);

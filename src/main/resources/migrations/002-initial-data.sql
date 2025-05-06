@@ -21,3 +21,42 @@ VALUES ('ivanov_arkadiy@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9U
         'Будущий врач, учусь в медицинском колледже', '2025-04-09 21:30:00+03'),
        ('admin@senla.ru', 'ADMIN', '$2a$10$zp4b4MEUJJPBESQka4E7tuHFYnGMAwYa2OqZxLo5LeNX66fLeKa4m', 'Admin', 'Senla','1995-04-20', 'MALE',
         'Java Web Developer, Founder of this application', '2025-04-09 09:00:00+03');
+
+
+
+INSERT INTO communities (name, owner_id, description, created_at)
+VALUES
+    ('Трейдеры и инвесторы', 1, 'Сообщество для обсуждения рынков и инвестиций', '2025-04-10 09:00:00+03'),
+    ('Java Developers', 11, 'Сообщество Java-разработчиков. Spring, Hibernate, Jakarta EE', '2025-04-11 10:00:00+03'),
+    ('Спортивное плавание', 6, 'Все о плавании: тренировки, соревнования, экипировка', '2025-04-12 11:00:00+03');
+
+INSERT INTO group_members (user_id, community_id, join_date, role, gm_type, is_banned, banned_reason)
+VALUES
+-- "Трейдеры и инвесторы"
+(1, 1, '2025-04-10 09:05:00+03', 'ADMIN', 'COMMUNITY', false, NULL),
+(3, 1, '2025-04-10 10:15:00+03', 'MEMBER', 'COMMUNITY', false, NULL),
+(4, 1, '2025-04-10 11:30:00+03', 'MEMBER', 'COMMUNITY', true, 'Нарушение правил сообщества: реклама'),
+
+-- "Java Developers"
+(11, 2, '2025-04-11 10:05:00+03', 'ADMIN', 'COMMUNITY', false, NULL),
+(2, 2, '2025-04-11 12:45:00+03', 'MODERATOR', 'COMMUNITY', false, NULL),
+(5, 2, '2025-04-11 14:20:00+03', 'MEMBER', 'COMMUNITY', false, NULL),
+(7, 2, '2025-04-11 15:30:00+03', 'MEMBER', 'COMMUNITY', true, 'Флуд и оффтоп'),
+
+-- "Спортивное плавание"
+(6, 3, '2025-04-12 11:05:00+03', 'ADMIN', 'COMMUNITY', false, NULL),
+(8, 3, '2025-04-12 13:10:00+03', 'MEMBER', 'COMMUNITY', false, NULL),
+(10, 3, '2025-04-12 15:40:00+03', 'MEMBER', 'COMMUNITY', true, 'Оскорбление участников');
+
+INSERT INTO posts (author_id, community_id, body, created_at, post_type)
+VALUES
+    (1, 1, 'Сегодня сильное движение на нефтяном рынке, все в шорте?', '2025-04-10 09:30:00+03', 'COMMUNITY'),
+    (3, 1, 'Кто что думает про акции Tesla после последнего отчета?', '2025-04-10 14:45:00+03', 'COMMUNITY'),
+
+    (11, 2, 'Переходим на Spring Boot 3.2 - основные изменения', '2025-04-11 11:20:00+03', 'COMMUNITY'),
+    (2, 2, 'Как правильно делать интеграционные тесты в Spring?', '2025-04-11 13:45:00+03', 'COMMUNITY'),
+    (5, 2, 'Hibernate vs JPA - в чем разница на практике?', '2025-04-11 16:30:00+03', 'COMMUNITY'),
+    (11, 2, 'Новый LTS релиз Java 21 - кто уже перешел?', '2025-04-11 17:50:00+03', 'COMMUNITY'),
+
+    (6, 3, 'Подготовка к чемпионату Москвы - график тренировок', '2025-04-12 12:15:00+03', 'COMMUNITY'),
+    (8, 3, 'Обзор новых гидрокостюмов 2025 года', '2025-04-12 17:50:00+03', 'COMMUNITY');

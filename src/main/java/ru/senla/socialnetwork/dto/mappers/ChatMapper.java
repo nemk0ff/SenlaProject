@@ -1,8 +1,8 @@
 package ru.senla.socialnetwork.dto.mappers;
 
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 import ru.senla.socialnetwork.dto.chats.ChatDTO;
 import ru.senla.socialnetwork.model.chats.Chat;
 
@@ -10,4 +10,6 @@ import ru.senla.socialnetwork.model.chats.Chat;
 public interface ChatMapper {
   @Mapping(target = "members", source = "members")
   ChatDTO chatToChatDTO(Chat chat);
+
+  List<ChatDTO> toListChatDTO(List<Chat> chats);
 }

@@ -33,6 +33,12 @@ public class ChatFacadeImpl implements ChatFacade {
   private final UserService userService;
 
   @Override
+  public List<ChatDTO> getUserChats(String email) {
+    User user = userService.getUserByEmail(email);
+    return chatMapper.toListChatDTO(chatService.getAllByUser(user.getId()));
+  }
+
+  @Override
   public ChatDTO create(CreateGroupChatDTO chatDTO) {
     Chat chat = chatService.create(chatDTO);
 

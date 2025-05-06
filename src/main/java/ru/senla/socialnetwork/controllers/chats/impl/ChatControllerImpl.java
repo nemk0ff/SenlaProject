@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.chats.ChatController;
 import ru.senla.socialnetwork.dto.chats.CreateGroupChatDTO;
@@ -24,6 +25,14 @@ import ru.senla.socialnetwork.facades.chats.ChatFacade;
 @RequestMapping("/chats")
 public class ChatControllerImpl implements ChatController {
   private final ChatFacade chatFacade;
+
+  @Override
+  @GetMapping
+  @PreAuthorize("hasRole('ADMIN') OR #email == authentication.name")
+  public ResponseEntity<?> getUserChats(@RequestParam("email") String email) {
+    log.info("Получение чатов пользователя {}", email);
+    return ResponseEntity.ok(chatFacade.getUserChats(email));
+  }
 
   @Override
   @PostMapping("/group")
@@ -49,9 +58,8 @@ public class ChatControllerImpl implements ChatController {
       "or @chatMemberFacadeImpl.isChatAdmin(#chatId, authentication.name)")
   public ResponseEntity<?> deleteChat(@PathVariable Long chatId) {
     log.info("Удаление чата с ID {}", chatId);
-    String chatName = chatFacade.get(chatId).name();
     chatFacade.delete(chatId);
-    return ResponseEntity.ok("Чат " + chatName + " удалён");
+    return ResponseEntity.ok("Чат " + chatId + " удалён");
   }
 
   @Override
