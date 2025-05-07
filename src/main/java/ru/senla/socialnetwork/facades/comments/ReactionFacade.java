@@ -1,14 +1,18 @@
 package ru.senla.socialnetwork.facades.comments;
 
 import java.util.List;
-import ru.senla.socialnetwork.model.comment.Reaction;
-import ru.senla.socialnetwork.model.comment.ReactionType;
+import ru.senla.socialnetwork.dto.comments.CreateReactionDTO;
+import ru.senla.socialnetwork.dto.comments.ReactionDTO;
 
 public interface ReactionFacade {
 
-  ReactionDTO setReaction(Long id, ReactionType type);
+  List<ReactionDTO> getAll();
 
-  void removeReaction(Long id);
+  ReactionDTO get(Long reactionId);
 
-  List<Reaction> getReactions(Long commentId);
+  ReactionDTO setReaction(Long id, CreateReactionDTO request);
+
+  void removeReaction(Long id, String email);
+
+  List<ReactionDTO> getByComment(Long commentId);
 }

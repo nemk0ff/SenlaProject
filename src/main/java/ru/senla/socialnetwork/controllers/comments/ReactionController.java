@@ -1,16 +1,17 @@
 package ru.senla.socialnetwork.controllers.comments;
 
 import org.springframework.http.ResponseEntity;
-import ru.senla.socialnetwork.model.comment.ReactionType;
+import org.springframework.security.core.Authentication;
+import ru.senla.socialnetwork.dto.comments.CreateReactionDTO;
 
 public interface ReactionController {
   ResponseEntity<?> getAll();
 
   ResponseEntity<?> get(Long id);
 
-  ResponseEntity<?> react(Long commentId, ReactionType reaction);
+  ResponseEntity<?> react(Long commentId, CreateReactionDTO request);
 
-  ResponseEntity<?> react(Long id);
+  ResponseEntity<?> react(Long id, Authentication auth);
 
-  ResponseEntity<?> getReactions(Long id);
+  ResponseEntity<?> getByComment(Long id);
 }

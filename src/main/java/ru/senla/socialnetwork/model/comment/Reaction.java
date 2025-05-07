@@ -38,6 +38,10 @@ public final class Reaction implements MyEntity {
   @JoinColumn(name = "user_id", nullable = false)
   private User owner;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "comment_id", nullable = false)
+  private Comment comment;
+
   @Column(name = "created_at")
   private ZonedDateTime createdAt;
 }

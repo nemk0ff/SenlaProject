@@ -68,5 +68,6 @@ public class CommentControllerImpl implements CommentController {
   @Override
   @DeleteMapping("/{id}")
   public ResponseEntity<?> deleteComment(@PathVariable("id") Long id) {
+    return ResponseEntity.ok("Удалено");
   }
 }
