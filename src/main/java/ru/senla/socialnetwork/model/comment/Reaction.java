@@ -25,7 +25,7 @@ import ru.senla.socialnetwork.model.users.User;
 @Builder
 @Entity
 @Table(name = "reactions")
-public class Reaction implements MyEntity {
+public final class Reaction implements MyEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
