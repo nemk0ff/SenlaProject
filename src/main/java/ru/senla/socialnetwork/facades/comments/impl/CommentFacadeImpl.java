@@ -37,7 +37,7 @@ public class CommentFacadeImpl implements CommentFacade {
 
   @Override
   public List<CommentDTO> getPostComments(Long postId, String email) {
-    return List.of();
+
   }
 
   @Override

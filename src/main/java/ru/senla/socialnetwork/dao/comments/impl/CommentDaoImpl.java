@@ -20,7 +20,9 @@ public class CommentDaoImpl extends HibernateAbstractDao<Comment> implements Com
   public List<Comment> getAll() {
     log.info("Получение списка всех комментариев...");
     try {
-      String hql = "SELECT c FROM Comment c LEFT JOIN FETCH c.author";
+      String hql = "SELECT c FROM Comment c " +
+          "LEFT JOIN FETCH c.author " +
+          "LEFT JOIN FETCH c.post ";
 
       List<Comment> comments = sessionFactory.getCurrentSession()
           .createQuery(hql, Comment.class)

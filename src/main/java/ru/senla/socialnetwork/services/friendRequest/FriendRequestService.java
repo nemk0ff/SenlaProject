@@ -19,4 +19,6 @@ public interface FriendRequestService {
   FriendRequest replyToRequest(User sender, User recipient, FriendStatus status);
 
   void unfriend(User user, User unfriend);
+
+  boolean isFriends(Long firstId, Long secondId);
 }

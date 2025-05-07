@@ -42,7 +42,6 @@ public class CommunityPostServiceImpl implements CommunityPostService {
     CommunityPost post = CommunityPost.builder()
         .author(author)
         .body(dto.body())
-//        .tags(dto.tags())
         .isPinned(false)
         .created_at(ZonedDateTime.now())
         .build();
@@ -60,9 +59,6 @@ public class CommunityPostServiceImpl implements CommunityPostService {
   public CommunityPost updatePost(Long communityId, Long postId, UpdateCommunityPostDTO dto) {
     CommunityPost post = getPost(communityId, postId);
     post.setBody(dto.body());
-//    if (dto.tags() != null) {
-//      post.setTags(dto.tags());
-//    }
     return communityPostDao.saveOrUpdate(post);
   }
 }

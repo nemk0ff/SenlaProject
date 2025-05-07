@@ -9,12 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.comments.ReactionController;
 import ru.senla.socialnetwork.dto.comments.CreateReactionDTO;
 import ru.senla.socialnetwork.facades.comments.ReactionFacade;
-import ru.senla.socialnetwork.model.comment.ReactionType;
 
 @Slf4j
 @RestController
