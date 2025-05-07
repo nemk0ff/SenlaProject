@@ -6,36 +6,30 @@ import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.senla.socialnetwork.dao.friendRequests.FriendRequestDao;
 import ru.senla.socialnetwork.exceptions.friendRequests.AlreadyFriendsException;
 import ru.senla.socialnetwork.exceptions.friendRequests.AlreadySentException;
 import ru.senla.socialnetwork.exceptions.friendRequests.FriendRequestException;
-import ru.senla.socialnetwork.exceptions.friendRequests.SelfFriendshipException;
 import ru.senla.socialnetwork.model.friendRequests.FriendRequest;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.model.friendRequests.FriendStatus;
 
 @Slf4j
 @Service
-@Transactional
 @AllArgsConstructor
 public class FriendRequestServiceImpl implements FriendRequestService {
   private final FriendRequestDao friendRequestDao;
 
-  @Transactional(readOnly = true)
   @Override
   public List<FriendRequest> getAllByUser(Long userId) {
     return friendRequestDao.getAllByUserId(userId);
   }
 
-  @Transactional(readOnly = true)
   @Override
   public List<User> getFriendsByUser(Long userId) {
     return friendRequestDao.findFriendsByUserId(userId);
   }
 
-  @Transactional(readOnly = true)
   @Override
   public List<FriendRequest> getIncomingRequests(Long userId, FriendStatus status) {
     return getAllByUser(userId)
@@ -45,7 +39,6 @@ public class FriendRequestServiceImpl implements FriendRequestService {
         .toList();
   }
 
-  @Transactional(readOnly = true)
   @Override
   public List<FriendRequest> getOutgoingRequests(Long userId) {
     return getAllByUser(userId)
@@ -55,7 +48,6 @@ public class FriendRequestServiceImpl implements FriendRequestService {
         .toList();
   }
 
-  @Transactional
   @Override
   public FriendRequest sendRequest(User sender, User recipient) {
     Optional<FriendRequest> optionalRequest = friendRequestDao.getByUsersIds(sender.getId(),
@@ -89,7 +81,6 @@ public class FriendRequestServiceImpl implements FriendRequestService {
     return request;
   }
 
-  @Transactional
   @Override
   public FriendRequest replyToRequest(User sender, User recipient, FriendStatus status) {
     Optional<FriendRequest> optionalRequest = friendRequestDao.getByUsersIds(sender.getId(),
@@ -106,7 +97,6 @@ public class FriendRequestServiceImpl implements FriendRequestService {
     return friendRequestDao.saveOrUpdate(repliedRequest);
   }
 
-  @Transactional
   @Override
   public void unfriend(User user, User unfriend) {
     Optional<FriendRequest> friendship = friendRequestDao.getByUsersIds(
@@ -115,5 +105,10 @@ public class FriendRequestServiceImpl implements FriendRequestService {
       throw new FriendRequestException(unfriend.getEmail() + " не является другом " + user.getEmail());
     }
     friendRequestDao.delete(friendship.get());
+  }
+
+  @Override
+  public boolean isFriends(Long firstId, Long secondId) {
+    return friendRequestDao.areFriends(firstId, secondId);
   }
 }

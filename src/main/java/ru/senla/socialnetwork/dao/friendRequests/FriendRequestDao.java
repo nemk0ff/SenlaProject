@@ -12,4 +12,6 @@ public interface FriendRequestDao extends GenericDao<FriendRequest> {
   List<FriendRequest> getAllByUserId(Long userId);
 
   Optional<FriendRequest> getByUsersIds(Long firstUser, Long secondUser, boolean isOrderRelevant);
+
+  boolean areFriends(Long firstUserId, Long secondUserId);
 }

@@ -24,8 +24,8 @@ public final class WallPost extends Post {
   @JoinColumn(name = "wall_owner_id", nullable = false)
   private User wall_owner;
 
-  @Column(name = "mood")
-  private Mood mood;
+  @Column(name = "mood", length = 32)
+  private String mood;
 
   @Column(name = "location")
   private String location;
