@@ -3,6 +3,7 @@ package ru.senla.socialnetwork.controllers.comments.impl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,7 @@ public class ReactionControllerImpl implements ReactionController {
 
   @Override
   @GetMapping
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<?> getAll() {
     log.info("Получение всех реакций");
     return ResponseEntity.ok(reactionFacade.getAll());
@@ -30,9 +32,9 @@ public class ReactionControllerImpl implements ReactionController {
 
   @Override
   @GetMapping("/{id}")
-  public ResponseEntity<?> get(@PathVariable("id") Long id) {
-    log.info("Получение реакции по id {}", id);
-    return ResponseEntity.ok(reactionFacade.get(id));
+  public ResponseEntity<?> get(@PathVariable("id") Long id, Authentication auth) {
+    log.info("Получение реакции {} пользователем {}", id, auth.getName());
+    return ResponseEntity.ok(reactionFacade.get(id, auth.getName()));
   }
 
   @Override
@@ -43,12 +45,12 @@ public class ReactionControllerImpl implements ReactionController {
   }
 
   @Override
-  @PostMapping("/{id}/reaction")
+  @PostMapping("/react")
   public ResponseEntity<?> react(
-      @PathVariable("id") Long id,
-      CreateReactionDTO request) {
-    log.info("Создание реакции на пост {}: {}", id, request);
-    return ResponseEntity.ok(reactionFacade.setReaction(id, request));
+      CreateReactionDTO request,
+      Authentication auth) {
+    log.info("Создание реакции на комментарий: {}", request);
+    return ResponseEntity.ok(reactionFacade.setReaction(request, auth.getName()));
   }
 
   @Override

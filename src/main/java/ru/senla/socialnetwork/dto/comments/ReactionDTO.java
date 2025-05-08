@@ -4,7 +4,7 @@ import ru.senla.socialnetwork.model.comment.ReactionType;
 
 public record ReactionDTO(
     Long id,
-    Long authorId,
+    String email,
     Long commentId,
     ReactionType type) {
 }

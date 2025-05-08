@@ -7,7 +7,7 @@ import ru.senla.socialnetwork.dto.comments.CreateReactionDTO;
 public interface ReactionController {
   ResponseEntity<?> getAll();
 
-  ResponseEntity<?> get(Long id);
+  ResponseEntity<?> get(Long id, Authentication auth);
 
   ResponseEntity<?> react(Long commentId, CreateReactionDTO request);
 
