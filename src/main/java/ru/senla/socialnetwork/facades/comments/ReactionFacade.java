@@ -8,11 +8,11 @@ public interface ReactionFacade {
 
   List<ReactionDTO> getAll();
 
-  ReactionDTO get(Long reactionId);
+  List<ReactionDTO> getByComment(Long commentId, String clientEmail);
 
-  ReactionDTO setReaction(Long id, CreateReactionDTO request);
+  ReactionDTO getById(Long reactionId, String clientEmail);
+
+  ReactionDTO setReaction(CreateReactionDTO request, String email);
 
   void removeReaction(Long id, String email);
-
-  List<ReactionDTO> getByComment(Long commentId);
 }
