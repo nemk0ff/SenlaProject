@@ -31,22 +31,28 @@ public class WallPostControllerImpl {
   public ResponseEntity<List<WallPostResponseDTO>> getAll(
       @RequestParam("email") String email,
       Authentication auth) {
-    log.info("Получение всех постов пользователя {}", email);
-    return ResponseEntity.ok(wallPostFacade.getByUser(email, auth.getName()));
+    log.info("Запрос всех постов пользователя {} от {}", email, auth.getName());
+    List<WallPostResponseDTO> posts = wallPostFacade.getByUser(email, auth.getName());
+    log.info("Найдено {} постов пользователя {}", posts.size(), email);
+    return ResponseEntity.ok(posts);
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<WallPostResponseDTO> getById(@PathVariable("id") Long postId,
                                                      Authentication auth) {
-    log.info("Получение поста пользователя по id поста {}", postId);
-    return ResponseEntity.ok(wallPostFacade.getById(postId, auth.getName()));
+    log.info("Запрос поста с id={} от {}", postId, auth.getName());
+    WallPostResponseDTO post = wallPostFacade.getById(postId, auth.getName());
+    log.info("Пост найден: id={}, автор={}", postId, post.wall_owner_id());
+    return ResponseEntity.ok(post);
   }
 
   @PostMapping
   public ResponseEntity<WallPostResponseDTO> create(
       @Valid @RequestBody WallPostRequestDTO dto,
       Authentication auth) {
+    log.info("Создание нового поста пользователем {}", auth.getName());
     WallPostResponseDTO createdPost = wallPostFacade.create(dto, auth.getName());
+    log.info("Пост создан успешно: id={}", createdPost.id());
     return ResponseEntity.status(HttpStatus.CREATED).body(createdPost);
   }
 
@@ -54,9 +60,10 @@ public class WallPostControllerImpl {
   public ResponseEntity<String> delete(
       @PathVariable Long postId,
       Authentication auth) {
-    log.info("Удаление поста {} пользователем {}", postId, auth.getName());
+    log.info("Удаление поста id={} пользователем={}", postId, auth.getName());
     wallPostFacade.delete(postId, auth.getName());
-    return ResponseEntity.ok("Пост " + postId + " удалён");
+    log.info("Пост id={} удален успешно", postId);
+    return ResponseEntity.ok("Пост " + postId + " удален");
   }
 
   @PatchMapping("/{postId}")
@@ -64,7 +71,9 @@ public class WallPostControllerImpl {
       @PathVariable("postId") Long postId,
       @Valid @RequestBody WallPostRequestDTO dto,
       Authentication auth) {
+    log.info("Обновление поста id={} пользователем {}", postId, auth.getName());
     WallPostResponseDTO updatedPost = wallPostFacade.update(postId, dto, auth.getName());
+    log.info("Пост id={} обновлен успешно", postId);
     return ResponseEntity.ok(updatedPost);
   }
 }

@@ -35,11 +35,7 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional(readOnly = true)
   public List<User> find(String name, String surname, Gender gender, LocalDate birthdate) {
-    List<User> foundUsers = userDao.findByParam(name, surname, gender, birthdate);
-    if (foundUsers.isEmpty()) {
-      throw new EntityNotFoundException("По вашему запросу не найдено пользователей");
-    }
-    return foundUsers;
+    return userDao.findByParam(name, surname, gender, birthdate);
   }
 
   @Transactional

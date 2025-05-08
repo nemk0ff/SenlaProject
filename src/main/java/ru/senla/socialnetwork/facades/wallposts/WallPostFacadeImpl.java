@@ -28,9 +28,11 @@ public class WallPostFacadeImpl implements WallPostFacade {
   public List<WallPostResponseDTO> getByUser(String email, String clientEmail) {
     User postsOwner = userService.getUserByEmail(email);
     User client = userService.getUserByEmail(clientEmail);
-    if (userService.isAdmin(clientEmail)
+
+    boolean hasAccess = userService.isAdmin(clientEmail)
         || friendRequestService.isFriends(postsOwner.getId(), client.getId())
-        || email.equals(clientEmail)) {
+        || email.equals(clientEmail);
+    if (hasAccess) {
       return WallPostMapper.INSTANCE.toListDto(wallPostService.getByUser(postsOwner.getId()));
     }
     throw new WallPostException("У вас нет доступа к просмотру стены пользователя " + email);
@@ -41,9 +43,11 @@ public class WallPostFacadeImpl implements WallPostFacade {
     WallPost post = wallPostService.get(postId);
     User postAuthor = post.getWall_owner();
     User client = userService.getUserByEmail(clientEmail);
-    if (userService.isAdmin(clientEmail)
+
+    boolean hasAccess = userService.isAdmin(clientEmail)
         || friendRequestService.isFriends(postAuthor.getId(), client.getId())
-        || postAuthor.getEmail().equals(clientEmail)) {
+        || postAuthor.getEmail().equals(clientEmail);
+    if (hasAccess) {
       return WallPostMapper.INSTANCE.toDto(post);
     }
     throw new WallPostException("У вас нет доступа к просмотру стены пользователя " + postAuthor.getEmail());
@@ -51,7 +55,6 @@ public class WallPostFacadeImpl implements WallPostFacade {
 
   @Override
   public WallPostResponseDTO create(WallPostRequestDTO dto, String clientEmail) {
-    log.info("Создание нового поста {} на стене пользователя {}...", dto, clientEmail);
     User user = userService.getUserByEmail(clientEmail);
     WallPost savedPost = wallPostService.create(dto, user);
     log.info("Пост создан: {}", savedPost);
@@ -60,7 +63,6 @@ public class WallPostFacadeImpl implements WallPostFacade {
 
   @Override
   public void delete(Long postId, String clientEmail) {
-    log.info("Удаление поста {} пользователем {}...", postId, clientEmail);
     User user = userService.getUserByEmail(clientEmail);
     WallPost post = wallPostService.get(postId);
     if(post.getWall_owner().equals(user) || userService.isAdmin(clientEmail)) {
@@ -72,7 +74,6 @@ public class WallPostFacadeImpl implements WallPostFacade {
 
   @Override
   public WallPostResponseDTO update(Long postId, WallPostRequestDTO dto, String clientEmail) {
-    log.info("Обновление поста {} пользователем {}...", postId, clientEmail);
     User user = userService.getUserByEmail(clientEmail);
     WallPost post = wallPostService.get(postId);
     if(post.getWall_owner().equals(user)) {

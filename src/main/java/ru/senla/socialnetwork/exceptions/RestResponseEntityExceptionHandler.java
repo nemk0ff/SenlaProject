@@ -87,17 +87,6 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     return new ResponseEntity<>(problemDetail, HttpStatus.UNAUTHORIZED);
   }
 
-  @ExceptionHandler(UserException.class)
-  protected ResponseEntity<ProblemDetail> handleUserNotRegisteredException(
-      UserException ex, WebRequest request) {
-    log.warn("{}: {}", ex.getAction(), ex.getMessage());
-
-    ProblemDetail problemDetail = problemDetailBuilder(ex.getAction(),
-        request, HttpStatus.BAD_REQUEST, ex);
-
-    return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
-  }
-
   @ExceptionHandler(AccessDeniedException.class)
   protected ResponseEntity<ProblemDetail> handleAccessDeniedException(
       AccessDeniedException ex, WebRequest request) {
@@ -136,11 +125,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     return new ResponseEntity<>(problemDetail, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
-  @ExceptionHandler({
-      FriendRequestException.class,
-      ChatException.class,
-      CommunityException.class
-  })
+  @ExceptionHandler({SocialNetworkException.class})
   public ResponseEntity<ProblemDetail> handleBusinessExceptions(
       RuntimeException ex, WebRequest request) {
     String title = ex instanceof SocialNetworkException
