@@ -24,7 +24,6 @@ public class FriendRequestFacadeImpl implements FriendRequestFacade {
   private final UserService userService;
   private final FriendRequestMapper friendRequestMapper;
 
-
   @Override
   public List<FriendRequestDTO> getAllByUser(String userEmail) {
     User user = userService.getUserByEmail(userEmail);
@@ -40,15 +39,13 @@ public class FriendRequestFacadeImpl implements FriendRequestFacade {
   @Override
   public List<FriendRequestDTO> getIncomingRequests(String userEmail, FriendStatus status) {
     User user = userService.getUserByEmail(userEmail);
-    return friendRequestMapper.toListDTO(
-        friendRequestService.getIncomingRequests(user.getId(), status));
+    return friendRequestMapper.toListDTO(friendRequestService.getIncomingRequests(user.getId(), status));
   }
 
   @Override
   public List<FriendRequestDTO> getOutgoingRequests(String userEmail) {
     User user = userService.getUserByEmail(userEmail);
-    return friendRequestMapper.toListDTO(
-        friendRequestService.getOutgoingRequests(user.getId()));
+    return friendRequestMapper.toListDTO(friendRequestService.getOutgoingRequests(user.getId()));
   }
 
   @Override

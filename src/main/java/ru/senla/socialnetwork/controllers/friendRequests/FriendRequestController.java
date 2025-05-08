@@ -11,6 +11,8 @@ import ru.senla.socialnetwork.model.friendRequests.FriendStatus;
 
 public interface FriendRequestController {
 
+  ResponseEntity<?> showAllByUser(String userEmail);
+
   ResponseEntity<?> showFriends(String userEmail);
 
   ResponseEntity<?> showOutgoingRequests(String userEmail);

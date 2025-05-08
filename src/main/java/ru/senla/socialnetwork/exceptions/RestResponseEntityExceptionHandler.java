@@ -5,6 +5,7 @@ import jakarta.persistence.EntityNotFoundException;
 import java.time.Instant;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -119,37 +120,36 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     return new ResponseEntity<>(problemDetail, HttpStatus.NOT_FOUND);
   }
 
-  @ExceptionHandler(FriendRequestException.class)
-  protected ResponseEntity<ProblemDetail> handleFriendRequestException(
-      FriendRequestException ex, WebRequest request) {
-    log.warn("Ошибка при действии с заявкой в друзья: {}", ex.getMessage());
-
-    ProblemDetail problemDetail = problemDetailBuilder("Ошибка при действии с заявкой в друзья",
-        request, HttpStatus.BAD_REQUEST, ex);
-
-    return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
-  }
-
-
-  @ExceptionHandler(ChatException.class)
-  protected ResponseEntity<ProblemDetail> handleFriendRequestException(
-      ChatException ex, WebRequest request) {
-    log.warn("{}: {}", ex.getAction(), ex.getMessage());
+  @ExceptionHandler(DataRetrievalFailureException.class)
+  protected ResponseEntity<ProblemDetail> handleDataRetrievalFailureException(
+      DataRetrievalFailureException ex, WebRequest request) {
+    log.error("Ошибка доступа к данным: {}", ex.getMessage());
 
     ProblemDetail problemDetail = problemDetailBuilder(
-        ex.getAction(), request, HttpStatus.BAD_REQUEST, ex);
+        "Ошибка доступа к данным",
+        request,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        ex
+    );
+    problemDetail.setDetail("Произошла ошибка при работе с базой данных");
 
-    return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(problemDetail, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
-  @ExceptionHandler(CommunityException.class)
-  protected ResponseEntity<ProblemDetail> handleFriendRequestException(
-      CommunityException ex, WebRequest request) {
-    log.warn("{}: {}", ex.getAction(), ex.getMessage());
+  @ExceptionHandler({
+      FriendRequestException.class,
+      ChatException.class,
+      CommunityException.class
+  })
+  public ResponseEntity<ProblemDetail> handleBusinessExceptions(
+      RuntimeException ex, WebRequest request) {
+    String title = ex instanceof SocialNetworkException
+        ? ((SocialNetworkException)ex).getAction()
+        : "Возникла бизнес-ошибка во время работы приложения";
 
-    ProblemDetail problemDetail = problemDetailBuilder(
-        ex.getAction(), request, HttpStatus.BAD_REQUEST, ex);
+    log.warn("{}: {}", title, ex.getMessage());
 
+    ProblemDetail problemDetail = problemDetailBuilder(title, request, HttpStatus.BAD_REQUEST, ex);
     return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
   }
 

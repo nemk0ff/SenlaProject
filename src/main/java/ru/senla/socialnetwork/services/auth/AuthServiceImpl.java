@@ -12,6 +12,7 @@ import ru.senla.socialnetwork.dto.auth.AuthRequestDTO;
 import ru.senla.socialnetwork.dto.auth.AuthResponseDTO;
 import ru.senla.socialnetwork.dto.auth.RegisterDTO;
 import ru.senla.socialnetwork.dto.mappers.UserMapper;
+import ru.senla.socialnetwork.dto.users.UserDTO;
 import ru.senla.socialnetwork.exceptions.auth.IllegalPasswordException;
 import ru.senla.socialnetwork.exceptions.users.EmailAlreadyExistsException;
 import ru.senla.socialnetwork.exceptions.users.UserNotRegisteredException;
@@ -34,20 +35,20 @@ public class AuthServiceImpl implements AuthService {
     UserDetails correctDetails = loadUserByUsername(requestDTO.email());
 
     if (!passwordEncoder.matches(requestDTO.password(), correctDetails.getPassword())) {
-      log.info("Пользователь ввёл неверный пароль");
       throw new IllegalPasswordException();
     }
 
+    log.info("Пользователь ввёл верный пароль, получаем его роль и генерируем токен...");
     String role = loadUserByUsername(requestDTO.email())
         .getAuthorities().iterator().next().getAuthority();
     String token = JwtUtils.generateToken(requestDTO.email(), role);
-
+    log.info("Токен сгенерирован успешно.");
     return new AuthResponseDTO(role, token);
   }
 
   @Transactional
   @Override
-  public User register(RegisterDTO regDTO) {
+  public UserDTO register(RegisterDTO regDTO) {
     log.info("Регистрируем нового пользователя {}...", regDTO.name());
     if (userDao.findByEmail(regDTO.email()).isPresent()) {
       throw new EmailAlreadyExistsException(regDTO.email());
@@ -58,7 +59,7 @@ public class AuthServiceImpl implements AuthService {
 
     userDao.saveOrUpdate(user);
     log.info("Пользователь {} успешно зарегистрирован.", regDTO.email());
-    return user;
+    return UserMapper.INSTANCE.toUserResponseDTO(user);
   }
 
   @Override
@@ -75,6 +76,4 @@ public class AuthServiceImpl implements AuthService {
         .roles(user.getRole().name())
         .build();
   }
-
-
 }

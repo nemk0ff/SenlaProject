@@ -50,9 +50,13 @@ public class FriendRequestServiceImpl implements FriendRequestService {
 
   @Override
   public FriendRequest sendRequest(User sender, User recipient) {
+    log.info("Попытка отправить заявку в друзья от {} к {}...",
+        sender.getEmail(), recipient.getEmail());
     Optional<FriendRequest> optionalRequest = friendRequestDao.getByUsersIds(sender.getId(),
         recipient.getId(), false);
     if (optionalRequest.isEmpty()) {
+      log.info("Заявок между {} и {} не найдено, создаём новую...",
+          sender.getEmail(), recipient.getEmail());
       return friendRequestDao.saveOrUpdate(FriendRequest.builder()
           .sender(sender)
           .recipient(recipient)
@@ -60,6 +64,8 @@ public class FriendRequestServiceImpl implements FriendRequestService {
           .createdAt(LocalDateTime.now())
           .build());
     }
+    log.info("Заявка между {} и {} уже существует, проверяем наличие несоответствий...",
+        sender.getEmail(), recipient.getEmail());
     FriendRequest request = handleExistingRequest(optionalRequest.get(),
         sender.getEmail(), recipient.getEmail());
     return friendRequestDao.saveOrUpdate(request);
@@ -73,9 +79,11 @@ public class FriendRequestServiceImpl implements FriendRequestService {
       if (request.getStatus().equals(FriendStatus.PENDING)) {
         throw new AlreadySentException(recipientEmail);
       } else if (request.getStatus().equals(FriendStatus.REJECTED)) {
+        log.info("Возобновление отклонённого запроса в друзья от {} к {}", senderEmail, recipientEmail);
         request.setStatus(FriendStatus.PENDING);
       }
     } else if (request.getSender().getEmail().equals(recipientEmail)) {
+      log.info("Автопринятие взаимного запроса в друзья от {} к {}", senderEmail, recipientEmail);
       request.setStatus(FriendStatus.ACCEPTED);
     }
     return request;
@@ -94,6 +102,7 @@ public class FriendRequestServiceImpl implements FriendRequestService {
 
     FriendRequest repliedRequest = optionalRequest.get();
     repliedRequest.setStatus(status);
+    log.info("Установлен статус {} для заявки {}:", status, repliedRequest.getId());
     return friendRequestDao.saveOrUpdate(repliedRequest);
   }
 

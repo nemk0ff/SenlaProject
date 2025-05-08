@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import ru.senla.socialnetwork.model.friendRequests.FriendStatus;
 
 public record FriendRequestDTO(
+    Long id,
     String senderEmail,
     String recipientEmail,
     LocalDateTime createdAt,
