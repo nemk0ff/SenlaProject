@@ -80,9 +80,7 @@ public class ChatMemberServiceImpl implements ChatMemberService {
 
 
   @Override
-  public ChatMember changeRole(Long chatId, String userEmail,
-                               MemberRole newRole) {
-    ChatMember member = getMember(chatId, userEmail);
+  public ChatMember changeRole(Long chatId, ChatMember member, MemberRole newRole) {
     if (member.getRole().equals(newRole)) {
       return member;
     }
@@ -97,7 +95,7 @@ public class ChatMemberServiceImpl implements ChatMemberService {
     member.setRole(newRole);
 
     ChatMember updatedMember = chatMemberDao.saveOrUpdate(member);
-    log.info("Роль пользователя {} в чате {} изменена на {}", userEmail, chatId, newRole);
+    log.info("Роль пользователя {} в чате {} изменена на {}", member.getUser().getEmail(), chatId, newRole);
     return updatedMember;
   }
 

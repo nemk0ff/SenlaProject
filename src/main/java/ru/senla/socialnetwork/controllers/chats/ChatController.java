@@ -2,19 +2,18 @@ package ru.senla.socialnetwork.controllers.chats;
 
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import ru.senla.socialnetwork.dto.chats.CreateGroupChatDTO;
-import ru.senla.socialnetwork.dto.chats.CreatePersonalChatDTO;
 
 public interface ChatController {
-  ResponseEntity<?> getUserChats(String email);
+  ResponseEntity<?> getUserChats(Authentication auth);
 
-  ResponseEntity<?> createChat(@Valid CreateGroupChatDTO request);
+  ResponseEntity<?> createGroupChat(@Valid CreateGroupChatDTO request, Authentication auth);
 
-  ResponseEntity<?> createChat(@Valid CreatePersonalChatDTO request);
+  ResponseEntity<?> createPersonalChat(String participantEmail, Authentication auth);
 
-  ResponseEntity<?> deleteChat(@PathVariable Long chatId);
+  ResponseEntity<?> deleteChat(@PathVariable Long chatId, Authentication auth);
 
-  ResponseEntity<?> getChat(@PathVariable Long chatId);
+  ResponseEntity<?> getChat(@PathVariable Long chatId, Authentication auth);
 }

@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.senla.socialnetwork.dao.chats.ChatDao;
 import ru.senla.socialnetwork.dto.chats.CreateGroupChatDTO;
-import ru.senla.socialnetwork.dto.chats.CreatePersonalChatDTO;
 import ru.senla.socialnetwork.exceptions.chats.ChatException;
 import ru.senla.socialnetwork.exceptions.chats.ChatMemberException;
 import ru.senla.socialnetwork.model.chats.Chat;
@@ -40,13 +39,13 @@ public class ChatServiceImpl implements ChatService {
         .createdAt(ZonedDateTime.now())
         .build());
 
-    log.info("Создан групповой чат {} пользователем {}", request.name(), request.creatorEmail());
+    log.info("Создан групповой чат {}", request.name());
     return chat;
   }
 
   @Override
-  public Chat create(CreatePersonalChatDTO request, String chatName) {
-    if (chatDao.existsByMembers(request.creatorEmail(), request.friendEmail())) {
+  public Chat create(String firstEmail, String secondEmail, String chatName) {
+    if (chatDao.existsByMembers(firstEmail, secondEmail)) {
       throw new ChatException("Личный чат " + chatName + " уже существует");
     }
     Chat chat = chatDao.saveOrUpdate(Chat.builder()

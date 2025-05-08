@@ -28,7 +28,11 @@ public class ChatMemberFacadeImpl implements ChatMemberFacade {
   private final UserService userService;
 
   @Override
-  public ChatMemberDTO addUserToChat(Long chatId, String userEmailToAdd) {
+  public ChatMemberDTO addUserToChat(Long chatId, String userEmailToAdd, String clientEmail) {
+    if (chatMemberService.isChatMember(chatId, clientEmail)) {
+      throw new ChatMemberException("Вы не можете добавить участника, т.к. не являетесь " +
+          "участником этого чата");
+    }
     Chat chat = chatService.get(chatId);
 
     if (chatMemberService.isChatMember(chat.getId(), userEmailToAdd)) {
@@ -67,12 +71,23 @@ public class ChatMemberFacadeImpl implements ChatMemberFacade {
   }
 
   @Override
-  public ChatMemberDTO mute(Long chatId, String userEmailToMute, ZonedDateTime muteUntil) {
+  public ChatMemberDTO mute(Long chatId, String userEmailToMute,
+                            ZonedDateTime muteUntil, String clientEmail) {
+    ChatMember client = chatMemberService.getMember(chatId, clientEmail);
+    if(client.getRole().equals(MemberRole.MEMBER)) {
+      throw new ChatMemberException(
+          "У вас недостаточно прав, чтобы выдавать мут участникам этого чата");
+    }
     return chatMemberMapper.memberToDTO(chatMemberService.mute(chatId, userEmailToMute, muteUntil));
   }
 
   @Override
-  public ChatMemberDTO unmute(Long chatId, String userEmailToMute) {
+  public ChatMemberDTO unmute(Long chatId, String userEmailToMute, String clientEmail) {
+    ChatMember client = chatMemberService.getMember(chatId, clientEmail);
+    if(client.getRole().equals(MemberRole.MEMBER)) {
+      throw new ChatMemberException(
+          "У вас недостаточно прав, чтобы снимать мут с участников этого чата");
+    }
     return chatMemberMapper.memberToDTO(chatMemberService.unmute(chatId, userEmailToMute));
   }
 
@@ -82,19 +97,21 @@ public class ChatMemberFacadeImpl implements ChatMemberFacade {
   }
 
   @Override
-  public ChatMemberDTO changeRole(Long chatId, String email, MemberRole role) {
-    return chatMemberMapper.memberToDTO(chatMemberService.changeRole(chatId, email, role));
+  public ChatMemberDTO changeRole(Long chatId, String email, MemberRole role, String clientName) {
+    if(clientName.equals(email)) {
+      throw new ChatMemberException("Вы не можете изменить свою роль в чате");
+    }
+    ChatMember member = chatMemberService.getMember(chatId, email);
+    ChatMember client = chatMemberService.getMember(chatId, clientName);
+    if(!client.getRole().equals(MemberRole.ADMIN) || member.getRole().equals(MemberRole.ADMIN)) {
+      throw new ChatMemberException("У вас нет прав, чтобы изменить роль этого участника чата");
+    }
+    return chatMemberMapper.memberToDTO(chatMemberService.changeRole(chatId, member, role));
   }
 
   @Override
   public boolean isChatMember(Long chatId, String email) {
     return chatMemberService.isChatMember(chatId, email);
-  }
-
-  @Override
-  public boolean isChatAdmin(Long chatId, String requesterEmail) {
-    ChatMember currentMember = chatMemberService.getMember(chatId, requesterEmail);
-    return currentMember.getRole().equals(MemberRole.ADMIN);
   }
 
   @Override

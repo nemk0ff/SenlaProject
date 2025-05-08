@@ -15,7 +15,7 @@ public interface ChatMemberService {
 
   void leave(Long chatId, String userEmail);
 
-  ChatMember changeRole(Long chatId, String userEmail, MemberRole newRole);
+  ChatMember changeRole(Long chatId, ChatMember member, MemberRole newRole);
 
   ChatMember getMember(Long chatId, String email);
 
