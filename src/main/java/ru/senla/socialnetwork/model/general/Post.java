@@ -36,4 +36,6 @@ public abstract class Post implements MyEntity {
 
   @Column(name = "created_at", nullable = false)
   protected ZonedDateTime created_at;
+
+  public abstract String getPostType();
 }

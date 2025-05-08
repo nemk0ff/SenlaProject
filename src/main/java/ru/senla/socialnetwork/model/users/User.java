@@ -59,6 +59,10 @@ public final class User implements MyEntity {
   @Column(name = "gender", columnDefinition = "gender_type")
   private Gender gender;
 
+  @Enumerated(EnumType.STRING)
+  @Column(name = "profile_type", columnDefinition = "profile_type")
+  private ProfileType profileType;
+
   @Column(name = "about_me", length = 1000)
   private String aboutMe;
 

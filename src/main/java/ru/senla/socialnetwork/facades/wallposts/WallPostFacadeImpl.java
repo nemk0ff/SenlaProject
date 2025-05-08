@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.facades.wallpost;
+package ru.senla.socialnetwork.facades.wallposts;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.model.users.WallPost;
 import ru.senla.socialnetwork.services.friendRequest.FriendRequestService;
 import ru.senla.socialnetwork.services.user.UserService;
-import ru.senla.socialnetwork.services.user.WallPostService;
+import ru.senla.socialnetwork.services.posts.WallPostService;
 
 @Service
 @Transactional
@@ -76,11 +76,7 @@ public class WallPostFacadeImpl implements WallPostFacade {
     User user = userService.getUserByEmail(clientEmail);
     WallPost post = wallPostService.get(postId);
     if(post.getWall_owner().equals(user)) {
-      post.setBody(dto.body());
-      post.setMood(dto.mood());
-      post.setLocation(dto.location());
-
-      WallPost updatedPost = wallPostService.update(post);
+      WallPost updatedPost = wallPostService.update(post, dto);
       log.info("Пост обновлён: {}", updatedPost);
       return WallPostMapper.INSTANCE.toDto(updatedPost);
     }

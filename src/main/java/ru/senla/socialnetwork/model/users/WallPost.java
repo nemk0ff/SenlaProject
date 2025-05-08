@@ -29,4 +29,9 @@ public final class WallPost extends Post {
 
   @Column(name = "location")
   private String location;
+
+  @Override
+  public String getPostType() {
+    return "WallPost";
+  }
 }

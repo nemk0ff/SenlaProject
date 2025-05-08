@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.services.user;
+package ru.senla.socialnetwork.services.posts;
 
 import java.util.List;
 import ru.senla.socialnetwork.dto.users.WallPostRequestDTO;
@@ -12,7 +12,7 @@ public interface WallPostService {
 
   WallPost create(WallPostRequestDTO dto, User user);
 
-  WallPost update(WallPost post);
+  WallPost update(WallPost post, WallPostRequestDTO dto);
 
   void delete(WallPost post);
 }

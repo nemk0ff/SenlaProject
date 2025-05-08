@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.dto.users.WallPostRequestDTO;
 import ru.senla.socialnetwork.dto.users.WallPostResponseDTO;
-import ru.senla.socialnetwork.facades.wallpost.WallPostFacade;
+import ru.senla.socialnetwork.facades.wallposts.WallPostFacade;
 
 @Slf4j
 @RestController

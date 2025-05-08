@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.facades.wallpost;
+package ru.senla.socialnetwork.facades.wallposts;
 
 import java.util.List;
 import ru.senla.socialnetwork.dto.users.WallPostRequestDTO;

@@ -8,13 +8,13 @@ import ru.senla.socialnetwork.dto.comments.UpdateCommentDTO;
 public interface CommentFacade {
   List<CommentDTO> getAll();
 
-  CommentDTO getById(Long id);
+  CommentDTO getById(Long id, String clientEmail);
 
   List<CommentDTO> getPostComments(Long postId, String email);
 
-  CommentDTO create(CreateCommentDTO commentDTO);
+  CommentDTO create(CreateCommentDTO commentDTO, String clientEmail);
 
-  CommentDTO update(UpdateCommentDTO commentDTO);
+  CommentDTO update(UpdateCommentDTO commentDTO, String clientEmail);
 
-  void delete(Long id);
+  void delete(Long id, String clientEmail);
 }

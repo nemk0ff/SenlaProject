@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.services.communities.impl;
+package ru.senla.socialnetwork.services.posts.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.time.ZonedDateTime;
@@ -12,7 +12,7 @@ import ru.senla.socialnetwork.dto.communitites.UpdateCommunityPostDTO;
 import ru.senla.socialnetwork.exceptions.communities.CommunityPostException;
 import ru.senla.socialnetwork.model.communities.CommunityMember;
 import ru.senla.socialnetwork.model.communities.CommunityPost;
-import ru.senla.socialnetwork.services.communities.CommunityPostService;
+import ru.senla.socialnetwork.services.posts.CommunityPostService;
 
 @Slf4j
 @Service
@@ -50,14 +50,12 @@ public class CommunityPostServiceImpl implements CommunityPostService {
   }
 
   @Override
-  public void deletePost(Long communityId, Long postId) {
-    CommunityPost post = getPost(communityId, postId);
+  public void deletePost(CommunityPost post) {
     communityPostDao.delete(post);
   }
 
   @Override
-  public CommunityPost updatePost(Long communityId, Long postId, UpdateCommunityPostDTO dto) {
-    CommunityPost post = getPost(communityId, postId);
+  public CommunityPost updatePost(CommunityPost post, UpdateCommunityPostDTO dto) {
     post.setBody(dto.body());
     return communityPostDao.saveOrUpdate(post);
   }

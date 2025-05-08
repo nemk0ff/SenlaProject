@@ -34,10 +34,9 @@ public class CommentControllerImpl implements CommentController {
 
   @Override
   @GetMapping("/{id}")
-  @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<?> get(@PathVariable("id") Long id) {
-    log.info("Получение комментария по id {}", id);
-    return ResponseEntity.ok(commentFacade.getById(id));
+  public ResponseEntity<?> get(@PathVariable("id") Long id, Authentication auth) {
+    log.info("Получение комментария по id {} пользователем {}", id, auth.getName());
+    return ResponseEntity.ok(commentFacade.getById(id, auth.getName()));
   }
 
   @Override

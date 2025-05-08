@@ -8,7 +8,7 @@ import ru.senla.socialnetwork.dto.comments.UpdateCommentDTO;
 public interface CommentController {
   ResponseEntity<?> getAll();
 
-  ResponseEntity<?> get(Long id);
+  ResponseEntity<?> get(Long id, Authentication auth);
 
   ResponseEntity<?> getPostComments(Long postId, Authentication auth);
 

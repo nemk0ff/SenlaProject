@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.services.user.impl;
+package ru.senla.socialnetwork.services.posts.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
@@ -11,7 +11,7 @@ import ru.senla.socialnetwork.dto.users.WallPostRequestDTO;
 import ru.senla.socialnetwork.exceptions.users.WallPostException;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.model.users.WallPost;
-import ru.senla.socialnetwork.services.user.WallPostService;
+import ru.senla.socialnetwork.services.posts.WallPostService;
 
 @Slf4j
 @Service
@@ -47,7 +47,10 @@ public class WallPostServiceImpl implements WallPostService {
   }
 
   @Override
-  public WallPost update(WallPost post) {
+  public WallPost update(WallPost post, WallPostRequestDTO dto) {
+    post.setBody(dto.body());
+    post.setMood(dto.mood());
+    post.setLocation(dto.location());
     return wallPostDao.saveOrUpdate(post);
   }
 

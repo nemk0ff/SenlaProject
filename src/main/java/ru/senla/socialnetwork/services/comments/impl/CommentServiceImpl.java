@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import ru.senla.socialnetwork.dao.comments.CommentDao;
 import ru.senla.socialnetwork.exceptions.comments.CommentException;
 import ru.senla.socialnetwork.model.comment.Comment;
+import ru.senla.socialnetwork.model.general.Post;
+import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.services.comments.CommentService;
 
 @Slf4j
@@ -28,7 +30,7 @@ public class CommentServiceImpl implements CommentService {
   public List<Comment> getAllByPost(Long postId) {
     List<Comment> comments = commentDao.getAllByPost(postId);
     if(comments.isEmpty()) {
-      throw new CommentException("Под этим постом нет комментариев. Прокомментируйте его первым!");
+      throw new CommentException("Под этим постом нет комментариев");
     }
     return comments;
   }
@@ -37,5 +39,26 @@ public class CommentServiceImpl implements CommentService {
   public Comment getById(Long commentId) {
     return commentDao.find(commentId)
         .orElseThrow(() -> new CommentException("Комментарий " + commentId + " не найден"));
+  }
+
+  @Override
+  public Comment create(Post post, User author, String message) {
+    Comment comment = Comment.builder()
+        .post(post)
+        .author(author)
+        .body(message)
+        .build();
+    return commentDao.saveOrUpdate(comment);
+  }
+
+  @Override
+  public Comment update(Comment comment, String newBody) {
+    comment.setBody(newBody);
+    return commentDao.saveOrUpdate(comment);
+  }
+
+  @Override
+  public void delete(Comment comment) {
+    commentDao.delete(comment);
   }
 }

@@ -32,4 +32,9 @@ public final class CommunityPost extends Post {
 
   @Column(name = "is_pinned")
   private Boolean isPinned;
+
+  @Override
+  public String getPostType() {
+    return "CommunityPost";
+  }
 }
