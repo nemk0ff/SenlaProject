@@ -16,7 +16,7 @@ import ru.senla.socialnetwork.model.communities.CommunityPost;
 import ru.senla.socialnetwork.model.general.MemberRole;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.services.communities.CommunityMemberService;
-import ru.senla.socialnetwork.services.communities.CommunityPostService;
+import ru.senla.socialnetwork.services.posts.CommunityPostService;
 import ru.senla.socialnetwork.services.user.UserService;
 
 @Service
@@ -42,17 +42,17 @@ public class CommunityPostFacadeImpl implements CommunityPostFacade {
   @Transactional
   public void deletePost(Long communityId, Long postId, String requesterEmail) {
     checkAccess(communityId, postId, requesterEmail);
-
-    communityPostService.deletePost(communityId, postId);
+    CommunityPost post = communityPostService.getPost(communityId, postId);
+    communityPostService.deletePost(post);
   }
 
   @Override
   @Transactional
   public CommunityPostDTO updatePost(Long communityId, Long postId, UpdateCommunityPostDTO dto, String requesterEmail) {
     checkAccess(communityId, postId, requesterEmail);
-
+    CommunityPost post = communityPostService.getPost(communityId, postId);
     return CommunityPostMapper.INSTANCE
-        .toDTO(communityPostService.updatePost(communityId, postId, dto));
+        .toDTO(communityPostService.updatePost(post, dto));
   }
 
   private void checkAccess(Long communityId, Long postId, String requesterEmail) {

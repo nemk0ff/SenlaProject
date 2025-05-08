@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.services.communities;
+package ru.senla.socialnetwork.services.posts;
 
 import java.util.List;
 import ru.senla.socialnetwork.dto.communitites.CreateCommunityPostDTO;
@@ -10,9 +10,9 @@ public interface CommunityPostService {
   CommunityPost createPost(Long communityId, CreateCommunityPostDTO dto,
                            CommunityMember author);
 
-  void deletePost(Long communityId, Long postId);
+  void deletePost(CommunityPost post);
 
-  CommunityPost updatePost(Long communityId, Long postId, UpdateCommunityPostDTO dto);
+  CommunityPost updatePost(CommunityPost post, UpdateCommunityPostDTO dto);
 
   List<CommunityPost> getAllPosts(Long communityId);
 

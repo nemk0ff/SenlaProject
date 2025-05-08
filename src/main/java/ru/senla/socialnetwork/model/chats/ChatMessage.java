@@ -21,10 +21,6 @@ import ru.senla.socialnetwork.model.general.ContentFragment;
 @Entity
 @DiscriminatorValue("MESSAGE")
 public final class ChatMessage extends ContentFragment {
-  @ManyToOne
-  @JoinColumn(name = "author_id", nullable = false)
-  private ChatMember author;
-
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "chat_id", nullable = false)
   private Chat chat;

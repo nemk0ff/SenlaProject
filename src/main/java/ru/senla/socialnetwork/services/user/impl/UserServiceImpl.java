@@ -15,6 +15,7 @@ import ru.senla.socialnetwork.exceptions.users.UserException;
 import ru.senla.socialnetwork.exceptions.users.UserNotRegisteredException;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.model.users.Gender;
+import ru.senla.socialnetwork.model.users.UserRole;
 import ru.senla.socialnetwork.services.user.UserService;
 
 @Slf4j
@@ -75,5 +76,11 @@ public class UserServiceImpl implements UserService {
   @Override
   public boolean existsByEmail(String email) {
     return userDao.findByEmail(email).isPresent();
+  }
+
+  @Transactional
+  @Override
+  public boolean isAdmin(String email) {
+    return getUserByEmail(email).getRole().equals(UserRole.ADMIN);
   }
 }

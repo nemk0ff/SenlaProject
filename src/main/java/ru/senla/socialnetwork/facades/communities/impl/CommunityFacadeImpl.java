@@ -12,7 +12,10 @@ import ru.senla.socialnetwork.dto.communitites.CreateCommunityDTO;
 import ru.senla.socialnetwork.dto.mappers.CommunityMapper;
 import ru.senla.socialnetwork.facades.communities.CommunityFacade;
 import ru.senla.socialnetwork.model.communities.Community;
+import ru.senla.socialnetwork.model.communities.CommunityMember;
+import ru.senla.socialnetwork.model.general.MemberRole;
 import ru.senla.socialnetwork.model.users.User;
+import ru.senla.socialnetwork.services.communities.CommunityMemberService;
 import ru.senla.socialnetwork.services.communities.CommunityService;
 import ru.senla.socialnetwork.services.user.UserService;
 
@@ -22,6 +25,7 @@ import ru.senla.socialnetwork.services.user.UserService;
 @Slf4j
 public class CommunityFacadeImpl implements CommunityFacade {
   private final CommunityService communityService;
+  private final CommunityMemberService communityMemberService;
   private final UserService userService;
 
   @Override
@@ -32,13 +36,16 @@ public class CommunityFacadeImpl implements CommunityFacade {
     User owner = userService.getUserByEmail(communityDTO.owner());
 
     Community community = Community.builder()
-        .owner(owner)
         .name(communityDTO.name())
         .description(communityDTO.description())
         .created_at(ZonedDateTime.now())
         .build();
 
     Community savedCommunity = communityService.save(community);
+
+    CommunityMember ownerMember = communityMemberService.joinCommunity(savedCommunity, owner);
+    communityMemberService.changeMemberRole(ownerMember, MemberRole.ADMIN);
+
     return CommunityMapper.INSTANCE.toDTO(savedCommunity);
   }
 

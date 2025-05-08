@@ -85,4 +85,30 @@ public class FriendRequestDaoImpl extends HibernateAbstractDao<FriendRequest>
           "Ошибка при поиске friendRequests для " + firstUser + " и " + secondUser);
     }
   }
+
+  @Override
+  public boolean areFriends(Long firstUserId, Long secondUserId) {
+    log.info("Проверка дружбы между user#{} и user#{}...", firstUserId, secondUserId);
+    try {
+      String hql = "SELECT COUNT(fr) > 0 FROM FriendRequest fr " +
+          "WHERE ((fr.sender.id = :firstUser AND fr.recipient.id = :secondUser) " +
+          "OR (fr.sender.id = :secondUser AND fr.recipient.id = :firstUser)) " +
+          "AND fr.status = :status";
+
+      Boolean areFriends = sessionFactory.getCurrentSession()
+          .createQuery(hql, Boolean.class)
+          .setParameter("firstUser", firstUserId)
+          .setParameter("secondUser", secondUserId)
+          .setParameter("status", FriendStatus.ACCEPTED)
+          .getSingleResult();
+
+      log.info("Пользователи user#{} и user#{} {} друзьями",
+          firstUserId, secondUserId, areFriends ? "являются" : "не являются");
+      return areFriends;
+    } catch (Exception e) {
+      throw new DataRetrievalFailureException(
+          String.format("Ошибка при проверке дружбы между user#%d и user#%d",
+              firstUserId, secondUserId), e);
+    }
+  }
 }

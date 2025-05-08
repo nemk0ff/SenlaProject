@@ -1,7 +1,6 @@
 package ru.senla.socialnetwork.dao.chats;
 
 import java.util.List;
-import java.util.Optional;
 import ru.senla.socialnetwork.dao.GenericDao;
 import ru.senla.socialnetwork.model.chats.ChatMessage;
 

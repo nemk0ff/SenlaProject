@@ -72,7 +72,7 @@ public class ChatMessageFacadeImpl implements ChatMessageFacade {
     ChatMessage message = chatMessageService.get(chatId, messageId);
     ChatMember member = chatMemberService.getMember(chatId, currentUserEmail);
 
-    if (!message.getAuthor().getUser().getEmail().equals(currentUserEmail)) {
+    if (!message.getAuthor().getEmail().equals(currentUserEmail)) {
       if (member.getRole() != MemberRole.ADMIN && member.getRole() != MemberRole.MODERATOR) {
         throw new ChatMessageException("Вы не можете удалить данное сообщение");
       }

@@ -38,7 +38,7 @@ public class CommunityControllerImpl implements CommunityController {
 
   @Override
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasRole('ADMIN') or @communityFacadeImpl.get(#id).owner() == authentication.name")
+  @PreAuthorize("hasRole('ADMIN') or @communityMemberFacadeImpl.isAdmin(#id, authentication.name)")
   public ResponseEntity<String> delete(@PathVariable Long id) {
     communityFacade.delete(id);
     return ResponseEntity.ok("Сообщество " + id + " удалено");
@@ -53,7 +53,7 @@ public class CommunityControllerImpl implements CommunityController {
 
   @Override
   @PatchMapping
-  @PreAuthorize("@communityFacadeImpl.get(#changeCommunityDTO.id()).owner() == authentication.name")
+  @PreAuthorize("@communityMemberFacadeImpl.isAdmin(#changeCommunityDTO.id(), authentication.name)")
   public ResponseEntity<CommunityDTO> change(@Valid @RequestBody
                                              ChangeCommunityDTO changeCommunityDTO) {
     return ResponseEntity.ok(communityFacade.change(changeCommunityDTO));
