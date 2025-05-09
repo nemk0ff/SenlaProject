@@ -2,6 +2,7 @@ package ru.senla.socialnetwork.exceptions;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 import java.time.Instant;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -21,10 +22,6 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import ru.senla.socialnetwork.exceptions.chats.ChatException;
-import ru.senla.socialnetwork.exceptions.communities.CommunityException;
-import ru.senla.socialnetwork.exceptions.friendRequests.FriendRequestException;
-import ru.senla.socialnetwork.exceptions.users.UserException;
 
 @ControllerAdvice
 @Slf4j
@@ -51,6 +48,25 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     ProblemDetail problemDetail = problemDetailBuilder(
         "Неверный тип параметра", request, HttpStatus.BAD_REQUEST, ex);
+
+    return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(ConstraintViolationException.class)
+  public ResponseEntity<ProblemDetail> handleConstraintViolation(
+      ConstraintViolationException ex, WebRequest request) {
+    log.warn("Ошибка валидации параметров: {}", ex.getMessage());
+
+    ProblemDetail problemDetail = problemDetailBuilder(
+        "Ошибка валидации параметров",
+        request,
+        HttpStatus.BAD_REQUEST,
+        ex);
+
+    List<String> errors = ex.getConstraintViolations().stream()
+        .map(v -> v.getPropertyPath() + ": " + v.getMessage())
+        .toList();
+    problemDetail.setProperty("errors", errors);
 
     return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
   }

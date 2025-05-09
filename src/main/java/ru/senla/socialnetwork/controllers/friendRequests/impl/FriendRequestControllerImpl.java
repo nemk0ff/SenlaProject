@@ -2,13 +2,13 @@ package ru.senla.socialnetwork.controllers.friendRequests.impl;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +25,7 @@ import ru.senla.socialnetwork.model.friendRequests.FriendStatus;
 
 @Slf4j
 @RestController
+@Validated
 @AllArgsConstructor
 @RequestMapping("/friends")
 public class FriendRequestControllerImpl implements FriendRequestController {
@@ -50,7 +51,7 @@ public class FriendRequestControllerImpl implements FriendRequestController {
   }
 
   @Override
-  @GetMapping("/outgoing_requests")
+  @GetMapping("/outgoing")
   public ResponseEntity<?> showOutgoingRequests(Authentication auth) {
     log.info("Запрос исходящих заявок пользователя: {}", auth.getName());
     List<FriendRequestDTO> requests = friendRequestFacade.getOutgoingRequests(auth.getName());
@@ -59,9 +60,9 @@ public class FriendRequestControllerImpl implements FriendRequestController {
   }
 
   @Override
-  @GetMapping("/incoming_requests")
+  @GetMapping("/incoming")
   public ResponseEntity<?> showIncomingRequests(
-      @RequestParam @NotNull FriendStatus status,
+      @RequestParam FriendStatus status,
       Authentication auth) {
     log.info("Запрос входящих заявок для {} со статусом {}", auth.getName(), status);
     List<FriendRequestDTO> requests = friendRequestFacade.getIncomingRequests(auth.getName(), status);
