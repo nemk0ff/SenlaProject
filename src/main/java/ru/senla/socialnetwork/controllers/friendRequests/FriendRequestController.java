@@ -1,12 +1,10 @@
 package ru.senla.socialnetwork.controllers.friendRequests;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
-import ru.senla.socialnetwork.dto.friendRequests.RemoveFriendRequestDTO;
+import org.springframework.security.core.Authentication;
 import ru.senla.socialnetwork.dto.friendRequests.RespondRequestDTO;
-import ru.senla.socialnetwork.dto.friendRequests.SendRequestDTO;
 import ru.senla.socialnetwork.model.friendRequests.FriendStatus;
 
 public interface FriendRequestController {
@@ -15,14 +13,13 @@ public interface FriendRequestController {
 
   ResponseEntity<?> showFriends(String userEmail);
 
-  ResponseEntity<?> showOutgoingRequests(String userEmail);
+  ResponseEntity<?> showOutgoingRequests(Authentication auth);
 
-  ResponseEntity<?> showIncomingRequests(@Email String recipientEmail,
-                                         @NotNull FriendStatus status);
+  ResponseEntity<?> showIncomingRequests(@NotNull FriendStatus status, Authentication auth);
 
-  ResponseEntity<?> sendRequest(@Valid SendRequestDTO request);
+  ResponseEntity<?> sendRequest(String recipient, Authentication auth);
 
-  ResponseEntity<?> respondRequest(@Valid RespondRequestDTO request);
+  ResponseEntity<?> respondRequest(@Valid RespondRequestDTO request, Authentication auth);
 
-  ResponseEntity<?> removeFriend(@Valid RemoveFriendRequestDTO request);
+  ResponseEntity<?> removeFriend(String recipient, Authentication auth);
 }

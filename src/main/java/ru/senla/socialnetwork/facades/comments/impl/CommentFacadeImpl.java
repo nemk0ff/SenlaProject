@@ -63,7 +63,7 @@ public class CommentFacadeImpl implements CommentFacade {
   @Override
   public List<CommentDTO> getPostComments(Long postId, String clientEmail) {
     List<Comment> comments = commentService.getAllByPost(postId);
-    Post post = comments.getFirst().getPost();
+    Post post = generalPostService.getPost(postId);
     User client = userService.getUserByEmail(clientEmail);
     if (!userService.isAdmin(clientEmail)) {
       if (post.getPostType().equals("WallPost")) {
@@ -126,7 +126,7 @@ public class CommentFacadeImpl implements CommentFacade {
       } else if (post.getPostType().equals("CommunityPost")) {
         CommunityPost communityPost = (CommunityPost) comment.getPost();
         CommunityMember member = communityMemberService.get(
-            communityPost.getCommunity().getId(), client.getId());
+            communityPost.getCommunity().getId(), clientEmail);
         if (member.getRole().equals(MemberRole.MEMBER)) {
           throw new CommentException("У вас нет прав для удаления этого комментария");
         }

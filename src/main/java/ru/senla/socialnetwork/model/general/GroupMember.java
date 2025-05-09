@@ -42,6 +42,9 @@ public abstract class GroupMember implements MyEntity {
   @Column(name = "join_date", nullable = false)
   protected ZonedDateTime joinDate;
 
+  @Column(name = "leave_date")
+  protected ZonedDateTime leaveDate;
+
   @Enumerated(EnumType.STRING)
   @Column(name = "role", nullable = false)
   protected MemberRole role;

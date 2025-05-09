@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS group_members (
     is_banned BOOLEAN,
     banned_reason VARCHAR(255),
     join_date TIMESTAMP WITH TIME ZONE NOT NULL,
+    leave_date TIMESTAMP WITH TIME ZONE,
     role VARCHAR(32) NOT NULL,
     gm_type VARCHAR(32)
     );
