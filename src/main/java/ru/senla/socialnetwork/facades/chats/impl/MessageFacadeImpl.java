@@ -5,88 +5,88 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.senla.socialnetwork.dto.chats.ChatMessageDTO;
+import ru.senla.socialnetwork.dto.chats.MessageDTO;
 import ru.senla.socialnetwork.dto.chats.CreateMessageDTO;
 import ru.senla.socialnetwork.dto.mappers.ChatMessageMapper;
 import ru.senla.socialnetwork.exceptions.chats.ChatMemberException;
-import ru.senla.socialnetwork.exceptions.chats.ChatMessageException;
-import ru.senla.socialnetwork.facades.chats.ChatMessageFacade;
+import ru.senla.socialnetwork.exceptions.chats.MessageException;
+import ru.senla.socialnetwork.facades.chats.MessageFacade;
 import ru.senla.socialnetwork.model.chats.ChatMember;
-import ru.senla.socialnetwork.model.chats.ChatMessage;
+import ru.senla.socialnetwork.model.chats.Message;
 import ru.senla.socialnetwork.model.general.MemberRole;
 import ru.senla.socialnetwork.services.chats.ChatMemberService;
-import ru.senla.socialnetwork.services.chats.ChatMessageService;
+import ru.senla.socialnetwork.services.chats.MessageService;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
-public class ChatMessageFacadeImpl implements ChatMessageFacade {
+public class MessageFacadeImpl implements MessageFacade {
   private final ChatMessageMapper chatMessageMapper;
   private final ChatMemberService chatMemberService;
-  private final ChatMessageService chatMessageService;
+  private final MessageService messageService;
 
   @Override
-  public ChatMessageDTO send(Long chatId, String authorEmail, CreateMessageDTO request) {
+  public MessageDTO send(Long chatId, String authorEmail, CreateMessageDTO request) {
     ChatMember member = chatMemberService.getMember(chatId, authorEmail);
-    return chatMessageMapper.toDTO(chatMessageService.send(member, request));
+    return chatMessageMapper.toDTO(messageService.send(member, request));
   }
 
   @Override
-  public List<ChatMessageDTO> getAll(Long chatId, String clientEmail) {
+  public List<MessageDTO> getAll(Long chatId, String clientEmail) {
     checkIsMember(chatId, clientEmail);
-    return chatMessageService.getAll(chatId).stream()
+    return messageService.getAll(chatId).stream()
         .map(chatMessageMapper::toDTO)
         .toList();
   }
 
   @Override
-  public ChatMessageDTO get(Long chatId, Long messageId, String clientEmail) {
+  public MessageDTO get(Long chatId, Long messageId, String clientEmail) {
     checkIsMember(chatId, clientEmail);
-    return chatMessageMapper.toDTO(chatMessageService.get(chatId, messageId));
+    return chatMessageMapper.toDTO(messageService.get(chatId, messageId));
   }
 
   @Override
-  public List<ChatMessageDTO> getAnswers(Long chatId, Long messageId, String clientEmail) {
+  public List<MessageDTO> getAnswers(Long chatId, Long messageId, String clientEmail) {
     checkIsMember(chatId, clientEmail);
-    return chatMessageService.getAnswers(chatId, messageId).stream()
+    return messageService.getAnswers(chatId, messageId).stream()
         .map(chatMessageMapper::toDTO)
         .toList();
   }
 
   @Override
-  public List<ChatMessageDTO> getPinned(Long chatId, String clientEmail) {
+  public List<MessageDTO> getPinned(Long chatId, String clientEmail) {
     checkIsMember(chatId, clientEmail);
-    return chatMessageService.getPinned(chatId).stream()
+    return messageService.getPinned(chatId).stream()
         .map(chatMessageMapper::toDTO)
         .toList();
   }
 
   @Override
-  public ChatMessageDTO pin(Long chatId, Long messageId, String clientEmail) {
+  public MessageDTO pin(Long chatId, Long messageId, String clientEmail) {
     checkIsAdminOrModerator(chatId, clientEmail);
-    return chatMessageMapper.toDTO(chatMessageService.pin(chatId, messageId));
+    return chatMessageMapper.toDTO(messageService.pin(chatId, messageId));
   }
 
   @Override
-  public ChatMessageDTO unpin(Long chatId, Long messageId, String clientEmail) {
+  public MessageDTO unpin(Long chatId, Long messageId, String clientEmail) {
     checkIsAdminOrModerator(chatId, clientEmail);
-    return chatMessageMapper.toDTO(chatMessageService.unpin(chatId, messageId));
+    return chatMessageMapper.toDTO(messageService.unpin(chatId, messageId));
   }
 
   @Override
   public void delete(Long chatId, Long messageId, String clientEmail) {
-    ChatMessage message = chatMessageService.get(chatId, messageId);
+    Message message = messageService.get(chatId, messageId);
     // Удалить сообщение может либо его автор, либо админ/модератор чата
     if (!message.getAuthor().getEmail().equals(clientEmail)) {
       checkIsAdminOrModerator(chatId, clientEmail);
     }
-    chatMessageService.delete(message);
+    messageService.delete(message);
   }
 
   private void checkIsMember(Long chatId, String email) {
     if(chatMemberService.isChatMember(chatId, email)) {
-      throw new ChatMessageException("Недостаточно прав для выполнения этой операции");
+      throw new MessageException("Недостаточно прав для выполнения этой операции");
     }
   }
 

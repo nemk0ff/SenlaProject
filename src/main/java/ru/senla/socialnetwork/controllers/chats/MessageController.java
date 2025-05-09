@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import ru.senla.socialnetwork.dto.chats.CreateMessageDTO;
 
-public interface ChatMessageController {
+public interface MessageController {
   ResponseEntity<?> sendMessage(Long chatId, @Valid CreateMessageDTO request, Authentication auth);
 
   ResponseEntity<?> getMessages(Long chatId, Authentication auth);

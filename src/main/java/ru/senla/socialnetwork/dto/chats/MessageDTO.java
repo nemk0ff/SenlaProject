@@ -2,7 +2,7 @@ package ru.senla.socialnetwork.dto.chats;
 
 import java.time.ZonedDateTime;
 
-public record ChatMessageDTO(
+public record MessageDTO(
     Long id,
     String body,
     String authorEmail,
