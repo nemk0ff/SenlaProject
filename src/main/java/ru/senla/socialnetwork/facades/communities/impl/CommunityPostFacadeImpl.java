@@ -9,12 +9,9 @@ import ru.senla.socialnetwork.dto.communitites.CommunityPostDTO;
 import ru.senla.socialnetwork.dto.communitites.CreateCommunityPostDTO;
 import ru.senla.socialnetwork.dto.communitites.UpdateCommunityPostDTO;
 import ru.senla.socialnetwork.dto.mappers.CommunityPostMapper;
-import ru.senla.socialnetwork.exceptions.communities.CommunityPostException;
 import ru.senla.socialnetwork.facades.communities.CommunityPostFacade;
 import ru.senla.socialnetwork.model.communities.CommunityMember;
 import ru.senla.socialnetwork.model.communities.CommunityPost;
-import ru.senla.socialnetwork.model.general.MemberRole;
-import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.services.communities.CommunityMemberService;
 import ru.senla.socialnetwork.services.posts.CommunityPostService;
 import ru.senla.socialnetwork.services.user.UserService;
@@ -29,19 +26,33 @@ public class CommunityPostFacadeImpl implements CommunityPostFacade {
   private final UserService userService;
 
   @Override
-  @Transactional
-  public CommunityPostDTO createPost(Long communityId, CreateCommunityPostDTO dto, String authorEmail) {
-    User author = userService.getUserByEmail(authorEmail);
-    CommunityMember member = communityMemberService.get(communityId, author.getId());
+  @Transactional(readOnly = true)
+  public List<CommunityPostDTO> getAllPosts(Long communityId) {
+    return CommunityPostMapper.INSTANCE
+        .toListDTO(communityPostService.getAllPosts(communityId));
+  }
 
+  @Override
+  @Transactional(readOnly = true)
+  public CommunityPostDTO getPost(Long communityId, Long postId) {
+    return CommunityPostMapper.INSTANCE.toDTO(communityPostService.getPost(communityId, postId));
+  }
+
+  @Override
+  @Transactional
+  public CommunityPostDTO createPost(Long communityId, CreateCommunityPostDTO dto, String clientEmail) {
+    communityMemberService.checkIsBanned(communityId, clientEmail);
+    CommunityMember member = communityMemberService.get(communityId, clientEmail);
     return CommunityPostMapper.INSTANCE
         .toDTO(communityPostService.createPost(communityId, dto, member));
   }
 
   @Override
   @Transactional
-  public void deletePost(Long communityId, Long postId, String requesterEmail) {
-    checkAccess(communityId, postId, requesterEmail);
+  public void deletePost(Long communityId, Long postId, String clientEmail) {
+    if(!userService.isAdmin(clientEmail)) {
+      checkAccess(communityId, postId, clientEmail);
+    }
     CommunityPost post = communityPostService.getPost(communityId, postId);
     communityPostService.deletePost(post);
   }
@@ -55,26 +66,11 @@ public class CommunityPostFacadeImpl implements CommunityPostFacade {
         .toDTO(communityPostService.updatePost(post, dto));
   }
 
-  private void checkAccess(Long communityId, Long postId, String requesterEmail) {
-    User user = userService.getUserByEmail(requesterEmail);
-    CommunityMember member = communityMemberService.get(communityId, user.getId());
+  private void checkAccess(Long communityId, Long postId, String clientEmail) {
+    CommunityMember member = communityMemberService.get(communityId, clientEmail);
     CommunityPost post = communityPostService.getPost(communityId, postId);
-
-    if(member.getRole().equals(MemberRole.MEMBER) && post.getAuthor().equals(member)) {
-      throw new CommunityPostException("Недостаточно прав для управления этим постом");
+    if(!post.getAuthor().equals(member)) {
+      communityMemberService.checkIsAdminOrModer(communityId, clientEmail);
     }
-  }
-
-  @Override
-  @Transactional(readOnly = true)
-  public List<CommunityPostDTO> getAllPosts(Long communityId) {
-    return CommunityPostMapper.INSTANCE
-        .toListDTO(communityPostService.getAllPosts(communityId));
-  }
-
-  @Override
-  @Transactional(readOnly = true)
-  public CommunityPostDTO getPost(Long communityId, Long postId) {
-    return CommunityPostMapper.INSTANCE.toDTO(communityPostService.getPost(communityId, postId));
   }
 }

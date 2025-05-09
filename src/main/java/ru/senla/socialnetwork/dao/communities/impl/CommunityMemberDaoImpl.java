@@ -19,14 +19,15 @@ public class CommunityMemberDaoImpl extends HibernateAbstractDao<CommunityMember
   }
 
   @Override
-  public Optional<CommunityMember> findByCommunityAndUser(Long communityId, Long userId) {
-    log.debug("Поиск участника сообщества {} для пользователя {}", communityId, userId);
+  public Optional<CommunityMember> findByCommunityAndUser(Long communityId, String userEmail) {
+    log.debug("Поиск участника сообщества {} для пользователя {}", communityId, userEmail);
     try {
       return sessionFactory.getCurrentSession()
-          .createQuery("FROM CommunityMember cm WHERE cm.community.id = :communityId AND cm.user.id = :userId",
+          .createQuery("FROM CommunityMember cm WHERE cm.community.id = :communityId " +
+                  "AND cm.user.email = :userEmail",
               CommunityMember.class)
           .setParameter("communityId", communityId)
-          .setParameter("userId", userId)
+          .setParameter("userEmail", userEmail)
           .uniqueResultOptional();
     } catch (HibernateException e) {
       log.error("Ошибка при поиске участника сообщества: {}", e.getMessage());

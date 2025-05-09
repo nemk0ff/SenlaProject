@@ -5,6 +5,6 @@ import jakarta.validation.constraints.NotNull;
 
 public record ChangeCommunityDTO(
     @NotNull(message = "Введите id сообщества") Long id,
-    @NotBlank(message = "Введите название сообщества") String name,
+    @NotBlank(message = "Введите новое название сообщества") String name,
     String description) {
 }

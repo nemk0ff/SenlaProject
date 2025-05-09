@@ -28,83 +28,55 @@ public class CommunityMemberFacadeImpl implements CommunityMemberFacade {
 
   @Override
   @Transactional(readOnly = true)
-  public List<CommunityMemberDTO> getAll(Long communityId) {
+  public List<CommunityMemberDTO> getAll(Long communityId, String clientEmail) {
     return CommunityMemberMapper.INSTANCE.toListDTO(communityMemberService.getAll(communityId));
   }
 
   @Override
-  @Transactional
-  public CommunityMemberDTO joinCommunity(Long communityId, String userEmail) {
-    log.info("(Facade) создание участника сообщества: id={}, email={}", communityId, userEmail);
-    User user = userService.getUserByEmail(userEmail);
+  public CommunityMemberDTO joinCommunity(Long communityId, String clientEmail) {
+    log.info("создание участника сообщества: id={}, email={}", communityId, clientEmail);
+    User user = userService.getUserByEmail(clientEmail);
     Community community = communityService.get(communityId);
     log.info("Найдены user={} и community={}", user.getId(), community.getId());
 
-    if(communityMemberService.isMember(communityId, user.getId())) {
-      throw new CommunityMemberException(userEmail + " уже является участником сообщества");
+    if (communityMemberService.isMember(communityId, clientEmail)) {
+      throw new CommunityMemberException(clientEmail + " уже является участником сообщества");
     }
     return CommunityMemberMapper.INSTANCE
         .toDTO(communityMemberService.joinCommunity(community, user));
   }
 
   @Override
-  @Transactional
   public void leaveCommunity(Long communityId, String userEmail) {
-    User user = userService.getUserByEmail(userEmail);
-    CommunityMember member = communityMemberService.get(communityId, user.getId());
+    CommunityMember member = communityMemberService.get(communityId, userEmail);
     communityMemberService.leaveCommunity(member);
   }
 
   @Override
-  @Transactional
-  public CommunityMemberDTO banMember(Long communityId, String userEmail, String reason) {
-    User user = userService.getUserByEmail(userEmail);
-    CommunityMember member = communityMemberService.get(communityId, user.getId());
+  public CommunityMemberDTO banMember(Long communityId, String userEmail, String reason, String clientEmail) {
+    communityMemberService.checkIsAdminOrModer(communityId, clientEmail);
+    CommunityMember member = communityMemberService.get(communityId, userEmail);
     return CommunityMemberMapper.INSTANCE
         .toDTO(communityMemberService.banMember(member, reason));
   }
 
   @Override
-  @Transactional
-  public CommunityMemberDTO unbanMember(Long communityId, String userEmail) {
-    User user = userService.getUserByEmail(userEmail);
-    CommunityMember member = communityMemberService.get(communityId, user.getId());
+  public CommunityMemberDTO unbanMember(Long communityId, String userEmail, String clientEmail) {
+    communityMemberService.checkIsAdminOrModer(communityId, clientEmail);
+    CommunityMember member = communityMemberService.get(communityId, userEmail);
     return CommunityMemberMapper.INSTANCE
         .toDTO(communityMemberService.unbanMember(member));
   }
 
   @Override
-  @Transactional
-  public CommunityMemberDTO changeMemberRole(Long communityId, String userEmail, MemberRole role) {
-    User user = userService.getUserByEmail(userEmail);
-    CommunityMember member = communityMemberService.get(communityId, user.getId());
+  public CommunityMemberDTO changeMemberRole(Long communityId, String userEmail, MemberRole role,
+                                             String clientEmail) {
+    communityMemberService.checkIsAdmin(communityId, clientEmail);
+    if (clientEmail.equals(userEmail)) {
+      throw new CommunityMemberException("Вы не можете изменить свою роль в сообществе");
+    }
+    CommunityMember member = communityMemberService.get(communityId, userEmail);
     return CommunityMemberMapper.INSTANCE
         .toDTO(communityMemberService.changeMemberRole(member, role));
-  }
-
-  @Override
-  @Transactional
-  public boolean isBanned(Long communityId, String userEmail) {
-    User user = userService.getUserByEmail(userEmail);
-    CommunityMember member = communityMemberService.get(communityId, user.getId());
-    return member.getIsBanned();
-  }
-
-  @Override
-  @Transactional
-  public boolean isAdmin(Long communityId, String userEmail) {
-    return hasRight(communityId, userEmail, MemberRole.ADMIN);
-  }
-
-  @Override
-  @Transactional
-  public boolean isModerator(Long communityId, String userEmail) {
-    return hasRight(communityId, userEmail, MemberRole.MODERATOR);
-  }
-
-  private boolean hasRight(Long communityId, String userEmail, MemberRole role) {
-    User user = userService.getUserByEmail(userEmail);
-    CommunityMember member = communityMemberService.get(communityId, user.getId());
-    return member.getRole().equals(role);
   }
 }

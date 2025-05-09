@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.senla.socialnetwork.dao.communities.CommunityMemberDao;
+import ru.senla.socialnetwork.exceptions.communities.CommunityMemberException;
 import ru.senla.socialnetwork.model.communities.Community;
 import ru.senla.socialnetwork.model.communities.CommunityMember;
 import ru.senla.socialnetwork.model.general.MemberRole;
@@ -20,8 +21,8 @@ public class CommunityMemberServiceImpl implements CommunityMemberService {
   private final CommunityMemberDao communityMemberDao;
 
   @Override
-  public CommunityMember get(Long communityId, Long userId) {
-    return communityMemberDao.findByCommunityAndUser(communityId, userId).
+  public CommunityMember get(Long communityId, String userEmail) {
+    return communityMemberDao.findByCommunityAndUser(communityId, userEmail).
         orElseThrow(() -> new EntityNotFoundException("Участник сообщества не найден"));
   }
 
@@ -70,9 +71,43 @@ public class CommunityMemberServiceImpl implements CommunityMemberService {
   }
 
   @Override
-  public boolean isMember(Long communityId, Long userId) {
-    return communityMemberDao.findByCommunityAndUser(communityId, userId)
-        .map(member -> !member.getIsBanned())
-        .orElse(false);
+  public boolean isMember(Long communityId, String userEmail) {
+    return communityMemberDao.findByCommunityAndUser(communityId, userEmail).isPresent();
+  }
+
+  @Override
+  public void checkIsBanned(Long communityId, String userEmail) {
+    log.info("Проверка, не забанен ли пользователь {} в сообществе {}...", userEmail, communityId);
+    if (get(communityId, userEmail).getIsBanned()) {
+      throw new CommunityMemberException("Вы забанены в этом сообществе");
+    }
+    log.info("Пользователь {} не забанен в сообществе {}, проверка пройдена.", userEmail,
+        communityId);
+  }
+
+  @Override
+  public void checkIsAdminOrModer(Long communityId, String userEmail) {
+    log.info("Проверка, имеет ли пользователь {} права админа или модератора в сообществе {}...",
+        userEmail, communityId);
+    if(hasRight(communityId, userEmail, MemberRole.MEMBER)) {
+      throw new CommunityMemberException("У вас недостаточно прав для выполнения этой операции");
+    }
+    log.info("Пользователь {} имеет права админа или модератора в сообществе {}, проверка " +
+            "пройдена.", userEmail, communityId);
+  }
+
+  @Override
+  public void checkIsAdmin(Long communityId, String userEmail) {
+    log.info("Проверка, имеет ли пользователь {} права админа в сообществе {}...",
+        userEmail, communityId);
+    if(!hasRight(communityId, userEmail, MemberRole.ADMIN)) {
+      throw new CommunityMemberException("У вас недостаточно прав для выполнения этой операции");
+    }
+    log.info("Пользователь {} имеет права админа в сообществе {}, проверка " +
+        "пройдена.", userEmail, communityId);
+  }
+
+  private boolean hasRight(Long communityId, String userEmail, MemberRole role) {
+    return get(communityId, userEmail).getRole().equals(role);
   }
 }

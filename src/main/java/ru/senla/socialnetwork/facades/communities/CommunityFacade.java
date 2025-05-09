@@ -6,13 +6,13 @@ import ru.senla.socialnetwork.dto.communitites.CommunityDTO;
 import ru.senla.socialnetwork.dto.communitites.CreateCommunityDTO;
 
 public interface CommunityFacade {
-  CommunityDTO create(CreateCommunityDTO communityDTO);
+  CommunityDTO create(CreateCommunityDTO communityDTO, String clientEmail);
 
-  void delete(Long communityId);
+  void delete(Long communityId, String clientEmail);
 
-  CommunityDTO get(Long communityId);
+  CommunityDTO get(Long communityId, String clientEmail);
 
   List<CommunityDTO> getAll();
 
-  CommunityDTO change(ChangeCommunityDTO communityDTO);
+  CommunityDTO change(ChangeCommunityDTO communityDTO, String clientEmail);
 }
