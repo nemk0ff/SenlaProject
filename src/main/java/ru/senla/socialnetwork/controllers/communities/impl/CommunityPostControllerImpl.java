@@ -31,21 +31,22 @@ public class CommunityPostControllerImpl implements CommunityPostController {
 
   @Override
   @GetMapping
-  public ResponseEntity<List<CommunityPostDTO>> getAllPosts(
+  public ResponseEntity<?> getAllPosts(
       @PathVariable Long communityId) {
     return ResponseEntity.ok(communityPostFacade.getAllPosts(communityId));
   }
 
   @Override
   @GetMapping("/{id}")
-  public ResponseEntity<CommunityPostDTO> getById(@PathVariable Long communityId,
-                                                  @PathVariable("id") Long postId) {
+  public ResponseEntity<?> getById(
+      @PathVariable Long communityId,
+      @PathVariable("id") Long postId) {
     return ResponseEntity.ok(communityPostFacade.getPost(communityId, postId));
   }
 
   @PostMapping
   @PreAuthorize("#authorEmail=authentication.name")
-  public ResponseEntity<CommunityPostDTO> create(
+  public ResponseEntity<?> create(
       @PathVariable Long communityId,
       @Valid @RequestBody CreateCommunityPostDTO dto,
       @RequestParam String authorEmail) {
@@ -54,7 +55,7 @@ public class CommunityPostControllerImpl implements CommunityPostController {
   }
 
   @DeleteMapping("/{postId}")
-  public ResponseEntity<String> delete(
+  public ResponseEntity<?> delete(
       @PathVariable Long communityId,
       @PathVariable Long postId,
       @RequestParam String email) {
@@ -63,7 +64,7 @@ public class CommunityPostControllerImpl implements CommunityPostController {
   }
 
   @PatchMapping("/{postId}")
-  public ResponseEntity<CommunityPostDTO> update(
+  public ResponseEntity<?> update(
       @PathVariable Long communityId,
       @PathVariable Long postId,
       @Valid @RequestBody UpdateCommunityPostDTO dto,

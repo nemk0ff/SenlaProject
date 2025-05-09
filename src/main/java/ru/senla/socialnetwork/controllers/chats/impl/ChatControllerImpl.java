@@ -39,8 +39,9 @@ public class ChatControllerImpl implements ChatController {
 
   @Override
   @PostMapping("/group")
-  public ResponseEntity<?> createGroupChat(@RequestBody @Valid CreateGroupChatDTO request,
-                                           Authentication auth) {
+  public ResponseEntity<?> createGroupChat(
+      @RequestBody @Valid CreateGroupChatDTO request,
+      Authentication auth) {
     log.info("Создание группового чата пользователем {}. Участников: {}, название: '{}'",
         auth.getName(), request.membersEmails().size(), request.name());
     ChatDTO chat = chatFacade.create(request, auth.getName());
@@ -50,8 +51,9 @@ public class ChatControllerImpl implements ChatController {
 
   @Override
   @PostMapping("/personal")
-  public ResponseEntity<?> createPersonalChat(@Email @RequestParam String participant,
-                                              Authentication auth) {
+  public ResponseEntity<?> createPersonalChat(
+      @Email @RequestParam String participant,
+      Authentication auth) {
     log.info("Создание персонального чата между {} и {}", auth.getName(), participant);
     ChatDTO chat = chatFacade.create(participant, auth.getName());
     log.info("Создан персональный чат ID: {} между {} и {}", chat.id(), auth.getName(), participant);
@@ -60,7 +62,9 @@ public class ChatControllerImpl implements ChatController {
 
   @Override
   @DeleteMapping("/{chatId}")
-  public ResponseEntity<?> deleteChat(@PathVariable Long chatId, Authentication auth) {
+  public ResponseEntity<?> deleteChat(
+      @PathVariable Long chatId,
+      Authentication auth) {
     String currentUser = auth.getName();
     log.info("Запрос на удаление чата id={}. пользователем id={}", chatId, currentUser);
     chatFacade.delete(chatId, auth.getName());
@@ -70,7 +74,9 @@ public class ChatControllerImpl implements ChatController {
 
   @Override
   @GetMapping("/{chatId}")
-  public ResponseEntity<?> getChat(@PathVariable Long chatId, Authentication auth) {
+  public ResponseEntity<?> getChat(
+      @PathVariable Long chatId,
+      Authentication auth) {
     log.info("Запрос информации о чате id={}", chatId);
     ChatDTO chat = chatFacade.get(chatId, auth.getName());
     log.info("Возвращена информация о чате id={}, тип={}, участников: {}",

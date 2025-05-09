@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +26,7 @@ public class ChatMemberControllerImpl implements ChatMemberController {
 
   @Override
   @PostMapping
-  public ResponseEntity<ChatMemberDTO> addMember(
+  public ResponseEntity<?> addMember(
       @PathVariable Long chatId,
       @RequestParam String userEmail,
       Authentication auth) {
@@ -40,7 +39,7 @@ public class ChatMemberControllerImpl implements ChatMemberController {
 
   @Override
   @DeleteMapping("/{email}")
-  public ResponseEntity<String> removeMember(
+  public ResponseEntity<?> removeMember(
       @PathVariable Long chatId,
       @PathVariable String email,
       Authentication auth) {
@@ -53,7 +52,7 @@ public class ChatMemberControllerImpl implements ChatMemberController {
 
   @Override
   @PostMapping("/{email}/mute")
-  public ResponseEntity<ChatMemberDTO> muteMember(
+  public ResponseEntity<?> muteMember(
       @PathVariable Long chatId,
       @PathVariable String email,
       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -68,7 +67,7 @@ public class ChatMemberControllerImpl implements ChatMemberController {
 
   @Override
   @PostMapping("/{email}/unmute")
-  public ResponseEntity<ChatMemberDTO> unmuteMember(
+  public ResponseEntity<?> unmuteMember(
       @PathVariable Long chatId,
       @PathVariable String email,
       Authentication auth) {
@@ -80,7 +79,7 @@ public class ChatMemberControllerImpl implements ChatMemberController {
 
   @Override
   @PostMapping("/leave")
-  public ResponseEntity<String> leaveChat(
+  public ResponseEntity<?> leaveChat(
       @PathVariable Long chatId,
       Authentication auth) {
     log.info("Выход пользователя {} из чата {}", auth.getName(), chatId);
@@ -91,7 +90,7 @@ public class ChatMemberControllerImpl implements ChatMemberController {
 
   @Override
   @PostMapping("/role")
-  public ResponseEntity<ChatMemberDTO> changeMemberRole(
+  public ResponseEntity<?> changeMemberRole(
       @PathVariable Long chatId,
       @RequestParam String email,
       @RequestParam MemberRole role,

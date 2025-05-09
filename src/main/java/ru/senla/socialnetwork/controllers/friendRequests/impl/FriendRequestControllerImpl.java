@@ -100,8 +100,7 @@ public class FriendRequestControllerImpl implements FriendRequestController {
   @Override
   @DeleteMapping("/remove")
   @PreAuthorize("hasRole('ADMIN') or #request.userEmail == authentication.name")
-  public ResponseEntity<?> removeFriend(
-      @RequestBody @Valid RemoveFriendRequestDTO request) {
+  public ResponseEntity<?> removeFriend(@RequestBody @Valid RemoveFriendRequestDTO request) {
     log.info("Попытка удаления из друзей: {} удаляет {}", request.userEmail(), request.friendEmail());
     friendRequestFacade.unfriend(request.userEmail(), request.friendEmail());
     log.info("Пользователь {} успешно удален из друзей {}", request.friendEmail(), request.userEmail());

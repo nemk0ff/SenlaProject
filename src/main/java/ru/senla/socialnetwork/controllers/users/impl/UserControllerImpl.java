@@ -63,7 +63,7 @@ public class UserControllerImpl implements UserController {
 
   @Override
   @PutMapping("/edit")
-  @PreAuthorize("hasRole('ADMIN') or #editDTO.email == authentication.name")
+  @PreAuthorize("#editDTO.email == authentication.name")
   public ResponseEntity<?> edit(@RequestBody UserEditDTO editDTO) {
     log.info("Запрос на редактирование пользователя: {}", editDTO.email());
     UserDTO updatedUser = UserMapper.INSTANCE.toUserResponseDTO(userService.edit(editDTO));
@@ -73,7 +73,7 @@ public class UserControllerImpl implements UserController {
 
   @Override
   @PostMapping("/change-email")
-  @PreAuthorize("hasRole('ADMIN') or #request.currentEmail == authentication.name")
+  @PreAuthorize("#request.currentEmail == authentication.name")
   public ResponseEntity<?> changeEmail(@RequestBody @Valid ChangeEmailDTO request) {
     log.info("Смена email с {} на {}", request.currentEmail(), request.newEmail());
 

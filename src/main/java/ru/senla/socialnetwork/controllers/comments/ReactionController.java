@@ -9,9 +9,9 @@ public interface ReactionController {
 
   ResponseEntity<?> get(Long id, Authentication auth);
 
-  ResponseEntity<?> react(Long commentId, CreateReactionDTO request);
+  ResponseEntity<?> getByComment(Long commentId, Authentication auth);
 
-  ResponseEntity<?> react(Long id, Authentication auth);
+  ResponseEntity<?> createReaction(CreateReactionDTO request, Authentication auth);
 
-  ResponseEntity<?> getByComment(Long id);
+  ResponseEntity<?> removeReaction(Long id, Authentication auth);
 }

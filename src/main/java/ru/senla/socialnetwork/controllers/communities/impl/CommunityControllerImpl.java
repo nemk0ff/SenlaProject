@@ -31,7 +31,7 @@ public class CommunityControllerImpl implements CommunityController {
   @Override
   @PostMapping
   @PreAuthorize("#dto.owner() == authentication.name")
-  public ResponseEntity<CommunityDTO> create(@Valid @RequestBody CreateCommunityDTO dto) {
+  public ResponseEntity<?> create(@Valid @RequestBody CreateCommunityDTO dto) {
     CommunityDTO created = communityFacade.create(dto);
     return ResponseEntity.status(HttpStatus.CREATED).body(created);
   }
@@ -39,14 +39,14 @@ public class CommunityControllerImpl implements CommunityController {
   @Override
   @DeleteMapping("/{id}")
   @PreAuthorize("hasRole('ADMIN') or @communityMemberFacadeImpl.isAdmin(#id, authentication.name)")
-  public ResponseEntity<String> delete(@PathVariable Long id) {
+  public ResponseEntity<?> delete(@PathVariable Long id) {
     communityFacade.delete(id);
     return ResponseEntity.ok("Сообщество " + id + " удалено");
   }
 
   @Override
   @GetMapping("/{id}")
-  public ResponseEntity<CommunityDTO> get(@PathVariable Long id) {
+  public ResponseEntity<?> get(@PathVariable Long id) {
     CommunityDTO community = communityFacade.get(id);
     return ResponseEntity.ok(community);
   }
@@ -54,8 +54,9 @@ public class CommunityControllerImpl implements CommunityController {
   @Override
   @PatchMapping
   @PreAuthorize("@communityMemberFacadeImpl.isAdmin(#changeCommunityDTO.id(), authentication.name)")
-  public ResponseEntity<CommunityDTO> change(@Valid @RequestBody
-                                             ChangeCommunityDTO changeCommunityDTO) {
+  public ResponseEntity<?> change(
+      @Valid @RequestBody
+      ChangeCommunityDTO changeCommunityDTO) {
     return ResponseEntity.ok(communityFacade.change(changeCommunityDTO));
   }
 }

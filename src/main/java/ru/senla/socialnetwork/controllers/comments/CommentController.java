@@ -12,9 +12,9 @@ public interface CommentController {
 
   ResponseEntity<?> getPostComments(Long postId, Authentication auth);
 
-  ResponseEntity<?> createComment(CreateCommentDTO request);
+  ResponseEntity<?> createComment(CreateCommentDTO request, Authentication auth);
 
-  ResponseEntity<?> updateComment(Long id, UpdateCommentDTO request);
+  ResponseEntity<?> updateComment(Long id, UpdateCommentDTO request, Authentication auth);
 
-  ResponseEntity<?> deleteComment(Long id);
+  ResponseEntity<?> deleteComment(Long id, Authentication auth);
 }

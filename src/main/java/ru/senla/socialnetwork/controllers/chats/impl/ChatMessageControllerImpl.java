@@ -1,11 +1,11 @@
 package ru.senla.socialnetwork.controllers.chats.impl;
 
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.chats.ChatMessageController;
+import ru.senla.socialnetwork.dto.chats.ChatMessageDTO;
 import ru.senla.socialnetwork.dto.chats.CreateMessageDTO;
 import ru.senla.socialnetwork.facades.chats.ChatMessageFacade;
 
@@ -27,79 +28,99 @@ public class ChatMessageControllerImpl implements ChatMessageController {
 
   @Override
   @PostMapping
-  @PreAuthorize("@chatMemberFacadeImpl.isChatMember(#chatId, authentication.name)")
   public ResponseEntity<?> sendMessage(
       @PathVariable Long chatId,
-      @RequestBody @Valid CreateMessageDTO request) {
-    log.info("Отправка сообщения в чат {} пользователем {}", chatId, request.senderEmail());
-    return ResponseEntity.status(HttpStatus.CREATED)
-        .body(chatMessageFacade.send(chatId, request.senderEmail(), request));
+      @RequestBody @Valid CreateMessageDTO request,
+      Authentication auth) {
+    log.info("Пользователь {} отправляет сообщение в чат {}", auth.getName(), chatId);
+    ChatMessageDTO message = chatMessageFacade.send(chatId, auth.getName(), request);
+    log.info("Сообщение ID {} успешно отправлено в чат {} пользователем {}",
+        message.id(), chatId, auth.getName());
+    return ResponseEntity.status(HttpStatus.CREATED).body(message);
   }
 
   @Override
   @GetMapping
-  @PreAuthorize("@chatMemberFacadeImpl.isChatMember(#chatId, authentication.name)")
-  public ResponseEntity<?> getMessages(@PathVariable Long chatId) {
-    log.info("Получение сообщений из чата {}", chatId);
-    return ResponseEntity.ok(chatMessageFacade.getAll(chatId));
+  public ResponseEntity<?> getMessages(
+      @PathVariable Long chatId,
+      Authentication auth) {
+    log.info("Запрос сообщений из чата {} пользователем {}", chatId, auth.getName());
+    List<ChatMessageDTO> messages = chatMessageFacade.getAll(chatId, auth.getName());
+    log.info("Возвращено {} сообщений из чата {}", messages.size(), chatId);
+    return ResponseEntity.ok(messages);
   }
 
   @Override
   @GetMapping("/{messageId}")
-  @PreAuthorize("@chatMemberFacadeImpl.isChatMember(#chatId, authentication.name)")
-  public ResponseEntity<?> getMessage(@PathVariable Long chatId,
-                                      @PathVariable Long messageId) {
-    log.info("Получение сообщения {} из чата {}", messageId, chatId);
-    return ResponseEntity.ok(chatMessageFacade.get(chatId, messageId));
+  public ResponseEntity<?> getMessage(
+      @PathVariable Long chatId,
+      @PathVariable Long messageId,
+      Authentication auth) {
+    log.info("Запрос сообщения id={} из чата {} пользователем {}", messageId, chatId, auth.getName());
+    ChatMessageDTO message = chatMessageFacade.get(chatId, messageId, auth.getName());
+    log.info("Сообщение id={} найдено в чате {}", messageId, chatId);
+    return ResponseEntity.ok(message);
   }
 
   @Override
   @GetMapping("/{messageId}/answers")
-  @PreAuthorize("@chatMemberFacadeImpl.isChatMember(#chatId, authentication.name)")
-  public ResponseEntity<?> getAnswers(@PathVariable Long chatId,
-                                      @PathVariable Long messageId) {
-    log.info("Получение ответов на сообщение {} из чата {}", messageId, chatId);
-    return ResponseEntity.ok(chatMessageFacade.getAnswers(chatId, messageId));
+  public ResponseEntity<?> getAnswers(
+      @PathVariable Long chatId,
+      @PathVariable Long messageId,
+      Authentication auth) {
+    log.info("Запрос ответов на сообщение id={} из чата {} пользователем {}",
+        messageId, chatId, auth.getName());
+    List<ChatMessageDTO> answers = chatMessageFacade.getAnswers(chatId, messageId, auth.getName());
+    log.info("Найдено {} ответов на сообщение id={}", answers.size(), messageId);
+    return ResponseEntity.ok(answers);
   }
 
   @Override
   @GetMapping("/pinned")
-  @PreAuthorize("@chatMemberFacadeImpl.isChatMember(#chatId, authentication.name)")
-  public ResponseEntity<?> getPinnedMessages(@PathVariable Long chatId) {
-    log.info("Получение закрепленных сообщений из чата {}", chatId);
-    return ResponseEntity.ok(chatMessageFacade.getPinned(chatId));
+  public ResponseEntity<?> getPinnedMessages(
+      @PathVariable Long chatId,
+      Authentication auth) {
+    log.info("Запрос закрепленных сообщений из чата {} пользователем {}", chatId, auth.getName());
+    List<ChatMessageDTO> pinnedMessages = chatMessageFacade.getPinned(chatId, auth.getName());
+    log.info("Найдено {} закрепленных сообщений в чате {}", pinnedMessages.size(), chatId);
+    return ResponseEntity.ok(pinnedMessages);
   }
 
   @Override
   @PostMapping("/{messageId}/pin")
-  @PreAuthorize("@chatMemberFacadeImpl.isChatAdminOrModerator(#chatId, authentication.name)")
   public ResponseEntity<?> pinMessage(
       @PathVariable Long chatId,
-      @PathVariable Long messageId) {
-    log.info("Закрепление сообщения {} в чате {}", messageId, chatId);
-    return ResponseEntity.ok(chatMessageFacade.pin(chatId, messageId));
+      @PathVariable Long messageId,
+      Authentication auth) {
+    log.info("Пользователь {} закрепляет сообщение id={} в чате {}", auth.getName(), messageId,
+        chatId);
+    ChatMessageDTO message = chatMessageFacade.pin(chatId, messageId, auth.getName());
+    log.info("Сообщение id={} успешно закреплено в чате {}", messageId, chatId);
+    return ResponseEntity.ok(message);
   }
 
   @Override
   @DeleteMapping("/{messageId}/pin")
-  @PreAuthorize("@chatMemberFacadeImpl.isChatAdminOrModerator(#chatId, authentication.name)")
   public ResponseEntity<?> unpinMessage(
       @PathVariable Long chatId,
-      @PathVariable Long messageId) {
-    log.info("Открепление сообщения {} в чате {}", messageId, chatId);
-    return ResponseEntity.ok(chatMessageFacade.unpin(chatId, messageId));
+      @PathVariable Long messageId,
+      Authentication auth) {
+    log.info("Пользователь {} открепляет сообщение id={} в чате {}", auth.getName(), messageId, chatId);
+    ChatMessageDTO message = chatMessageFacade.unpin(chatId, messageId, auth.getName());
+    log.info("Сообщение id={} успешно откреплено в чате {}", messageId, chatId);
+    return ResponseEntity.ok(message);
   }
 
   @Override
   @DeleteMapping("/{messageId}")
-  @PreAuthorize("@chatMemberFacadeImpl.isChatMember(#chatId, authentication.name)")
   public ResponseEntity<?> deleteMessage(
       @PathVariable Long chatId,
       @PathVariable Long messageId,
-      Authentication authentication) {
-    log.info("Удаление сообщения {} в чате {} пользователем {}",
-        messageId, chatId, authentication.getName());
-    chatMessageFacade.delete(chatId, messageId, authentication.getName());
-    return ResponseEntity.noContent().build();
+      Authentication auth) {
+    log.info("Пользователь {} удаляет сообщение id={} из чата {}", auth.getName(), messageId, chatId);
+    chatMessageFacade.delete(chatId, messageId, auth.getName());
+    String response = "Сообщение id=" + messageId + " успешно удалено из чата id=" + chatId;
+    log.info(response);
+    return ResponseEntity.ok(response);
   }
 }

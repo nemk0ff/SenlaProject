@@ -102,7 +102,8 @@ public class ChatMemberServiceImpl implements ChatMemberService {
   @Override
   public ChatMember getMember(Long chatId, String email) {
     return chatMemberDao.findByChatIdAndUserEmail(chatId, email)
-        .orElseThrow(() -> new EntityNotFoundException("Участник не найден"));
+        .orElseThrow(() -> new EntityNotFoundException(
+            "Участник " + email + " чата id= " + chatId + " не найден"));
   }
 
   @Override

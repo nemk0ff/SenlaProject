@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.senla.socialnetwork.controllers.users.WallPostController;
 import ru.senla.socialnetwork.dto.users.WallPostRequestDTO;
 import ru.senla.socialnetwork.dto.users.WallPostResponseDTO;
 import ru.senla.socialnetwork.facades.wallposts.WallPostFacade;
@@ -24,11 +25,11 @@ import ru.senla.socialnetwork.facades.wallposts.WallPostFacade;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/posts")
-public class WallPostControllerImpl {
+public class WallPostControllerImpl implements WallPostController {
   private final WallPostFacade wallPostFacade;
 
   @GetMapping
-  public ResponseEntity<List<WallPostResponseDTO>> getAll(
+  public ResponseEntity<List<?>> getAll(
       @RequestParam("email") String email,
       Authentication auth) {
     log.info("Запрос всех постов пользователя {} от {}", email, auth.getName());
@@ -38,8 +39,9 @@ public class WallPostControllerImpl {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<WallPostResponseDTO> getById(@PathVariable("id") Long postId,
-                                                     Authentication auth) {
+  public ResponseEntity<?> getById(
+      @PathVariable("id") Long postId,
+      Authentication auth) {
     log.info("Запрос поста с id={} от {}", postId, auth.getName());
     WallPostResponseDTO post = wallPostFacade.getById(postId, auth.getName());
     log.info("Пост найден: id={}, автор={}", postId, post.wall_owner_id());
@@ -47,7 +49,7 @@ public class WallPostControllerImpl {
   }
 
   @PostMapping
-  public ResponseEntity<WallPostResponseDTO> create(
+  public ResponseEntity<?> create(
       @Valid @RequestBody WallPostRequestDTO dto,
       Authentication auth) {
     log.info("Создание нового поста пользователем {}", auth.getName());
@@ -57,7 +59,7 @@ public class WallPostControllerImpl {
   }
 
   @DeleteMapping("/{postId}")
-  public ResponseEntity<String> delete(
+  public ResponseEntity<?> delete(
       @PathVariable Long postId,
       Authentication auth) {
     log.info("Удаление поста id={} пользователем={}", postId, auth.getName());
@@ -67,7 +69,7 @@ public class WallPostControllerImpl {
   }
 
   @PatchMapping("/{postId}")
-  public ResponseEntity<WallPostResponseDTO> update(
+  public ResponseEntity<?> update(
       @PathVariable("postId") Long postId,
       @Valid @RequestBody WallPostRequestDTO dto,
       Authentication auth) {
