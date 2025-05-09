@@ -2,16 +2,16 @@ package ru.senla.socialnetwork.services.user.impl;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.senla.socialnetwork.dao.users.UserDao;
 import ru.senla.socialnetwork.dto.users.UserRequestDTO;
-import ru.senla.socialnetwork.dto.mappers.UserMapper;
 import ru.senla.socialnetwork.exceptions.users.EmailAlreadyExistsException;
 import ru.senla.socialnetwork.exceptions.users.UserException;
-import ru.senla.socialnetwork.exceptions.users.UserNotRegisteredException;
+import ru.senla.socialnetwork.exceptions.auth.UserNotRegisteredException;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.model.users.Gender;
 import ru.senla.socialnetwork.model.users.UserRole;
@@ -39,11 +39,17 @@ public class UserServiceImpl implements UserService {
 
   @Transactional
   @Override
-  public User edit(UserRequestDTO editDTO) {
-    User mergedUser = UserMapper.INSTANCE.toUser(editDTO);
-    User oldUser = getUserByEmail(editDTO.email());
-    mergedUser.setId(oldUser.getId());
-    return userDao.saveOrUpdate(mergedUser);
+  public User edit(UserRequestDTO editDTO, String clientEmail) {
+    User user = getUserByEmail(clientEmail);
+
+    Optional.ofNullable(editDTO.name()).ifPresent(user::setName);
+    Optional.ofNullable(editDTO.surname()).ifPresent(user::setSurname);
+    Optional.ofNullable(editDTO.birthDate()).ifPresent(user::setBirthDate);
+    Optional.ofNullable(editDTO.gender()).ifPresent(user::setGender);
+    Optional.ofNullable(editDTO.profileType()).ifPresent(user::setProfileType);
+    Optional.ofNullable(editDTO.aboutMe()).ifPresent(user::setAboutMe);
+
+    return userDao.saveOrUpdate(user);
   }
 
   @Transactional

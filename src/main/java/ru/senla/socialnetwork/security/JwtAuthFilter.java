@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -49,12 +50,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(auth);
       }
       filterChain.doFilter(request, response);
-    } catch (JwtAuthException ex) {
+    } catch (AuthenticationException ex) {
       response.setContentType("application/json");
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       response.getWriter()
           .write("{" +
-              "\"error\":\"Ошибка авторизации\"," +
+              "\"error\":\"Authorization error\"," +
               "\"message\":\"" + ex.getMessage() + "\"}"
           );
     }

@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +41,16 @@ public class UserControllerImpl implements UserController {
   public ResponseEntity<?> get(@PathVariable("id") Long id) {
     log.info("Запрос на получение пользователя с id: {}", id);
     UserResponseDTO response = UserMapper.INSTANCE.toUserResponseDTO(userService.get(id));
-    log.info("Найден пользователь ID: {}, email: {}", id, response.email());
+    log.info("Найден пользователь id={}, email: {}", id, response.email());
+    return ResponseEntity.ok(response);
+  }
+
+  @Override
+  @GetMapping
+  public ResponseEntity<?> get(@RequestParam String email) {
+    log.info("Запрос на получение пользователя по email {}", email);
+    UserResponseDTO response = UserMapper.INSTANCE.toUserResponseDTO(userService.getUserByEmail(email));
+    log.info("Найден пользователь id={} по email: {}", response.id(), email);
     return ResponseEntity.ok(response);
   }
 
@@ -64,10 +72,12 @@ public class UserControllerImpl implements UserController {
 
   @Override
   @PutMapping("/edit")
-  @PreAuthorize("#editDTO.email == authentication.name")
-  public ResponseEntity<?> edit(@RequestBody UserRequestDTO editDTO) {
-    log.info("Запрос на редактирование пользователя: {}", editDTO.email());
-    UserResponseDTO updatedUser = UserMapper.INSTANCE.toUserResponseDTO(userService.edit(editDTO));
+  public ResponseEntity<?> edit(
+      @RequestBody UserRequestDTO editDTO,
+      Authentication auth) {
+    log.info("Запрос на редактирование пользователя: {}", auth.getName());
+    UserResponseDTO updatedUser = UserMapper.INSTANCE
+        .toUserResponseDTO(userService.edit(editDTO, auth.getName()));
     log.info("Пользователь {} успешно обновлен", updatedUser.email());
     return ResponseEntity.ok(updatedUser);
   }

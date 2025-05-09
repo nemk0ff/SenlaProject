@@ -22,6 +22,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import ru.senla.socialnetwork.exceptions.auth.UserNotRegisteredException;
 
 @ControllerAdvice
 @Slf4j
@@ -92,9 +93,12 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     return new ResponseEntity<>(problemDetail, headers, HttpStatus.BAD_REQUEST);
   }
 
-  @ExceptionHandler(AuthenticationException.class)
+  @ExceptionHandler({
+      AuthenticationException.class,
+      UserNotRegisteredException.class
+  })
   protected ResponseEntity<ProblemDetail> handleAuthenticationException(
-      AuthenticationException ex, WebRequest request) {
+      Exception ex, WebRequest request) {
     log.warn("Ошибка аутентификации: {}", ex.getMessage());
 
     ProblemDetail problemDetail = problemDetailBuilder("Ошибка аутентификации",
@@ -143,7 +147,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
   @ExceptionHandler({SocialNetworkException.class})
   public ResponseEntity<ProblemDetail> handleBusinessExceptions(
-      RuntimeException ex, WebRequest request) {
+      Exception ex, WebRequest request) {
     String title = ex instanceof SocialNetworkException
         ? ((SocialNetworkException)ex).getAction()
         : "Возникла бизнес-ошибка во время работы приложения";

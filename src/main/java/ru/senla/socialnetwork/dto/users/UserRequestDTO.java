@@ -5,7 +5,6 @@ import ru.senla.socialnetwork.model.users.Gender;
 import ru.senla.socialnetwork.model.users.ProfileType;
 
 public record UserRequestDTO(
-    String email,
     String name,
     String surname,
     LocalDate birthDate,

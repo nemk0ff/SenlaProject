@@ -11,7 +11,7 @@ public interface UserService {
 
   List<User> find(String name, String surname, Gender gender, LocalDate birthdate);
 
-  User edit(UserRequestDTO editDTO);
+  User edit(UserRequestDTO editDTO, String clientEmail);
 
   User changeEmail(String oldEmail, String newEmail);
 

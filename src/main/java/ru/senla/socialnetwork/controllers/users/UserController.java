@@ -10,9 +10,11 @@ import ru.senla.socialnetwork.model.users.Gender;
 public interface UserController {
   ResponseEntity<?> get(Long id);
 
+  ResponseEntity<?> get(String email);
+
   ResponseEntity<?> find(String name, String surname, Gender gender, LocalDate birthdate);
 
-  ResponseEntity<?> edit(UserRequestDTO editDTO);
+  ResponseEntity<?> edit(UserRequestDTO editDTO, Authentication auth);
 
   ResponseEntity<?> changeEmail(@Email String newEmail, Authentication auth);
 }
