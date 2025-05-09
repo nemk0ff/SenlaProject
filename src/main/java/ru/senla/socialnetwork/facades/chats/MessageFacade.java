@@ -1,23 +1,23 @@
 package ru.senla.socialnetwork.facades.chats;
 
 import java.util.List;
-import ru.senla.socialnetwork.dto.chats.MessageDTO;
-import ru.senla.socialnetwork.dto.chats.CreateMessageDTO;
+import ru.senla.socialnetwork.dto.chats.MessageResponseDTO;
+import ru.senla.socialnetwork.dto.chats.MessageRequestDTO;
 
 public interface MessageFacade {
-  MessageDTO send(Long chatId, String authorEmail, CreateMessageDTO request);
+  MessageResponseDTO send(Long chatId, String authorEmail, MessageRequestDTO request);
 
-  List<MessageDTO> getAll(Long chatId, String clientEmail);
+  List<MessageResponseDTO> getAll(Long chatId, String clientEmail);
 
-  MessageDTO get(Long chatId, Long messageId, String clientEmail);
+  MessageResponseDTO get(Long chatId, Long messageId, String clientEmail);
 
-  List<MessageDTO> getAnswers(Long chatId, Long messageId, String clientEmail);
+  List<MessageResponseDTO> getAnswers(Long chatId, Long messageId, String clientEmail);
 
-  List<MessageDTO> getPinned(Long chatId, String clientEmail);
+  List<MessageResponseDTO> getPinned(Long chatId, String clientEmail);
 
-  MessageDTO pin(Long chatId, Long messageId, String clientEmail);
+  MessageResponseDTO pin(Long chatId, Long messageId, String clientEmail);
 
-  MessageDTO unpin(Long chatId, Long messageId, String clientEmail);
+  MessageResponseDTO unpin(Long chatId, Long messageId, String clientEmail);
 
   void delete(Long chatId, Long messageId, String clientEmail);
 }

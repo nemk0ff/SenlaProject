@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.senla.socialnetwork.dao.chats.MessageDao;
-import ru.senla.socialnetwork.dto.chats.CreateMessageDTO;
+import ru.senla.socialnetwork.dto.chats.MessageRequestDTO;
 import ru.senla.socialnetwork.exceptions.chats.ChatMemberException;
 import ru.senla.socialnetwork.exceptions.chats.MessageException;
 import ru.senla.socialnetwork.model.chats.ChatMember;
@@ -20,7 +20,7 @@ public class MessageServiceImpl implements MessageService {
   private final MessageDao messageDao;
 
   @Override
-  public Message send(ChatMember member, CreateMessageDTO request) {
+  public Message send(ChatMember member, MessageRequestDTO request) {
     if (member.getMutedUntil() != null && member.getMutedUntil().isAfter(ZonedDateTime.now())) {
       throw new MessageException("Вы замьючены до " + member.getMutedUntil());
     }

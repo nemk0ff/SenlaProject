@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.chats.MessageController;
-import ru.senla.socialnetwork.dto.chats.MessageDTO;
-import ru.senla.socialnetwork.dto.chats.CreateMessageDTO;
+import ru.senla.socialnetwork.dto.chats.MessageResponseDTO;
+import ru.senla.socialnetwork.dto.chats.MessageRequestDTO;
 import ru.senla.socialnetwork.facades.chats.MessageFacade;
 
 @Slf4j
@@ -30,10 +30,10 @@ public class MessageControllerImpl implements MessageController {
   @PostMapping
   public ResponseEntity<?> sendMessage(
       @PathVariable Long chatId,
-      @RequestBody @Valid CreateMessageDTO request,
+      @RequestBody @Valid MessageRequestDTO request,
       Authentication auth) {
     log.info("Пользователь {} отправляет сообщение в чат {}", auth.getName(), chatId);
-    MessageDTO message = messageFacade.send(chatId, auth.getName(), request);
+    MessageResponseDTO message = messageFacade.send(chatId, auth.getName(), request);
     log.info("Сообщение ID {} успешно отправлено в чат {} пользователем {}",
         message.id(), chatId, auth.getName());
     return ResponseEntity.status(HttpStatus.CREATED).body(message);
@@ -45,7 +45,7 @@ public class MessageControllerImpl implements MessageController {
       @PathVariable Long chatId,
       Authentication auth) {
     log.info("Запрос сообщений из чата {} пользователем {}", chatId, auth.getName());
-    List<MessageDTO> messages = messageFacade.getAll(chatId, auth.getName());
+    List<MessageResponseDTO> messages = messageFacade.getAll(chatId, auth.getName());
     log.info("Возвращено {} сообщений из чата {}", messages.size(), chatId);
     return ResponseEntity.ok(messages);
   }
@@ -57,7 +57,7 @@ public class MessageControllerImpl implements MessageController {
       @PathVariable Long messageId,
       Authentication auth) {
     log.info("Запрос сообщения id={} из чата {} пользователем {}", messageId, chatId, auth.getName());
-    MessageDTO message = messageFacade.get(chatId, messageId, auth.getName());
+    MessageResponseDTO message = messageFacade.get(chatId, messageId, auth.getName());
     log.info("Сообщение id={} найдено в чате {}", messageId, chatId);
     return ResponseEntity.ok(message);
   }
@@ -70,7 +70,7 @@ public class MessageControllerImpl implements MessageController {
       Authentication auth) {
     log.info("Запрос ответов на сообщение id={} из чата {} пользователем {}",
         messageId, chatId, auth.getName());
-    List<MessageDTO> answers = messageFacade.getAnswers(chatId, messageId, auth.getName());
+    List<MessageResponseDTO> answers = messageFacade.getAnswers(chatId, messageId, auth.getName());
     log.info("Найдено {} ответов на сообщение id={}", answers.size(), messageId);
     return ResponseEntity.ok(answers);
   }
@@ -81,7 +81,7 @@ public class MessageControllerImpl implements MessageController {
       @PathVariable Long chatId,
       Authentication auth) {
     log.info("Запрос закрепленных сообщений из чата {} пользователем {}", chatId, auth.getName());
-    List<MessageDTO> pinnedMessages = messageFacade.getPinned(chatId, auth.getName());
+    List<MessageResponseDTO> pinnedMessages = messageFacade.getPinned(chatId, auth.getName());
     log.info("Найдено {} закрепленных сообщений в чате {}", pinnedMessages.size(), chatId);
     return ResponseEntity.ok(pinnedMessages);
   }
@@ -94,7 +94,7 @@ public class MessageControllerImpl implements MessageController {
       Authentication auth) {
     log.info("Пользователь {} закрепляет сообщение id={} в чате {}", auth.getName(), messageId,
         chatId);
-    MessageDTO message = messageFacade.pin(chatId, messageId, auth.getName());
+    MessageResponseDTO message = messageFacade.pin(chatId, messageId, auth.getName());
     log.info("Сообщение id={} успешно закреплено в чате {}", messageId, chatId);
     return ResponseEntity.ok(message);
   }
@@ -106,7 +106,7 @@ public class MessageControllerImpl implements MessageController {
       @PathVariable Long messageId,
       Authentication auth) {
     log.info("Пользователь {} открепляет сообщение id={} в чате {}", auth.getName(), messageId, chatId);
-    MessageDTO message = messageFacade.unpin(chatId, messageId, auth.getName());
+    MessageResponseDTO message = messageFacade.unpin(chatId, messageId, auth.getName());
     log.info("Сообщение id={} успешно откреплено в чате {}", messageId, chatId);
     return ResponseEntity.ok(message);
   }

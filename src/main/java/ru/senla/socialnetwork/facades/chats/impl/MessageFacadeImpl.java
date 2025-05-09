@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.senla.socialnetwork.dto.chats.MessageDTO;
-import ru.senla.socialnetwork.dto.chats.CreateMessageDTO;
+import ru.senla.socialnetwork.dto.chats.MessageResponseDTO;
+import ru.senla.socialnetwork.dto.chats.MessageRequestDTO;
 import ru.senla.socialnetwork.dto.mappers.ChatMessageMapper;
 import ru.senla.socialnetwork.exceptions.chats.ChatMemberException;
 import ru.senla.socialnetwork.exceptions.chats.MessageException;
@@ -27,13 +27,13 @@ public class MessageFacadeImpl implements MessageFacade {
   private final MessageService messageService;
 
   @Override
-  public MessageDTO send(Long chatId, String authorEmail, CreateMessageDTO request) {
+  public MessageResponseDTO send(Long chatId, String authorEmail, MessageRequestDTO request) {
     ChatMember member = chatMemberService.getMember(chatId, authorEmail);
     return chatMessageMapper.toDTO(messageService.send(member, request));
   }
 
   @Override
-  public List<MessageDTO> getAll(Long chatId, String clientEmail) {
+  public List<MessageResponseDTO> getAll(Long chatId, String clientEmail) {
     checkIsMember(chatId, clientEmail);
     return messageService.getAll(chatId).stream()
         .map(chatMessageMapper::toDTO)
@@ -41,13 +41,13 @@ public class MessageFacadeImpl implements MessageFacade {
   }
 
   @Override
-  public MessageDTO get(Long chatId, Long messageId, String clientEmail) {
+  public MessageResponseDTO get(Long chatId, Long messageId, String clientEmail) {
     checkIsMember(chatId, clientEmail);
     return chatMessageMapper.toDTO(messageService.get(chatId, messageId));
   }
 
   @Override
-  public List<MessageDTO> getAnswers(Long chatId, Long messageId, String clientEmail) {
+  public List<MessageResponseDTO> getAnswers(Long chatId, Long messageId, String clientEmail) {
     checkIsMember(chatId, clientEmail);
     return messageService.getAnswers(chatId, messageId).stream()
         .map(chatMessageMapper::toDTO)
@@ -55,7 +55,7 @@ public class MessageFacadeImpl implements MessageFacade {
   }
 
   @Override
-  public List<MessageDTO> getPinned(Long chatId, String clientEmail) {
+  public List<MessageResponseDTO> getPinned(Long chatId, String clientEmail) {
     checkIsMember(chatId, clientEmail);
     return messageService.getPinned(chatId).stream()
         .map(chatMessageMapper::toDTO)
@@ -63,13 +63,13 @@ public class MessageFacadeImpl implements MessageFacade {
   }
 
   @Override
-  public MessageDTO pin(Long chatId, Long messageId, String clientEmail) {
+  public MessageResponseDTO pin(Long chatId, Long messageId, String clientEmail) {
     checkIsAdminOrModerator(chatId, clientEmail);
     return chatMessageMapper.toDTO(messageService.pin(chatId, messageId));
   }
 
   @Override
-  public MessageDTO unpin(Long chatId, Long messageId, String clientEmail) {
+  public MessageResponseDTO unpin(Long chatId, Long messageId, String clientEmail) {
     checkIsAdminOrModerator(chatId, clientEmail);
     return chatMessageMapper.toDTO(messageService.unpin(chatId, messageId));
   }
