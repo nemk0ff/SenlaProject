@@ -120,7 +120,7 @@ public class ChatFacadeImpl implements ChatFacade {
   @Override
   public ChatDTO get(Long chatId, String clientEmail) {
     if(chatMemberService.isChatMember(chatId, clientEmail)){
-      return chatMapper.chatToChatDTO(chatService.get(chatId));
+      return chatMapper.ToChatDTO(chatService.get(chatId));
     }
     throw new ChatException("У вас нет доступа к этому чату, т.к. вы не являетесь участником");
   }

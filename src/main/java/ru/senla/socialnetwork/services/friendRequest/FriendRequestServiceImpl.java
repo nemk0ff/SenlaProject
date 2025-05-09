@@ -1,5 +1,6 @@
 package ru.senla.socialnetwork.services.friendRequest;
 
+import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -49,7 +50,7 @@ public class FriendRequestServiceImpl implements FriendRequestService {
   }
 
   @Override
-  public FriendRequest sendRequest(User sender, User recipient) {
+  public FriendRequest send(User sender, User recipient) {
     log.info("Попытка отправить заявку в друзья от {} к {}...",
         sender.getEmail(), recipient.getEmail());
     Optional<FriendRequest> optionalRequest = friendRequestDao.getByUsersIds(sender.getId(),
@@ -71,6 +72,15 @@ public class FriendRequestServiceImpl implements FriendRequestService {
     return friendRequestDao.saveOrUpdate(request);
   }
 
+  @Override
+  public FriendRequest cancel(User sender, User recipient) {
+    FriendRequest request = friendRequestDao
+        .getByUsersIds(sender.getId(), recipient.getId(), true)
+        .orElseThrow(() -> new EntityNotFoundException("Заявка в друзья не найдена"));
+    request.setStatus(FriendStatus.CANCELLED);
+    return friendRequestDao.saveOrUpdate(request);
+  }
+
   private FriendRequest handleExistingRequest(FriendRequest request, String senderEmail,
                                               String recipientEmail) {
     if (request.getStatus().equals(FriendStatus.ACCEPTED)) {
@@ -80,6 +90,9 @@ public class FriendRequestServiceImpl implements FriendRequestService {
         throw new AlreadySentException(recipientEmail);
       } else if (request.getStatus().equals(FriendStatus.REJECTED)) {
         log.info("Возобновление отклонённого запроса в друзья от {} к {}", senderEmail, recipientEmail);
+        request.setStatus(FriendStatus.PENDING);
+      } else if (request.getStatus().equals(FriendStatus.CANCELLED)) {
+        log.info("Возобновление отменённого запроса в друзья от {} к {}", senderEmail, recipientEmail);
         request.setStatus(FriendStatus.PENDING);
       }
     } else if (request.getSender().getEmail().equals(recipientEmail)) {
@@ -93,7 +106,8 @@ public class FriendRequestServiceImpl implements FriendRequestService {
   public FriendRequest replyToRequest(User sender, User recipient, FriendStatus status) {
     Optional<FriendRequest> optionalRequest = friendRequestDao.getByUsersIds(sender.getId(),
         recipient.getId(), true);
-    if (optionalRequest.isEmpty()) {
+    if (optionalRequest.isEmpty()
+        || optionalRequest.get().getStatus().equals(FriendStatus.CANCELLED)) {
       throw new FriendRequestException(
           "У вас нет активных запросов на дружбу от " + sender.getEmail());
     } else if (optionalRequest.get().getStatus().equals(FriendStatus.ACCEPTED)) {
@@ -107,13 +121,15 @@ public class FriendRequestServiceImpl implements FriendRequestService {
   }
 
   @Override
-  public void unfriend(User user, User unfriend) {
+  public FriendRequest unfriend(User user, User unfriend) {
     Optional<FriendRequest> friendship = friendRequestDao.getByUsersIds(
         user.getId(), unfriend.getId(), false);
     if (friendship.isEmpty() || !friendship.get().getStatus().equals(FriendStatus.ACCEPTED)) {
       throw new FriendRequestException(unfriend.getEmail() + " не является другом " + user.getEmail());
     }
-    friendRequestDao.delete(friendship.get());
+    FriendRequest request = friendship.get();
+    request.setStatus(FriendStatus.CANCELLED);
+    return friendRequestDao.saveOrUpdate(request);
   }
 
   @Override

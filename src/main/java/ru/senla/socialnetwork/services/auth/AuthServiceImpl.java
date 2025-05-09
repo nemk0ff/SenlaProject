@@ -12,7 +12,7 @@ import ru.senla.socialnetwork.dto.auth.AuthRequestDTO;
 import ru.senla.socialnetwork.dto.auth.AuthResponseDTO;
 import ru.senla.socialnetwork.dto.auth.RegisterDTO;
 import ru.senla.socialnetwork.dto.mappers.UserMapper;
-import ru.senla.socialnetwork.dto.users.UserDTO;
+import ru.senla.socialnetwork.dto.users.UserResponseDTO;
 import ru.senla.socialnetwork.exceptions.auth.IllegalPasswordException;
 import ru.senla.socialnetwork.exceptions.users.EmailAlreadyExistsException;
 import ru.senla.socialnetwork.exceptions.users.UserNotRegisteredException;
@@ -48,12 +48,12 @@ public class AuthServiceImpl implements AuthService {
 
   @Transactional
   @Override
-  public UserDTO register(RegisterDTO regDTO) {
+  public UserResponseDTO register(RegisterDTO regDTO) {
     log.info("Регистрируем нового пользователя {}...", regDTO.name());
     if (userDao.findByEmail(regDTO.email()).isPresent()) {
       throw new EmailAlreadyExistsException(regDTO.email());
     }
-    User user = UserMapper.INSTANCE.registrationDTOtoUser(regDTO);
+    User user = UserMapper.INSTANCE.toUser(regDTO);
     user.setPassword(passwordEncoder.encode(regDTO.password()));
     user.setRole(UserRole.USER);
 

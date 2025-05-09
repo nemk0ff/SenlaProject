@@ -1,6 +1,5 @@
 package ru.senla.socialnetwork.services.user.impl;
 
-import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -8,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.senla.socialnetwork.dao.users.UserDao;
-import ru.senla.socialnetwork.dto.users.UserEditDTO;
+import ru.senla.socialnetwork.dto.users.UserRequestDTO;
 import ru.senla.socialnetwork.dto.mappers.UserMapper;
 import ru.senla.socialnetwork.exceptions.users.EmailAlreadyExistsException;
 import ru.senla.socialnetwork.exceptions.users.UserException;
@@ -40,8 +39,8 @@ public class UserServiceImpl implements UserService {
 
   @Transactional
   @Override
-  public User edit(UserEditDTO editDTO) {
-    User mergedUser = UserMapper.INSTANCE.userEditDTOtoUser(editDTO);
+  public User edit(UserRequestDTO editDTO) {
+    User mergedUser = UserMapper.INSTANCE.toUser(editDTO);
     User oldUser = getUserByEmail(editDTO.email());
     mergedUser.setId(oldUser.getId());
     return userDao.saveOrUpdate(mergedUser);

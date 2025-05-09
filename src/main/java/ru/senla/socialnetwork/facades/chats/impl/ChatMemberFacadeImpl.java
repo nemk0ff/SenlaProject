@@ -47,7 +47,7 @@ public class ChatMemberFacadeImpl implements ChatMemberFacade {
         .joinDate(ZonedDateTime.now())
         .build();
 
-    return chatMemberMapper.memberToDTO(chatMemberService.addUserToChat(chat, newMember));
+    return chatMemberMapper.ToDTO(chatMemberService.addUserToChat(chat, newMember));
   }
 
   @Override
@@ -78,7 +78,7 @@ public class ChatMemberFacadeImpl implements ChatMemberFacade {
       throw new ChatMemberException(
           "У вас недостаточно прав, чтобы выдавать мут участникам этого чата");
     }
-    return chatMemberMapper.memberToDTO(chatMemberService.mute(chatId, userEmailToMute, muteUntil));
+    return chatMemberMapper.ToDTO(chatMemberService.mute(chatId, userEmailToMute, muteUntil));
   }
 
   @Override
@@ -88,7 +88,7 @@ public class ChatMemberFacadeImpl implements ChatMemberFacade {
       throw new ChatMemberException(
           "У вас недостаточно прав, чтобы снимать мут с участников этого чата");
     }
-    return chatMemberMapper.memberToDTO(chatMemberService.unmute(chatId, userEmailToMute));
+    return chatMemberMapper.ToDTO(chatMemberService.unmute(chatId, userEmailToMute));
   }
 
   @Override
@@ -106,7 +106,7 @@ public class ChatMemberFacadeImpl implements ChatMemberFacade {
     if(!client.getRole().equals(MemberRole.ADMIN) || member.getRole().equals(MemberRole.ADMIN)) {
       throw new ChatMemberException("У вас нет прав, чтобы изменить роль этого участника чата");
     }
-    return chatMemberMapper.memberToDTO(chatMemberService.changeRole(chatId, member, role));
+    return chatMemberMapper.ToDTO(chatMemberService.changeRole(chatId, member, role));
   }
 
   @Override

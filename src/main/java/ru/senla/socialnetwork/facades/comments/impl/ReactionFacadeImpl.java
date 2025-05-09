@@ -53,7 +53,7 @@ public class ReactionFacadeImpl implements ReactionFacade {
       }
     }
     List<Reaction> reactions = reactionService.getAllByComment(commentId);
-    return ReactionMapper.INSTANCE.toListDto(reactions);
+    return ReactionMapper.INSTANCE.toListDTO(reactions);
   }
 
   @Override
@@ -72,7 +72,7 @@ public class ReactionFacadeImpl implements ReactionFacade {
         }
       }
     }
-    return ReactionMapper.INSTANCE.toDto(reaction);
+    return ReactionMapper.INSTANCE.toDTO(reaction);
   }
 
   @Override
@@ -97,7 +97,7 @@ public class ReactionFacadeImpl implements ReactionFacade {
         .comment(comment)
         .build();
     Reaction result = reactionService.save(reaction);
-    return ReactionMapper.INSTANCE.toDto(reaction);
+    return ReactionMapper.INSTANCE.toDTO(reaction);
   }
 
   @Override

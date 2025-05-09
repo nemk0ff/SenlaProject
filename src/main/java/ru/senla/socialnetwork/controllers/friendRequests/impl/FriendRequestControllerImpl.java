@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.friendRequests.FriendRequestController;
 import ru.senla.socialnetwork.dto.friendRequests.FriendRequestDTO;
 import ru.senla.socialnetwork.dto.friendRequests.RespondRequestDTO;
-import ru.senla.socialnetwork.dto.users.UserDTO;
+import ru.senla.socialnetwork.dto.users.UserResponseDTO;
 import ru.senla.socialnetwork.facades.friendRequests.FriendRequestFacade;
 import ru.senla.socialnetwork.model.friendRequests.FriendStatus;
 
@@ -45,7 +45,7 @@ public class FriendRequestControllerImpl implements FriendRequestController {
   @GetMapping
   public ResponseEntity<?> showFriends(@RequestParam @Email String userEmail) {
     log.info("Запрос списка друзей пользователя: {}", userEmail);
-    List<UserDTO> friends = friendRequestFacade.getFriendsByUser(userEmail);
+    List<UserResponseDTO> friends = friendRequestFacade.getFriendsByUser(userEmail);
     log.info("Найдено {} друзей для пользователя {}", friends.size(), userEmail);
     return ResponseEntity.ok(friends);
   }
@@ -71,13 +71,25 @@ public class FriendRequestControllerImpl implements FriendRequestController {
   }
 
   @Override
-  @PostMapping("/send")
+  @PostMapping("/request")
   public ResponseEntity<?> sendRequest(
       @RequestParam @Email String recipient,
       Authentication auth) {
     log.info("Попытка отправить заявку от {} к {}", auth.getName(), recipient);
     FriendRequestDTO response = friendRequestFacade.send(auth.getName(), recipient);
     log.info("Заявка успешно отправлена от {} к {}. ID заявки: {}",
+        auth.getName(), recipient, response.id());
+    return ResponseEntity.ok(response);
+  }
+
+  @Override
+  @DeleteMapping("/request")
+  public ResponseEntity<?> cancelRequest(
+      @RequestParam @Email String recipient,
+      Authentication auth) {
+    log.info("Попытка отменить заявку от {} к {}", auth.getName(), recipient);
+    FriendRequestDTO response = friendRequestFacade.cancel(auth.getName(), recipient);
+    log.info("Заявка успешно отменена от {} к {}. ID заявки: {}",
         auth.getName(), recipient, response.id());
     return ResponseEntity.ok(response);
   }
@@ -101,8 +113,8 @@ public class FriendRequestControllerImpl implements FriendRequestController {
       @RequestParam @Email String recipient,
       Authentication auth) {
     log.info("Попытка удаления из друзей: {} удаляет {}", auth.getName(), recipient);
-    friendRequestFacade.unfriend(auth.getName(), recipient);
+    FriendRequestDTO friendRequestDTO = friendRequestFacade.unfriend(auth.getName(), recipient);
     log.info("Пользователь {} успешно удален из друзей {}", recipient, auth.getName());
-    return ResponseEntity.ok(recipient + " удалён из списка друзей " + auth.getName());
+    return ResponseEntity.ok(friendRequestDTO);
   }
 }

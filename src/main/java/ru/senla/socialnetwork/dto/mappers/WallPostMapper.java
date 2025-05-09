@@ -10,7 +10,7 @@ import ru.senla.socialnetwork.model.users.WallPost;
 public interface WallPostMapper {
   WallPostMapper INSTANCE = Mappers.getMapper(WallPostMapper.class);
 
-  WallPostResponseDTO toDto(WallPost wallPost);
+  WallPostResponseDTO toDTO(WallPost wallPost);
 
-  List<WallPostResponseDTO> toListDto(List<WallPost> wallPosts);
+  List<WallPostResponseDTO> toListDTO(List<WallPost> wallPosts);
 }

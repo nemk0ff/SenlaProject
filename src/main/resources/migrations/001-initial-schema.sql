@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS friend_requests (
     id SERIAL PRIMARY KEY,
     sender_id INTEGER     NOT NULL REFERENCES users (id),
     recipient_id INTEGER     NOT NULL REFERENCES users (id),
-    status VARCHAR(10) NOT NULL CHECK (status IN ('PENDING', 'ACCEPTED', 'REJECTED')),
+    status VARCHAR(10) NOT NULL CHECK (status IN ('PENDING', 'ACCEPTED', 'REJECTED', 'CANCELLED')),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
 

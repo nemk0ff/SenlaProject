@@ -8,5 +8,5 @@ import ru.senla.socialnetwork.model.chats.ChatMember;
 @Mapper(componentModel = "spring")
 public interface ChatMemberMapper {
   @Mapping(target = "email", source = "user.email")
-  ChatMemberDTO memberToDTO(ChatMember chatMember);
+  ChatMemberDTO ToDTO(ChatMember chatMember);
 }

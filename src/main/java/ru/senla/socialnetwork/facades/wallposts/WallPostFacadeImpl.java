@@ -33,7 +33,7 @@ public class WallPostFacadeImpl implements WallPostFacade {
         || friendRequestService.isFriends(postsOwner.getId(), client.getId())
         || email.equals(clientEmail);
     if (hasAccess) {
-      return WallPostMapper.INSTANCE.toListDto(wallPostService.getByUser(postsOwner.getId()));
+      return WallPostMapper.INSTANCE.toListDTO(wallPostService.getByUser(postsOwner.getId()));
     }
     throw new WallPostException("У вас нет доступа к просмотру стены пользователя " + email);
   }
@@ -48,7 +48,7 @@ public class WallPostFacadeImpl implements WallPostFacade {
         || friendRequestService.isFriends(postAuthor.getId(), client.getId())
         || postAuthor.getEmail().equals(clientEmail);
     if (hasAccess) {
-      return WallPostMapper.INSTANCE.toDto(post);
+      return WallPostMapper.INSTANCE.toDTO(post);
     }
     throw new WallPostException("У вас нет доступа к просмотру стены пользователя " + postAuthor.getEmail());
   }
@@ -58,7 +58,7 @@ public class WallPostFacadeImpl implements WallPostFacade {
     User user = userService.getUserByEmail(clientEmail);
     WallPost savedPost = wallPostService.create(dto, user);
     log.info("Пост создан: {}", savedPost);
-    return WallPostMapper.INSTANCE.toDto(savedPost);
+    return WallPostMapper.INSTANCE.toDTO(savedPost);
   }
 
   @Override
@@ -79,7 +79,7 @@ public class WallPostFacadeImpl implements WallPostFacade {
     if(post.getWall_owner().equals(user)) {
       WallPost updatedPost = wallPostService.update(post, dto);
       log.info("Пост обновлён: {}", updatedPost);
-      return WallPostMapper.INSTANCE.toDto(updatedPost);
+      return WallPostMapper.INSTANCE.toDTO(updatedPost);
     }
     throw new WallPostException("У вас не хватает прав для удаления этого поста");
   }

@@ -6,7 +6,7 @@ import java.time.ZonedDateTime;
 import ru.senla.socialnetwork.model.users.Gender;
 import ru.senla.socialnetwork.model.users.UserRole;
 
-public record UserDTO(
+public record UserResponseDTO(
     Long id,
     String email,
     UserRole role,

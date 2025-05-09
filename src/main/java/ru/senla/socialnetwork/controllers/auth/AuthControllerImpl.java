@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.dto.auth.AuthRequestDTO;
 import ru.senla.socialnetwork.dto.auth.AuthResponseDTO;
 import ru.senla.socialnetwork.dto.auth.RegisterDTO;
-import ru.senla.socialnetwork.dto.users.UserDTO;
+import ru.senla.socialnetwork.dto.users.UserResponseDTO;
 import ru.senla.socialnetwork.services.auth.AuthService;
 
 @Slf4j
@@ -34,7 +34,7 @@ public class AuthControllerImpl implements AuthController {
   @Override
   public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO registerDTO) {
     log.info("Попытка регистрации нового пользователя с email: {}...", registerDTO.email());
-    UserDTO response = authService.register(registerDTO);
+    UserResponseDTO response = authService.register(registerDTO);
     log.info("Успешная регистрация пользователя с email: {}", registerDTO.email());
     return ResponseEntity.ok(response);
   }

@@ -19,6 +19,8 @@ public interface FriendRequestController {
 
   ResponseEntity<?> sendRequest(@Email String recipient, Authentication auth);
 
+  ResponseEntity<?> cancelRequest(@Email String recipient, Authentication auth);
+
   ResponseEntity<?> respondRequest(@Valid RespondRequestDTO request, Authentication auth);
 
   ResponseEntity<?> removeFriend(@Email String recipient, Authentication auth);

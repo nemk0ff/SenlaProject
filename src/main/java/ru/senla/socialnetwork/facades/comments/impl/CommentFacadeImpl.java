@@ -39,7 +39,7 @@ public class CommentFacadeImpl implements CommentFacade {
 
   @Override
   public List<CommentDTO> getAll() {
-    return commentMapper.toListDto(commentService.getAll());
+    return commentMapper.toListDTO(commentService.getAll());
   }
 
   @Override
@@ -57,7 +57,7 @@ public class CommentFacadeImpl implements CommentFacade {
         }
       }
     }
-    return commentMapper.toDto(comment);
+    return commentMapper.toDTO(comment);
   }
 
   @Override
@@ -76,7 +76,7 @@ public class CommentFacadeImpl implements CommentFacade {
         }
       }
     }
-    return commentMapper.toListDto(comments);
+    return commentMapper.toListDTO(comments);
   }
 
   @Override
@@ -95,7 +95,7 @@ public class CommentFacadeImpl implements CommentFacade {
     }
     Comment createdComment = commentService.create(post, client, commentDTO.body());
     log.info("Комментарий создан: {}", createdComment);
-    return commentMapper.toDto(createdComment);
+    return commentMapper.toDTO(createdComment);
   }
 
   @Override
@@ -107,7 +107,7 @@ public class CommentFacadeImpl implements CommentFacade {
     }
     Comment updatedComment = commentService.update(comment, commentDTO.body());
     log.info("Комментарий обновлён: {}", updatedComment);
-    return commentMapper.toDto(updatedComment);
+    return commentMapper.toDTO(updatedComment);
   }
 
   @Override

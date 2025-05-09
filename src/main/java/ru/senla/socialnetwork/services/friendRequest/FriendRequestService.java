@@ -14,11 +14,13 @@ public interface FriendRequestService {
 
   List<FriendRequest> getOutgoingRequests(Long userId);
 
-  FriendRequest sendRequest(User sender, User recipient);
+  FriendRequest send(User sender, User recipient);
+
+  FriendRequest cancel(User sender, User recipient);
 
   FriendRequest replyToRequest(User sender, User recipient, FriendStatus status);
 
-  void unfriend(User user, User unfriend);
+  FriendRequest unfriend(User user, User unfriend);
 
   boolean isFriends(Long firstId, Long secondId);
 }
