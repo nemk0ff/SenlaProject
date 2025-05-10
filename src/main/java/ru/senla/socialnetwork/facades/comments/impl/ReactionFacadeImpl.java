@@ -44,9 +44,9 @@ public class ReactionFacadeImpl implements ReactionFacade {
     if (!userService.isAdmin(clientEmail)) {
       if (comment.getPost().getPostType().equals("WallPost")) {
         WallPost wallpost = (WallPost) comment.getPost();
-        if (client.equals(wallpost.getWall_owner())
-            && !friendRequestService.isFriends(wallpost.getWall_owner().getId(), client.getId())
-            && wallpost.getWall_owner().getProfileType().equals(ProfileType.CLOSED)) {
+        if (client.equals(wallpost.getWallOwner())
+            && !friendRequestService.isFriends(wallpost.getWallOwner().getId(), client.getId())
+            && wallpost.getWallOwner().getProfileType().equals(ProfileType.CLOSED)) {
           throw new CommentException("У вас нет доступа, т.к. вы не являетесь другом автора " +
               "поста, а его профиль является закрытым");
         }
@@ -64,9 +64,9 @@ public class ReactionFacadeImpl implements ReactionFacade {
     if (!userService.isAdmin(clientEmail)) {
       if (post.getPostType().equals("WallPost")) {
         WallPost wallpost = (WallPost) post;
-        if (client.equals(wallpost.getWall_owner())
-            && !friendRequestService.isFriends(wallpost.getWall_owner().getId(), client.getId())
-            && wallpost.getWall_owner().getProfileType().equals(ProfileType.CLOSED)) {
+        if (client.equals(wallpost.getWallOwner())
+            && !friendRequestService.isFriends(wallpost.getWallOwner().getId(), client.getId())
+            && wallpost.getWallOwner().getProfileType().equals(ProfileType.CLOSED)) {
           throw new CommentException("Вы не можете увидеть комментарий под этим постом, т.к. вы " +
               "не являетесь другом автора поста, а его профиль является закрытым");
         }
@@ -83,9 +83,9 @@ public class ReactionFacadeImpl implements ReactionFacade {
     if (!userService.isAdmin(clientEmail)) {
       if (post.getPostType().equals("WallPost")) {
         WallPost wallpost = (WallPost) post;
-        if (client.equals(wallpost.getWall_owner())
-            && !friendRequestService.isFriends(wallpost.getWall_owner().getId(), client.getId())
-            && wallpost.getWall_owner().getProfileType().equals(ProfileType.CLOSED)) {
+        if (client.equals(wallpost.getWallOwner())
+            && !friendRequestService.isFriends(wallpost.getWallOwner().getId(), client.getId())
+            && wallpost.getWallOwner().getProfileType().equals(ProfileType.CLOSED)) {
           throw new CommentException("Вы не можете реагировать на этот комментарий" +
               "т.к. вы не являетесь другом автора поста, а его профиль является закрытым");
         }

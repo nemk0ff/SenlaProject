@@ -43,7 +43,7 @@ public class CommunityPostServiceImpl implements CommunityPostService {
         .author(author)
         .body(dto.body())
         .isPinned(false)
-        .created_at(ZonedDateTime.now())
+        .createdAt(ZonedDateTime.now())
         .build();
 
     return communityPostDao.saveOrUpdate(post);

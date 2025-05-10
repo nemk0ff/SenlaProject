@@ -4,9 +4,9 @@ import java.time.ZonedDateTime;
 
 public record WallPostResponseDTO(
     Long id,
-    Long wall_owner_id,
+    String wallOwnerEmail,
     String mood,
     String body,
-    ZonedDateTime createdAt,
-    boolean isPinned) {
+    String location,
+    ZonedDateTime createdAt) {
 }

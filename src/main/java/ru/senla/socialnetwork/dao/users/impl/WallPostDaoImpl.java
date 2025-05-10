@@ -22,7 +22,7 @@ public class WallPostDaoImpl extends HibernateAbstractDao<WallPost> implements W
     log.info("Получение всех постов со стены пользователя id={}...", userId);
     try {
       List<WallPost> posts = sessionFactory.getCurrentSession()
-          .createQuery("FROM WallPost wp WHERE wp.wall_owner.id = :userId",
+          .createQuery("FROM WallPost wp WHERE wp.wallOwner.id = :userId",
               WallPost.class)
           .setParameter("userId", userId)
           .getResultList();

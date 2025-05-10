@@ -33,7 +33,7 @@ public class WallPostServiceImpl implements WallPostService {
   @Override
   public WallPost create(WallPostRequestDTO dto, User user) {
     WallPost newPost = WallPost.builder()
-        .wall_owner(user)
+        .wallOwner(user)
         .body(dto.body())
         .mood(dto.mood())
         .location(dto.location())

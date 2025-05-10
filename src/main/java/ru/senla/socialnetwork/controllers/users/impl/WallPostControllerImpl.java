@@ -44,7 +44,7 @@ public class WallPostControllerImpl implements WallPostController {
       Authentication auth) {
     log.info("Запрос поста с id={} от {}", postId, auth.getName());
     WallPostResponseDTO post = wallPostFacade.getById(postId, auth.getName());
-    log.info("Пост найден: id={}, автор={}", postId, post.wall_owner_id());
+    log.info("Пост найден: id={}, автор={}", postId, post.wallOwnerEmail());
     return ResponseEntity.ok(post);
   }
 

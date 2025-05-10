@@ -22,7 +22,7 @@ import ru.senla.socialnetwork.model.general.Post;
 public final class WallPost extends Post {
   @ManyToOne
   @JoinColumn(name = "wall_owner_id", nullable = false)
-  private User wall_owner;
+  private User wallOwner;
 
   @Column(name = "mood", length = 32)
   private String mood;

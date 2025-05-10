@@ -49,9 +49,9 @@ public class CommentFacadeImpl implements CommentFacade {
     if (!userService.isAdmin(clientEmail)) {
       if (comment.getPost().getPostType().equals("WallPost")) {
         WallPost post = (WallPost) comment.getPost();
-        if (!client.equals(post.getWall_owner())
-            && !friendRequestService.isFriends(post.getWall_owner().getId(), client.getId())
-            && post.getWall_owner().getProfileType().equals(ProfileType.CLOSED)) {
+        if (!client.equals(post.getWallOwner())
+            && !friendRequestService.isFriends(post.getWallOwner().getId(), client.getId())
+            && post.getWallOwner().getProfileType().equals(ProfileType.CLOSED)) {
           throw new CommentException("Вы не можете увидеть комментарий под этим постом, т.к. вы " +
               "не являетесь другом автора поста, а его профиль является закрытым");
         }
@@ -68,9 +68,9 @@ public class CommentFacadeImpl implements CommentFacade {
     if (!userService.isAdmin(clientEmail)) {
       if (post.getPostType().equals("WallPost")) {
         WallPost wallpost = (WallPost) post;
-        if (!client.equals(wallpost.getWall_owner())
-            && !friendRequestService.isFriends(wallpost.getWall_owner().getId(), client.getId())
-            && wallpost.getWall_owner().getProfileType().equals(ProfileType.CLOSED)) {
+        if (!client.equals(wallpost.getWallOwner())
+            && !friendRequestService.isFriends(wallpost.getWallOwner().getId(), client.getId())
+            && wallpost.getWallOwner().getProfileType().equals(ProfileType.CLOSED)) {
           throw new CommentException("Вы не можете увидеть комментарии под этим постом, т.к. вы " +
               "не являетесь другом автора поста, а его профиль является закрытым");
         }
@@ -86,8 +86,8 @@ public class CommentFacadeImpl implements CommentFacade {
     if (!userService.isAdmin(clientEmail)) {
       if (post.getPostType().equals("WallPost")) {
         WallPost wallpost = (WallPost) post;
-        if (!friendRequestService.isFriends(wallpost.getWall_owner().getId(), client.getId())
-            && wallpost.getWall_owner().getProfileType().equals(ProfileType.CLOSED)) {
+        if (!friendRequestService.isFriends(wallpost.getWallOwner().getId(), client.getId())
+            && wallpost.getWallOwner().getProfileType().equals(ProfileType.CLOSED)) {
           throw new CommentException("Вы не можете комментировать этот пост, т.к. вы " +
               "не являетесь другом автора поста, а его профиль является закрытым");
         }
@@ -120,7 +120,7 @@ public class CommentFacadeImpl implements CommentFacade {
     if (!userService.isAdmin(clientEmail) && !client.equals(comment.getAuthor())) {
       if (post.getPostType().equals("WallPost")) {
         WallPost wallPost = (WallPost) comment.getPost();
-        if (!wallPost.getWall_owner().equals(client)) {
+        if (!wallPost.getWallOwner().equals(client)) {
           throw new CommentException("У вас нет прав для удаления этого комментария");
         }
       } else if (post.getPostType().equals("CommunityPost")) {
