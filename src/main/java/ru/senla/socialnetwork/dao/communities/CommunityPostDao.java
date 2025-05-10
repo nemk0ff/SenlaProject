@@ -6,4 +6,6 @@ import ru.senla.socialnetwork.model.communities.CommunityPost;
 
 public interface CommunityPostDao extends GenericDao<CommunityPost> {
   List<CommunityPost> findAllByCommunity(Long communityId);
+
+  List<CommunityPost> findPinnedByCommunity(Long communityId);
 }

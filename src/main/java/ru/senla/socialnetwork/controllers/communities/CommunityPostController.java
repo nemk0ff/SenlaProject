@@ -8,6 +8,8 @@ import ru.senla.socialnetwork.dto.communitites.UpdateCommunityPostDTO;
 public interface CommunityPostController {
   ResponseEntity<?> getAllPosts(Long communityId);
 
+  ResponseEntity<?> getPinnedPosts(Long communityId);
+
   ResponseEntity<?> getById(Long communityId, Long postId);
 
   ResponseEntity<?> create(Long communityId, CreateCommunityPostDTO dto, Authentication auth);

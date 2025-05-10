@@ -9,8 +9,12 @@ public record ChatMemberDTO(
     Long chatId,
     String chatName,
     MemberRole role,
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss XXX")
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+        pattern = "dd-MM-yyyy HH:mm:ss [ZZZ]",
+        timezone = "UTC")
     ZonedDateTime joinDate,
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss XXX")
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+        pattern = "dd-MM-yyyy HH:mm:ss [ZZZ]",
+        timezone = "UTC")
     ZonedDateTime leaveDate) {
 }

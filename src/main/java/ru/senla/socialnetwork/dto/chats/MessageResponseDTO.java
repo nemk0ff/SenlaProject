@@ -8,7 +8,9 @@ public record MessageResponseDTO(
     Long chatId,
     String body,
     String authorEmail,
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss XXX")
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+        pattern = "dd-MM-yyyy HH:mm:ss [ZZZ]",
+        timezone = "UTC")
     ZonedDateTime createdAt,
     Long replyToId,
     Boolean isPinned

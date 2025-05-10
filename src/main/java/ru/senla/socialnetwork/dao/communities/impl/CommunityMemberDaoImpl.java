@@ -24,7 +24,7 @@ public class CommunityMemberDaoImpl extends HibernateAbstractDao<CommunityMember
     try {
       return sessionFactory.getCurrentSession()
           .createQuery("FROM CommunityMember cm WHERE cm.community.id = :communityId " +
-                  "AND cm.user.email = :userEmail",
+                  "AND lower(cm.user.email) = lower(:userEmail)",
               CommunityMember.class)
           .setParameter("communityId", communityId)
           .setParameter("userEmail", userEmail)

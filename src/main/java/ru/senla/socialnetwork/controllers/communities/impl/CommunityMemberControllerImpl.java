@@ -53,10 +53,9 @@ public class CommunityMemberControllerImpl implements CommunityMemberController 
       @PathVariable Long communityId,
       Authentication auth) {
     log.info("Пользователь {} покидает сообщество {}...", auth.getName(), communityId);
-    communityMemberFacade.leaveCommunity(communityId, auth.getName());
+    CommunityMemberDTO member = communityMemberFacade.leaveCommunity(communityId, auth.getName());
     log.info("Пользователь {} вышел из сообщества {}", auth.getName(), communityId);
-    return ResponseEntity.ok("Пользователь " + auth.getName()
-        + " вышел из сообщества " + communityId);
+    return ResponseEntity.ok(member);
   }
 
   @Override

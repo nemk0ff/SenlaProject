@@ -39,6 +39,16 @@ public class CommunityPostControllerImpl implements CommunityPostController {
   }
 
   @Override
+  @GetMapping("/pinned")
+  public ResponseEntity<?> getPinnedPosts(
+      @PathVariable Long communityId) {
+    log.info("Запрос закреплённых постов сообщества id={}", communityId);
+    List<CommunityPostDTO> posts = communityPostFacade.getPinnedPosts(communityId);
+    log.info("Возвращено {} постов, закреплённых в сообществе id={}", posts.size(), communityId);
+    return ResponseEntity.ok(posts);
+  }
+
+  @Override
   @GetMapping("/{id}")
   public ResponseEntity<?> getById(
       @PathVariable Long communityId,

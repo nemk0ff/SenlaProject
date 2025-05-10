@@ -3,6 +3,7 @@ package ru.senla.socialnetwork.services.communities.impl;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import ru.senla.socialnetwork.exceptions.chats.ChatMemberException;
 import ru.senla.socialnetwork.exceptions.communities.CommunityMemberException;
 import ru.senla.socialnetwork.model.communities.Community;
 import ru.senla.socialnetwork.model.communities.CommunityMember;
+import ru.senla.socialnetwork.model.general.GroupMember;
 import ru.senla.socialnetwork.model.general.MemberRole;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.services.communities.CommunityMemberService;
@@ -25,7 +27,7 @@ public class CommunityMemberServiceImpl implements CommunityMemberService {
   public CommunityMember get(Long communityId, String userEmail) {
     CommunityMember member = communityMemberDao.findByCommunityAndUser(communityId, userEmail).
         orElseThrow(() -> new EntityNotFoundException("Участник сообщества не найден"));
-    if(member.isUserInGroup()) {
+    if(!member.isUserInGroup()) {
       throw new ChatMemberException("Пользователь " + userEmail + " не является участником " +
           "сообщества с момента " + member.getLeaveDate());
     }
@@ -58,7 +60,14 @@ public class CommunityMemberServiceImpl implements CommunityMemberService {
   }
 
   @Override
-  public CommunityMember recreate(CommunityMember member) {
+  public CommunityMember recreate(Long communityId, String userEmail) {
+    Optional<CommunityMember> maybeMember = communityMemberDao.findByCommunityAndUser(
+        communityId, userEmail);
+    if(maybeMember.isEmpty()) {
+      throw new CommunityMemberException("Ошибка при повторном вступлении в сообщество: участник " +
+          "не найден в базе данных");
+    }
+    CommunityMember member = maybeMember.get();
     member.setJoinDate(ZonedDateTime.now());
     return communityMemberDao.saveOrUpdate(member);
   }
@@ -79,13 +88,17 @@ public class CommunityMemberServiceImpl implements CommunityMemberService {
 
   @Override
   public CommunityMember changeMemberRole(CommunityMember member, MemberRole role) {
+    log.info("Изменение роли участника {} сообщества {} на {}", member.getUser().getEmail(),
+        member.getCommunity().getId(), role);
     member.setRole(role);
     return communityMemberDao.saveOrUpdate(member);
   }
 
   @Override
   public boolean isMember(Long communityId, String userEmail) {
-    return get(communityId, userEmail).isUserInGroup();
+    Optional<CommunityMember> maybeMember = communityMemberDao.findByCommunityAndUser(
+        communityId, userEmail);
+    return maybeMember.map(GroupMember::isUserInGroup).orElse(false);
   }
 
   @Override

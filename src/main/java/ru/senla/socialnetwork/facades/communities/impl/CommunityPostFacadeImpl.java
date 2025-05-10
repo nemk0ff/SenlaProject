@@ -10,9 +10,11 @@ import ru.senla.socialnetwork.dto.communitites.CreateCommunityPostDTO;
 import ru.senla.socialnetwork.dto.communitites.UpdateCommunityPostDTO;
 import ru.senla.socialnetwork.dto.mappers.CommunityPostMapper;
 import ru.senla.socialnetwork.facades.communities.CommunityPostFacade;
+import ru.senla.socialnetwork.model.communities.Community;
 import ru.senla.socialnetwork.model.communities.CommunityMember;
 import ru.senla.socialnetwork.model.communities.CommunityPost;
 import ru.senla.socialnetwork.services.communities.CommunityMemberService;
+import ru.senla.socialnetwork.services.communities.CommunityService;
 import ru.senla.socialnetwork.services.posts.CommunityPostService;
 import ru.senla.socialnetwork.services.user.UserService;
 
@@ -21,6 +23,7 @@ import ru.senla.socialnetwork.services.user.UserService;
 @RequiredArgsConstructor
 @Slf4j
 public class CommunityPostFacadeImpl implements CommunityPostFacade {
+  private final CommunityService communityService;
   private final CommunityPostService communityPostService;
   private final CommunityMemberService communityMemberService;
   private final UserService userService;
@@ -34,6 +37,13 @@ public class CommunityPostFacadeImpl implements CommunityPostFacade {
 
   @Override
   @Transactional(readOnly = true)
+  public List<CommunityPostDTO> getPinnedPosts(Long communityId) {
+    return CommunityPostMapper.INSTANCE
+        .toListDTO(communityPostService.getPinnedPosts(communityId));
+  }
+
+  @Override
+  @Transactional(readOnly = true)
   public CommunityPostDTO getPost(Long communityId, Long postId) {
     return CommunityPostMapper.INSTANCE.toDTO(communityPostService.getPost(communityId, postId));
   }
@@ -42,8 +52,9 @@ public class CommunityPostFacadeImpl implements CommunityPostFacade {
   public CommunityPostDTO createPost(Long communityId, CreateCommunityPostDTO dto, String clientEmail) {
     communityMemberService.checkIsBanned(communityId, clientEmail);
     CommunityMember member = communityMemberService.get(communityId, clientEmail);
+    Community community = communityService.get(communityId);
     return CommunityPostMapper.INSTANCE
-        .toDTO(communityPostService.createPost(communityId, dto, member));
+        .toDTO(communityPostService.createPost(community, dto, member));
   }
 
   @Override

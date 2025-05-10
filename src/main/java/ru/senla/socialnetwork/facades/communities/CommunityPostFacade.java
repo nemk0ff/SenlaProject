@@ -8,6 +8,8 @@ import ru.senla.socialnetwork.dto.communitites.UpdateCommunityPostDTO;
 public interface CommunityPostFacade {
   List<CommunityPostDTO> getAllPosts(Long communityId);
 
+  List<CommunityPostDTO> getPinnedPosts(Long communityId);
+
   CommunityPostDTO getPost(Long communityId, Long postId);
 
   CommunityPostDTO createPost(Long communityId, CreateCommunityPostDTO dto, String clientEmail);

@@ -15,7 +15,7 @@ public interface CommunityMemberService {
 
   CommunityMember leaveCommunity(CommunityMember member);
 
-  CommunityMember recreate(CommunityMember member);
+  CommunityMember recreate(Long communityId, String userEmail);
 
   CommunityMember banMember(CommunityMember member, String reason);
 

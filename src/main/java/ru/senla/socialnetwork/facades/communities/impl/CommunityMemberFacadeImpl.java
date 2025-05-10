@@ -42,8 +42,7 @@ public class CommunityMemberFacadeImpl implements CommunityMemberFacade {
     if (communityMemberService.isMember(communityId, clientEmail)) {
       throw new CommunityMemberException(clientEmail + " уже является участником сообщества");
     } else if (communityMemberService.isMemberExists(communityId, clientEmail)) {
-      CommunityMember member = communityMemberService.get(communityId, clientEmail);
-      return CommunityMemberMapper.INSTANCE.toDTO(communityMemberService.recreate(member));
+      return CommunityMemberMapper.INSTANCE.toDTO(communityMemberService.recreate(communityId, clientEmail));
     }
     return CommunityMemberMapper.INSTANCE
         .toDTO(communityMemberService.joinCommunity(community, user));
