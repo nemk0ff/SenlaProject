@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS posts (
     mood VARCHAR(32),
     location VARCHAR(255),
     body VARCHAR(2000),
-    created_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     post_type VARCHAR(32)
     );
 

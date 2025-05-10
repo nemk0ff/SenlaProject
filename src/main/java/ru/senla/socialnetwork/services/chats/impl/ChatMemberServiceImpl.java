@@ -3,6 +3,7 @@ package ru.senla.socialnetwork.services.chats.impl;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -107,7 +108,7 @@ public class ChatMemberServiceImpl implements ChatMemberService {
 
   @Override
   public ChatMember getMember(Long chatId, String email) {
-    ChatMember member = chatMemberDao.findByChatIdAndUserEmail(chatId, email)
+    ChatMember member = chatMemberDao.findActiveByChatIdAndUserEmail(chatId, email)
         .orElseThrow(() -> new EntityNotFoundException(
             "Участник " + email + " чата id= " + chatId + " не найден"));
     if(!member.isUserInGroup()) {
@@ -115,6 +116,11 @@ public class ChatMemberServiceImpl implements ChatMemberService {
           "Пользователь " + email + " не является участником чата с момента " + member.getLeaveDate());
     }
     return member;
+  }
+
+  @Override
+  public Optional<ChatMember> getMaybeMember(Long chatId, String email) {
+    return chatMemberDao.findByChatIdAndUserEmail(chatId, email);
   }
 
   @Override
@@ -135,12 +141,10 @@ public class ChatMemberServiceImpl implements ChatMemberService {
 
   @Override
   public boolean isChatMember(Long chatId, String userEmail) {
-    return getMember(chatId, userEmail).isUserInGroup();
-  }
-
-  @Override
-  public boolean isChatMemberExists(Long chatId, String userEmail) {
-    return chatMemberDao.existsByChatIdAndUserEmail(chatId, userEmail);
+    log.info("Проверяем, является ли {} участником чата {}...", userEmail, chatId);
+    boolean result = getMember(chatId, userEmail).isUserInGroup();
+    log.info("Выражение '{} - участник чата {}' имеет значение {}", userEmail, chatId, result);
+    return result;
   }
 
   @Override

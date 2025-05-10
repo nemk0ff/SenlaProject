@@ -81,8 +81,12 @@ public class ChatDaoImpl extends HibernateAbstractDao<Chat> implements ChatDao {
       String hql = "SELECT DISTINCT c FROM Chat c " +
           "LEFT JOIN FETCH c.members m " +
           "LEFT JOIN FETCH m.user " +
-          "WHERE m.user.id = :userId " +
-          "AND (m.leaveDate IS NULL OR m.joinDate > m.leaveDate) " +
+          "WHERE c.id IN (" +
+          "SELECT c2.id FROM Chat c2 " +
+          "JOIN c2.members m2 " +
+          "WHERE m2.user.id = :userId " +
+          "AND (m2.leaveDate IS NULL OR m2.joinDate > m2.leaveDate)" +
+          ") " +
           "ORDER BY c.createdAt DESC";
 
       return sessionFactory.getCurrentSession()

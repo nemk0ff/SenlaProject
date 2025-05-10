@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ import ru.senla.socialnetwork.dto.chats.CreateGroupChatDTO;
 import ru.senla.socialnetwork.facades.chats.ChatFacade;
 
 @Slf4j
+@Validated
 @RestController
 @AllArgsConstructor
 @RequestMapping("/chats")
@@ -52,7 +54,7 @@ public class ChatControllerImpl implements ChatController {
   @Override
   @PostMapping("/personal")
   public ResponseEntity<?> createPersonalChat(
-      @Email @RequestParam String participant,
+      @RequestParam @Email String participant,
       Authentication auth) {
     log.info("Создание персонального чата между {} и {}", auth.getName(), participant);
     ChatDTO chat = chatFacade.create(participant, auth.getName());

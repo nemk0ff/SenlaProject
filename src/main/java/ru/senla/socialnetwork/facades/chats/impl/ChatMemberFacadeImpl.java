@@ -1,6 +1,7 @@
 package ru.senla.socialnetwork.facades.chats.impl;
 
 import java.time.ZonedDateTime;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,17 +30,20 @@ public class ChatMemberFacadeImpl implements ChatMemberFacade {
 
   @Override
   public ChatMemberDTO addUserToChat(Long chatId, String userEmailToAdd, String clientEmail) {
-    if (chatMemberService.isChatMember(chatId, clientEmail)) {
-      throw new ChatMemberException("Вы не можете добавить участника, т.к. не являетесь " +
-          "участником этого чата");
+    if (!chatMemberService.isChatMember(chatId, clientEmail)) {
+      throw new ChatMemberException("Вы не можете добавить участника, т.к. не являетесь участником этого чата");
     }
+
     Chat chat = chatService.get(chatId);
 
-    if (chatMemberService.isChatMember(chat.getId(), userEmailToAdd)) {
-      throw new ChatMemberException("Пользователь уже в чате");
-    } else if (chatMemberService.isChatMemberExists(chat.getId(), userEmailToAdd)) {
-      ChatMember chatMember = chatMemberService.getMember(chatId, userEmailToAdd);
-      return chatMemberMapper.toDTO(chatMemberService.recreate(chatMember));
+    Optional<ChatMember> existingMember = chatMemberService.getMaybeMember(chatId, userEmailToAdd);
+
+    if (existingMember.isPresent()) {
+      ChatMember member = existingMember.get();
+      if (member.isUserInGroup()) {
+        throw new ChatMemberException("Пользователь уже в чате");
+      }
+      return chatMemberMapper.toDTO(chatMemberService.recreate(member));
     }
 
     User user = userService.getUserByEmail(userEmailToAdd);

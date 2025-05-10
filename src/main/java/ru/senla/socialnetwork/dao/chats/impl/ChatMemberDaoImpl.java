@@ -38,6 +38,28 @@ public class ChatMemberDaoImpl extends HibernateAbstractDao<ChatMember> implemen
 
   @Override
   public Optional<ChatMember> findByChatIdAndUserEmail(Long chatId, String userEmail) {
+    log.info("Поиск участника чата {} с email {}", chatId, userEmail);
+    try {
+      String hql = "FROM ChatMember cm " +
+          "WHERE cm.chat.id = :chatId " +
+          "AND cm.user.email = :email ";
+
+      Optional<ChatMember> member = sessionFactory.getCurrentSession()
+          .createQuery(hql, ChatMember.class)
+          .setParameter("chatId", chatId)
+          .setParameter("email", userEmail)
+          .uniqueResultOptional();
+
+      log.info("Найден участник: {}", member.orElse(null));
+      return member;
+    } catch (Exception e) {
+      throw new DataRetrievalFailureException(
+          "Ошибка при поиске активного участника чата", e);
+    }
+  }
+
+  @Override
+  public Optional<ChatMember> findActiveByChatIdAndUserEmail(Long chatId, String userEmail) {
     log.info("Поиск активного участника чата {} с email {}", chatId, userEmail);
     try {
       String hql = "FROM ChatMember cm " +

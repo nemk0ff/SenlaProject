@@ -1,6 +1,7 @@
 package ru.senla.socialnetwork.services.posts.impl;
 
 import jakarta.persistence.EntityNotFoundException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,7 @@ public class WallPostServiceImpl implements WallPostService {
         .body(dto.body())
         .mood(dto.mood())
         .location(dto.location())
+        .createdAt(ZonedDateTime.now())
         .build();
     return wallPostDao.saveOrUpdate(newPost);
   }

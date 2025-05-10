@@ -61,6 +61,7 @@ public class WallPostFacadeImpl implements WallPostFacade {
     if (post.getWallOwner().equals(user) || userService.isAdmin(clientEmail)) {
       wallPostService.delete(post);
       log.info("Пост удалён.");
+      return;
     }
     throw new WallPostException("У вас не хватает прав для удаления этого поста");
   }

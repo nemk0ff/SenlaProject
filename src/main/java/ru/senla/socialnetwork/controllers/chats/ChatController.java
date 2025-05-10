@@ -1,6 +1,7 @@
 package ru.senla.socialnetwork.controllers.chats;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,9 +12,9 @@ public interface ChatController {
 
   ResponseEntity<?> createGroupChat(@Valid CreateGroupChatDTO request, Authentication auth);
 
-  ResponseEntity<?> createPersonalChat(String participantEmail, Authentication auth);
+  ResponseEntity<?> createPersonalChat(@Email String participantEmail, Authentication auth);
 
-  ResponseEntity<?> deleteChat(@PathVariable Long chatId, Authentication auth);
+  ResponseEntity<?> deleteChat(Long chatId, Authentication auth);
 
-  ResponseEntity<?> getChat(@PathVariable Long chatId, Authentication auth);
+  ResponseEntity<?> getChat(Long chatId, Authentication auth);
 }

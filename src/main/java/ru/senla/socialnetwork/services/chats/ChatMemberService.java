@@ -2,6 +2,7 @@ package ru.senla.socialnetwork.services.chats;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 import ru.senla.socialnetwork.model.chats.Chat;
 import ru.senla.socialnetwork.model.chats.ChatMember;
 import ru.senla.socialnetwork.model.general.MemberRole;
@@ -20,6 +21,8 @@ public interface ChatMemberService {
 
   ChatMember getMember(Long chatId, String email);
 
+  Optional<ChatMember> getMaybeMember(Long chatId, String email);
+
   List<ChatMember> getMembers(Long chatId);
 
   ChatMember removeMember(ChatMember member);
@@ -27,8 +30,6 @@ public interface ChatMemberService {
   void deleteMember(ChatMember member);
 
   boolean isChatMember(Long chatId, String email);
-
-  boolean isChatMemberExists(Long chatId, String email);
 
   ChatMember recreate(ChatMember member);
 

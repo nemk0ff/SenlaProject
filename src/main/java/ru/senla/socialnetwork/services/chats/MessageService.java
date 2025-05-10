@@ -2,11 +2,12 @@ package ru.senla.socialnetwork.services.chats;
 
 import java.util.List;
 import ru.senla.socialnetwork.dto.chats.MessageRequestDTO;
+import ru.senla.socialnetwork.model.chats.Chat;
 import ru.senla.socialnetwork.model.chats.ChatMember;
 import ru.senla.socialnetwork.model.chats.Message;
 
 public interface MessageService {
-  Message send(ChatMember member, MessageRequestDTO request);
+  Message send(ChatMember member, MessageRequestDTO request, Chat chat);
 
   List<Message> getAll(Long chatId);
 

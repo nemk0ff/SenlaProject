@@ -11,11 +11,13 @@ import ru.senla.socialnetwork.dto.mappers.ChatMessageMapper;
 import ru.senla.socialnetwork.exceptions.chats.ChatMemberException;
 import ru.senla.socialnetwork.exceptions.chats.MessageException;
 import ru.senla.socialnetwork.facades.chats.MessageFacade;
+import ru.senla.socialnetwork.model.chats.Chat;
 import ru.senla.socialnetwork.model.chats.ChatMember;
 import ru.senla.socialnetwork.model.chats.Message;
 import ru.senla.socialnetwork.model.general.MemberRole;
 import ru.senla.socialnetwork.services.chats.ChatMemberService;
 import ru.senla.socialnetwork.services.chats.MessageService;
+import ru.senla.socialnetwork.services.chats.impl.ChatServiceImpl;
 
 @Service
 @Transactional
@@ -25,11 +27,13 @@ public class MessageFacadeImpl implements MessageFacade {
   private final ChatMessageMapper chatMessageMapper;
   private final ChatMemberService chatMemberService;
   private final MessageService messageService;
+  private final ChatServiceImpl chatServiceImpl;
 
   @Override
   public MessageResponseDTO send(Long chatId, String authorEmail, MessageRequestDTO request) {
     ChatMember member = chatMemberService.getMember(chatId, authorEmail);
-    return chatMessageMapper.toDTO(messageService.send(member, request));
+    Chat chat = chatServiceImpl.get(chatId);
+    return chatMessageMapper.toDTO(messageService.send(member, request, chat));
   }
 
   @Override
@@ -86,7 +90,7 @@ public class MessageFacadeImpl implements MessageFacade {
   }
 
   private void checkIsMember(Long chatId, String email) {
-    if(chatMemberService.isChatMember(chatId, email)) {
+    if(!chatMemberService.isChatMember(chatId, email)) {
       throw new MessageException("Недостаточно прав для выполнения этой операции");
     }
   }

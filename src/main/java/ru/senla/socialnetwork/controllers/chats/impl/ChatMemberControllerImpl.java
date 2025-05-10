@@ -1,11 +1,13 @@
 package ru.senla.socialnetwork.controllers.chats.impl;
 
+import jakarta.validation.constraints.Email;
 import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +20,7 @@ import ru.senla.socialnetwork.facades.chats.ChatMemberFacade;
 import ru.senla.socialnetwork.model.general.MemberRole;
 
 @Slf4j
+@Validated
 @RestController
 @AllArgsConstructor
 @RequestMapping("/chats/{chatId}/members")
@@ -28,20 +31,20 @@ public class ChatMemberControllerImpl implements ChatMemberController {
   @PostMapping
   public ResponseEntity<?> addMember(
       @PathVariable Long chatId,
-      @RequestParam String userEmail,
+      @RequestParam @Email String email,
       Authentication auth) {
     log.info("Добавление участника {} в чат {} пользователем {}",
-        userEmail, chatId, auth.getName());
-    ChatMemberDTO result = chatMemberFacade.addUserToChat(chatId, userEmail, auth.getName());
-    log.info("Участник {} успешно добавлен в чат {}", userEmail, chatId);
+        email, chatId, auth.getName());
+    ChatMemberDTO result = chatMemberFacade.addUserToChat(chatId, email, auth.getName());
+    log.info("Участник {} успешно добавлен в чат {}", email, chatId);
     return ResponseEntity.ok(result);
   }
 
   @Override
-  @DeleteMapping("/{email}")
+  @DeleteMapping
   public ResponseEntity<?> removeMember(
       @PathVariable Long chatId,
-      @PathVariable String email,
+      @RequestParam @Email String email,
       Authentication auth) {
     log.info("Удаление участника {} из чата {} пользователем {}",
         email, chatId, auth.getName());
@@ -51,10 +54,10 @@ public class ChatMemberControllerImpl implements ChatMemberController {
   }
 
   @Override
-  @PostMapping("/{email}/mute")
+  @PostMapping("/mute")
   public ResponseEntity<?> muteMember(
       @PathVariable Long chatId,
-      @PathVariable String email,
+      @RequestParam @Email String email,
       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
       ZonedDateTime muteUntil,
       Authentication auth) {
@@ -66,10 +69,10 @@ public class ChatMemberControllerImpl implements ChatMemberController {
   }
 
   @Override
-  @PostMapping("/{email}/unmute")
+  @PostMapping("/unmute")
   public ResponseEntity<?> unmuteMember(
       @PathVariable Long chatId,
-      @PathVariable String email,
+      @RequestParam @Email String email,
       Authentication auth) {
     log.info("Размут участника {} в чате {} (инициатор: {})", email, chatId, auth.getName());
     ChatMemberDTO result = chatMemberFacade.unmute(chatId, email, auth.getName());
@@ -78,7 +81,7 @@ public class ChatMemberControllerImpl implements ChatMemberController {
   }
 
   @Override
-  @PostMapping("/leave")
+  @DeleteMapping("/leave")
   public ResponseEntity<?> leaveChat(
       @PathVariable Long chatId,
       Authentication auth) {
@@ -92,7 +95,7 @@ public class ChatMemberControllerImpl implements ChatMemberController {
   @PostMapping("/role")
   public ResponseEntity<?> changeMemberRole(
       @PathVariable Long chatId,
-      @RequestParam String email,
+      @RequestParam @Email String email,
       @RequestParam MemberRole role,
       Authentication auth) {
     log.info("Изменение роли участника {} в чате {} на {} пользователем {}",

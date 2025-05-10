@@ -9,6 +9,7 @@ import ru.senla.socialnetwork.dao.chats.MessageDao;
 import ru.senla.socialnetwork.dto.chats.MessageRequestDTO;
 import ru.senla.socialnetwork.exceptions.chats.ChatMemberException;
 import ru.senla.socialnetwork.exceptions.chats.MessageException;
+import ru.senla.socialnetwork.model.chats.Chat;
 import ru.senla.socialnetwork.model.chats.ChatMember;
 import ru.senla.socialnetwork.model.chats.Message;
 import ru.senla.socialnetwork.services.chats.MessageService;
@@ -20,12 +21,13 @@ public class MessageServiceImpl implements MessageService {
   private final MessageDao messageDao;
 
   @Override
-  public Message send(ChatMember member, MessageRequestDTO request) {
+  public Message send(ChatMember member, MessageRequestDTO request, Chat chat) {
     if (member.getMutedUntil() != null && member.getMutedUntil().isAfter(ZonedDateTime.now())) {
       throw new MessageException("Вы замьючены до " + member.getMutedUntil());
     }
 
     Message message = Message.builder()
+        .chat(chat)
         .author(member.getUser())
         .body(request.body())
         .createdAt(ZonedDateTime.now())
@@ -33,7 +35,7 @@ public class MessageServiceImpl implements MessageService {
         .build();
 
     if (request.replyToId() != null) {
-      Message replyTo = messageDao.find(request.replyToId())
+      Message replyTo = messageDao.findByIdAndChatId(request.replyToId(), chat.getId())
           .orElseThrow(() -> new MessageException("Сообщение для ответа не найдено"));
       message.setReplyTo(replyTo);
     }
@@ -42,11 +44,7 @@ public class MessageServiceImpl implements MessageService {
 
   @Override
   public List<Message> getAll(Long chatId) {
-    List<Message> messages = messageDao.findByChatId(chatId);
-    if(messages.isEmpty()){
-      throw new ChatMemberException("Чат пуст, отправьте сообщение первым");
-    }
-    return messages;
+    return messageDao.findByChatId(chatId);
   }
 
   @Override
@@ -62,11 +60,7 @@ public class MessageServiceImpl implements MessageService {
 
   @Override
   public List<Message> getAnswers(Long chatId, Long messageId) {
-    List<Message> messages = messageDao.findAnswers(chatId, messageId);
-    if(messages.isEmpty()){
-      throw new ChatMemberException("Ответов на сообщение не найдено");
-    }
-    return messages;
+    return messageDao.findAnswers(chatId, messageId);
   }
 
   @Override

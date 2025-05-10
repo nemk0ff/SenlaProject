@@ -13,6 +13,8 @@ public interface ChatMemberDao extends GenericDao<ChatMember> {
 
   Optional<ChatMember> findByChatIdAndUserEmail(Long chatId, String userEmail);
 
+  Optional<ChatMember> findActiveByChatIdAndUserEmail(Long chatId, String userEmail);
+
   boolean existsByChatIdAndUserEmail(Long chatId, String userEmail);
 
   long countByChatIdAndRole(Long chatId, MemberRole role);

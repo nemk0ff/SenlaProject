@@ -1,6 +1,7 @@
 package ru.senla.socialnetwork.dao.chats.impl;
 
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.springframework.dao.DataRetrievalFailureException;
@@ -20,7 +21,7 @@ public class MessageDaoImpl extends HibernateAbstractDao<Message> implements Mes
   public List<Message> findByChatId(Long chatId) {
     log.info("Поиск сообщений чата {}", chatId);
     try {
-      String hql = "FROM Message m WHERE m.chat.id = :chatId ORDER BY m.createdAt DESC";
+      String hql = "FROM Message m WHERE m.chat.id = :chatId ORDER BY m.createdAt";
       return sessionFactory.getCurrentSession()
           .createQuery(hql, Message.class)
           .setParameter("chatId", chatId)
@@ -58,6 +59,21 @@ public class MessageDaoImpl extends HibernateAbstractDao<Message> implements Mes
           .getResultList();
     } catch (Exception e) {
       throw new DataRetrievalFailureException("Ошибка при поиске закрепленных сообщений чата", e);
+    }
+  }
+
+  @Override
+  public Optional<Message> findByIdAndChatId(Long messageId, Long chatId) {
+    log.info("Поиск сообщения {} в чате {}", messageId, chatId);
+    try {
+      String hql = "FROM Message m WHERE m.chat.id = :chatId AND m.id = :messageId";
+      return  sessionFactory.getCurrentSession()
+          .createQuery(hql, Message.class)
+          .setParameter("chatId", chatId)
+          .setParameter("messageId", messageId)
+          .uniqueResultOptional();
+    } catch (Exception e) {
+      throw new DataRetrievalFailureException("Ошибка при поиске сообщений чата", e);
     }
   }
 }
