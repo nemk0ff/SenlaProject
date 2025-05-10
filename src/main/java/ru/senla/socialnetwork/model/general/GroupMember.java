@@ -48,5 +48,11 @@ public abstract class GroupMember implements MyEntity {
   @Enumerated(EnumType.STRING)
   @Column(name = "role", nullable = false)
   protected MemberRole role;
+
+  public boolean isUserInGroup() {
+    // В чате, если дата входа позже даты выхода
+    // Или если выход не указан (никогда не выходил)
+    return leaveDate == null || joinDate.isAfter(leaveDate);
+  }
 }
 

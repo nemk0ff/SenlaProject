@@ -112,7 +112,7 @@ public class ChatFacadeImpl implements ChatFacade {
     }
 
     List<ChatMember> members = chatMemberService.getMembers(chatId);
-    members.forEach(chatMemberService::removeMember);
+    members.forEach(chatMemberService::deleteMember);
 
     chatService.delete(chat);
   }
@@ -120,7 +120,7 @@ public class ChatFacadeImpl implements ChatFacade {
   @Override
   public ChatDTO get(Long chatId, String clientEmail) {
     if(chatMemberService.isChatMember(chatId, clientEmail)){
-      return chatMapper.ToChatDTO(chatService.get(chatId));
+      return chatMapper.toChatDTO(chatService.get(chatId));
     }
     throw new ChatException("У вас нет доступа к этому чату, т.к. вы не являетесь участником");
   }

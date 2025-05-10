@@ -41,15 +41,18 @@ public class CommunityMemberFacadeImpl implements CommunityMemberFacade {
 
     if (communityMemberService.isMember(communityId, clientEmail)) {
       throw new CommunityMemberException(clientEmail + " уже является участником сообщества");
+    } else if (communityMemberService.isMemberExists(communityId, clientEmail)) {
+      CommunityMember member = communityMemberService.get(communityId, clientEmail);
+      return CommunityMemberMapper.INSTANCE.toDTO(communityMemberService.recreate(member));
     }
     return CommunityMemberMapper.INSTANCE
         .toDTO(communityMemberService.joinCommunity(community, user));
   }
 
   @Override
-  public void leaveCommunity(Long communityId, String userEmail) {
+  public CommunityMemberDTO leaveCommunity(Long communityId, String userEmail) {
     CommunityMember member = communityMemberService.get(communityId, userEmail);
-    communityMemberService.leaveCommunity(member);
+    return CommunityMemberMapper.INSTANCE.toDTO(communityMemberService.leaveCommunity(member));
   }
 
   @Override

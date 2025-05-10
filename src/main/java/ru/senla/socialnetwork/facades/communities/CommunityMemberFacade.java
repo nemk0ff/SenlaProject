@@ -9,7 +9,7 @@ public interface CommunityMemberFacade {
 
   CommunityMemberDTO joinCommunity(Long communityId, String userEmail);
 
-  void leaveCommunity(Long communityId, String userEmail);
+  CommunityMemberDTO leaveCommunity(Long communityId, String userEmail);
 
   CommunityMemberDTO banMember(Long communityId, String userEmail, String reason, String clientEmail);
 

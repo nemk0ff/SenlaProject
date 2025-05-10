@@ -76,6 +76,7 @@ public class MessageFacadeImpl implements MessageFacade {
 
   @Override
   public void delete(Long chatId, Long messageId, String clientEmail) {
+    checkIsMember(chatId, clientEmail);
     Message message = messageService.get(chatId, messageId);
     // Удалить сообщение может либо его автор, либо админ/модератор чата
     if (!message.getAuthor().getEmail().equals(clientEmail)) {

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.senla.socialnetwork.dao.communities.CommunityMemberDao;
+import ru.senla.socialnetwork.exceptions.chats.ChatMemberException;
 import ru.senla.socialnetwork.exceptions.communities.CommunityMemberException;
 import ru.senla.socialnetwork.model.communities.Community;
 import ru.senla.socialnetwork.model.communities.CommunityMember;
@@ -22,8 +23,13 @@ public class CommunityMemberServiceImpl implements CommunityMemberService {
 
   @Override
   public CommunityMember get(Long communityId, String userEmail) {
-    return communityMemberDao.findByCommunityAndUser(communityId, userEmail).
+    CommunityMember member = communityMemberDao.findByCommunityAndUser(communityId, userEmail).
         orElseThrow(() -> new EntityNotFoundException("Участник сообщества не найден"));
+    if(member.isUserInGroup()) {
+      throw new ChatMemberException("Пользователь " + userEmail + " не является участником " +
+          "сообщества с момента " + member.getLeaveDate());
+    }
+    return member;
   }
 
   @Override
@@ -46,8 +52,15 @@ public class CommunityMemberServiceImpl implements CommunityMemberService {
   }
 
   @Override
-  public void leaveCommunity(CommunityMember member) {
-    communityMemberDao.delete(member);
+  public CommunityMember leaveCommunity(CommunityMember member) {
+    member.setLeaveDate(ZonedDateTime.now());
+    return communityMemberDao.saveOrUpdate(member);
+  }
+
+  @Override
+  public CommunityMember recreate(CommunityMember member) {
+    member.setJoinDate(ZonedDateTime.now());
+    return communityMemberDao.saveOrUpdate(member);
   }
 
   @Override
@@ -72,6 +85,11 @@ public class CommunityMemberServiceImpl implements CommunityMemberService {
 
   @Override
   public boolean isMember(Long communityId, String userEmail) {
+    return get(communityId, userEmail).isUserInGroup();
+  }
+
+  @Override
+  public boolean isMemberExists(Long communityId, String userEmail) {
     return communityMemberDao.findByCommunityAndUser(communityId, userEmail).isPresent();
   }
 
@@ -107,7 +125,13 @@ public class CommunityMemberServiceImpl implements CommunityMemberService {
         "пройдена.", userEmail, communityId);
   }
 
+  @Override
+  public void delete(CommunityMember member) {
+    communityMemberDao.delete(member);
+  }
+
   private boolean hasRight(Long communityId, String userEmail, MemberRole role) {
-    return get(communityId, userEmail).getRole().equals(role);
+    CommunityMember member = get(communityId, userEmail);
+    return member.getRole().equals(role) && member.isUserInGroup();
   }
 }

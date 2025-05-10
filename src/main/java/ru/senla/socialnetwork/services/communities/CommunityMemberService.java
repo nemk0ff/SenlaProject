@@ -13,7 +13,9 @@ public interface CommunityMemberService {
 
   CommunityMember joinCommunity(Community community, User user);
 
-  void leaveCommunity(CommunityMember member);
+  CommunityMember leaveCommunity(CommunityMember member);
+
+  CommunityMember recreate(CommunityMember member);
 
   CommunityMember banMember(CommunityMember member, String reason);
 
@@ -23,9 +25,13 @@ public interface CommunityMemberService {
 
   boolean isMember(Long communityId, String userEmail);
 
+  boolean isMemberExists(Long communityId, String userEmail);
+
   void checkIsBanned(Long communityId, String userEmail);
 
   void checkIsAdmin(Long communityId, String userEmail);
 
   void checkIsAdminOrModer(Long communityId, String userEmail);
+
+  void delete(CommunityMember member);
 }

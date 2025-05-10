@@ -39,7 +39,6 @@ public class CommunityPostFacadeImpl implements CommunityPostFacade {
   }
 
   @Override
-  @Transactional
   public CommunityPostDTO createPost(Long communityId, CreateCommunityPostDTO dto, String clientEmail) {
     communityMemberService.checkIsBanned(communityId, clientEmail);
     CommunityMember member = communityMemberService.get(communityId, clientEmail);
@@ -48,7 +47,6 @@ public class CommunityPostFacadeImpl implements CommunityPostFacade {
   }
 
   @Override
-  @Transactional
   public void deletePost(Long communityId, Long postId, String clientEmail) {
     if(!userService.isAdmin(clientEmail)) {
       checkAccess(communityId, postId, clientEmail);
@@ -58,7 +56,6 @@ public class CommunityPostFacadeImpl implements CommunityPostFacade {
   }
 
   @Override
-  @Transactional
   public CommunityPostDTO updatePost(Long communityId, Long postId, UpdateCommunityPostDTO dto, String requesterEmail) {
     checkAccess(communityId, postId, requesterEmail);
     CommunityPost post = communityPostService.getPost(communityId, postId);

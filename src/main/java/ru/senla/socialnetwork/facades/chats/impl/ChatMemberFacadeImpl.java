@@ -37,21 +37,17 @@ public class ChatMemberFacadeImpl implements ChatMemberFacade {
 
     if (chatMemberService.isChatMember(chat.getId(), userEmailToAdd)) {
       throw new ChatMemberException("Пользователь уже в чате");
+    } else if (chatMemberService.isChatMemberExists(chat.getId(), userEmailToAdd)) {
+      ChatMember chatMember = chatMemberService.getMember(chatId, userEmailToAdd);
+      return chatMemberMapper.toDTO(chatMemberService.recreate(chatMember));
     }
 
-    User userToAdd = userService.getUserByEmail(userEmailToAdd);
-    ChatMember newMember = ChatMember.builder()
-        .chat(chat)
-        .user(userToAdd)
-        .role(MemberRole.MEMBER)
-        .joinDate(ZonedDateTime.now())
-        .build();
-
-    return chatMemberMapper.ToDTO(chatMemberService.addUserToChat(chat, newMember));
+    User user = userService.getUserByEmail(userEmailToAdd);
+    return chatMemberMapper.toDTO(chatMemberService.addUserToChat(chat, user));
   }
 
   @Override
-  public void removeUserFromChat(Long chatId, String userEmailToRemove, String currentUserEmail) {
+  public ChatMemberDTO removeUser(Long chatId, String userEmailToRemove, String currentUserEmail) {
     Chat chat = chatService.get(chatId);
     if (!chat.getIsGroup()) {
       throw new ChatMemberException("Нельзя удалить участника из личного чата. Удалите весь чат.");
@@ -67,7 +63,7 @@ public class ChatMemberFacadeImpl implements ChatMemberFacade {
         && !removingMember.getRole().equals(MemberRole.MEMBER)) {
       throw new ChatMemberException("Вы можете удалить из чата только обычного участника");
     }
-    chatMemberService.removeMember(removingMember);
+    return chatMemberMapper.toDTO(chatMemberService.removeMember(removingMember));
   }
 
   @Override
@@ -78,7 +74,7 @@ public class ChatMemberFacadeImpl implements ChatMemberFacade {
       throw new ChatMemberException(
           "У вас недостаточно прав, чтобы выдавать мут участникам этого чата");
     }
-    return chatMemberMapper.ToDTO(chatMemberService.mute(chatId, userEmailToMute, muteUntil));
+    return chatMemberMapper.toDTO(chatMemberService.mute(chatId, userEmailToMute, muteUntil));
   }
 
   @Override
@@ -88,12 +84,12 @@ public class ChatMemberFacadeImpl implements ChatMemberFacade {
       throw new ChatMemberException(
           "У вас недостаточно прав, чтобы снимать мут с участников этого чата");
     }
-    return chatMemberMapper.ToDTO(chatMemberService.unmute(chatId, userEmailToMute));
+    return chatMemberMapper.toDTO(chatMemberService.unmute(chatId, userEmailToMute));
   }
 
   @Override
-  public void leave(Long chatId, String userEmail) {
-    chatMemberService.leave(chatId, userEmail);
+  public ChatMemberDTO leave(Long chatId, String userEmail) {
+    return chatMemberMapper.toDTO(chatMemberService.leave(chatId, userEmail));
   }
 
   @Override
@@ -106,18 +102,6 @@ public class ChatMemberFacadeImpl implements ChatMemberFacade {
     if(!client.getRole().equals(MemberRole.ADMIN) || member.getRole().equals(MemberRole.ADMIN)) {
       throw new ChatMemberException("У вас нет прав, чтобы изменить роль этого участника чата");
     }
-    return chatMemberMapper.ToDTO(chatMemberService.changeRole(chatId, member, role));
-  }
-
-  @Override
-  public boolean isChatMember(Long chatId, String email) {
-    return chatMemberService.isChatMember(chatId, email);
-  }
-
-  @Override
-  public boolean isChatAdminOrModerator(Long chatId, String requesterEmail) {
-    ChatMember currentMember = chatMemberService.getMember(chatId, requesterEmail);
-    return currentMember.getRole().equals(MemberRole.MODERATOR)
-        || currentMember.getRole().equals(MemberRole.ADMIN);
+    return chatMemberMapper.toDTO(chatMemberService.changeRole(chatId, member, role));
   }
 }

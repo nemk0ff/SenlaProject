@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import ru.senla.socialnetwork.dao.chats.ChatDao;
 import ru.senla.socialnetwork.dto.chats.CreateGroupChatDTO;
 import ru.senla.socialnetwork.exceptions.chats.ChatException;
-import ru.senla.socialnetwork.exceptions.chats.ChatMemberException;
 import ru.senla.socialnetwork.model.chats.Chat;
 import ru.senla.socialnetwork.services.chats.ChatService;
 
@@ -21,11 +20,7 @@ public class ChatServiceImpl implements ChatService {
 
   @Override
   public List<Chat> getAllByUser(Long userId) {
-    List<Chat> chats = chatDao.findAllByUserId(userId);
-    if (chats.isEmpty()) {
-      throw new ChatMemberException("Пользователь " + userId + " не состоит в чатах");
-    }
-    return chats;
+    return chatDao.findAllActiveByUserId(userId);
   }
 
   @Override

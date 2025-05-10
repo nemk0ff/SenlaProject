@@ -10,7 +10,7 @@ public interface CommunityController {
 
   ResponseEntity<?> delete(Long id, Authentication auth);
 
-  ResponseEntity<?> get(Long id, Authentication auth);
+  ResponseEntity<?> get(Long id);
 
   ResponseEntity<?> change(ChangeCommunityDTO changeCommunityDTO, Authentication auth);
 }

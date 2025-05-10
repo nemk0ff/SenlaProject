@@ -1,5 +1,6 @@
 package ru.senla.socialnetwork.services.user.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +12,6 @@ import ru.senla.socialnetwork.dao.users.UserDao;
 import ru.senla.socialnetwork.dto.users.UserRequestDTO;
 import ru.senla.socialnetwork.exceptions.users.EmailAlreadyExistsException;
 import ru.senla.socialnetwork.exceptions.users.UserException;
-import ru.senla.socialnetwork.exceptions.auth.UserNotRegisteredException;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.model.users.Gender;
 import ru.senla.socialnetwork.model.users.UserRole;
@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
   @Transactional(readOnly = true)
   public User get(long userId) {
     return userDao.find(userId).orElseThrow(
-        () -> new UserNotRegisteredException("id" + userId));
+        () -> new EntityNotFoundException("id" + userId));
   }
 
   @Override
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
   @Transactional(readOnly = true)
   public User getUserByEmail(String email) {
     return userDao.findByEmail(email).orElseThrow(
-        () -> new UserNotRegisteredException(email));
+        () -> new EntityNotFoundException(email));
   }
 
   @Transactional

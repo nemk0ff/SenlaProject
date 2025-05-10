@@ -45,7 +45,7 @@ public class CommunityControllerImpl implements CommunityController {
   public ResponseEntity<?> delete(
       @PathVariable Long id,
       Authentication auth) {
-    log.info("Пользователь {} инициировал удаление сообщества id={}", auth.getName(), id);
+    log.info("Пользователь {} удаляет сообщества id={}", auth.getName(), id);
     communityFacade.delete(id, auth.getName());
     log.warn("Сообщество id={} удалено пользователем {}", id, auth.getName());
     return ResponseEntity.ok("Сообщество " + id + " удалено");
@@ -53,12 +53,10 @@ public class CommunityControllerImpl implements CommunityController {
 
   @Override
   @GetMapping("/{id}")
-  public ResponseEntity<?> get(
-      @PathVariable Long id,
-      Authentication auth) {
-    log.info("Запрос информации о сообществе ID: {} пользователем {}", id, auth.getName());
-    CommunityDTO community = communityFacade.get(id, auth.getName());
-    log.info("Возвращена информация о сообществе ID: {}, название: '{}'", id, community.name());
+  public ResponseEntity<?> get(@PathVariable Long id) {
+    log.info("Запрос информации о сообществе id={}", id);
+    CommunityDTO community = communityFacade.get(id);
+    log.info("Возвращена информация о сообществе id={}, название: '{}'", id, community.name());
     return ResponseEntity.ok(community);
   }
 

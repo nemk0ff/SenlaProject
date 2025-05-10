@@ -45,9 +45,9 @@ public class ChatMemberControllerImpl implements ChatMemberController {
       Authentication auth) {
     log.info("Удаление участника {} из чата {} пользователем {}",
         email, chatId, auth.getName());
-    chatMemberFacade.removeUserFromChat(chatId, email, auth.getName());
+    ChatMemberDTO result = chatMemberFacade.removeUser(chatId, email, auth.getName());
     log.info("Участник {} успешно удален из чата {}", email, chatId);
-    return ResponseEntity.ok("Участник " + email + " удален из чата id=" + chatId);
+    return ResponseEntity.ok(result);
   }
 
   @Override
@@ -83,9 +83,9 @@ public class ChatMemberControllerImpl implements ChatMemberController {
       @PathVariable Long chatId,
       Authentication auth) {
     log.info("Выход пользователя {} из чата {}", auth.getName(), chatId);
-    chatMemberFacade.leave(chatId, auth.getName());
+    ChatMemberDTO chatMember = chatMemberFacade.leave(chatId, auth.getName());
     log.info("Пользователь {} вышел из чата {}", auth.getName(), chatId);
-    return ResponseEntity.ok("Пользователь " + auth.getName() + " вышел из чата id=" + chatId);
+    return ResponseEntity.ok(chatMember);
   }
 
   @Override

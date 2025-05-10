@@ -59,13 +59,16 @@ public class CommunityFacadeImpl implements CommunityFacade {
         throw new CommunityException("Недостаточно прав для выполнения этой операции");
       }
     }
+
+    List<CommunityMember> members = communityMemberService.getAll(communityId);
+    members.forEach(communityMemberService::delete);
     Community community = communityService.get(communityId);
     communityService.delete(community);
   }
 
   @Override
   @Transactional(readOnly = true)
-  public CommunityDTO get(Long communityId, String clientEmail) {
+  public CommunityDTO get(Long communityId) {
     return CommunityMapper.INSTANCE.toDTO(communityService.get(communityId));
   }
 

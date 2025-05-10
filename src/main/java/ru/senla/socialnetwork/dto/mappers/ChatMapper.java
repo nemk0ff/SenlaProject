@@ -10,7 +10,7 @@ import ru.senla.socialnetwork.model.chats.Chat;
 public interface ChatMapper {
 
   @Mapping(target = "members", source = "members")
-  ChatDTO ToChatDTO(Chat chat);
+  ChatDTO toChatDTO(Chat chat);
 
   List<ChatDTO> toListChatDTO(List<Chat> chats);
 }
