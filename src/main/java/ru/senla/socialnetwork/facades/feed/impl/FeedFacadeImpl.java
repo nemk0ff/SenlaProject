@@ -18,10 +18,8 @@ import ru.senla.socialnetwork.model.communities.CommunityPost;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.model.users.WallPost;
 import ru.senla.socialnetwork.services.communities.CommunityMemberService;
-import ru.senla.socialnetwork.services.communities.CommunityService;
 import ru.senla.socialnetwork.services.friendRequest.FriendRequestService;
 import ru.senla.socialnetwork.services.posts.CommunityPostService;
-import ru.senla.socialnetwork.services.posts.GeneralPostService;
 import ru.senla.socialnetwork.services.posts.WallPostService;
 import ru.senla.socialnetwork.services.user.UserService;
 
@@ -33,10 +31,8 @@ public class FeedFacadeImpl implements FeedFacade {
   private final UserService userService;
   private final FriendRequestService friendRequestService;
   private final WallPostService wallPostService;
-  private final CommunityService communityService;
   private final CommunityMemberService communityMemberService;
   private final CommunityPostService communityPostService;
-  private final GeneralPostService generalPostService;
 
   @Override
   public List<PostDTO> getNews(String clientEmail) {

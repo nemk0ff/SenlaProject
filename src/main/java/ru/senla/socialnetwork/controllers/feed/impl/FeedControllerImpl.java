@@ -11,7 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.feed.FeedController;
 import ru.senla.socialnetwork.dto.PostDTO;
 import ru.senla.socialnetwork.facades.feed.FeedFacade;
-import ru.senla.socialnetwork.model.Post;
+
+
+// TODO: (возможно) поиск постов по mood, location, key words
+// TODO: (возможно) рекомендованные публикации (хз как, хз стоит ли)
+
 
 @Slf4j
 @RestController
@@ -23,7 +27,8 @@ public class FeedControllerImpl implements FeedController {
 
   @Override
   @GetMapping()
-  public List<PostDTO> getNews(Authentication auth) {
+  public List<PostDTO> newsFeed(Authentication auth) {
+    log.info("Получение ленты новостей пользователем {}", auth.getName());
     return feedFacade.getNews(auth.getName());
   }
 }
