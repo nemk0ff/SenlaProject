@@ -1,1 +1,1 @@
-![Диаграмма базы данных](assets/normal.drawio.png)
+![Диаграмма базы данных](assets/senlaproject.png)
