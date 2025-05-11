@@ -23,4 +23,14 @@ public class CommunityPostDaoImpl extends HibernateAbstractDao<CommunityPost> im
         .setParameter("communityId", communityId)
         .getResultList();
   }
+
+  @Override
+  public List<CommunityPost> findPinnedByCommunity(Long communityId) {
+    return sessionFactory.getCurrentSession()
+        .createQuery("FROM CommunityPost cp WHERE cp.community.id = :communityId" +
+                " AND cp.isPinned",
+            CommunityPost.class)
+        .setParameter("communityId", communityId)
+        .getResultList();
+  }
 }

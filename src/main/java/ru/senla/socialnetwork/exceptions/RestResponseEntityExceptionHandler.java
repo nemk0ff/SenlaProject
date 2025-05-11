@@ -2,9 +2,11 @@ package ru.senla.socialnetwork.exceptions;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 import java.time.Instant;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -20,10 +22,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import ru.senla.socialnetwork.exceptions.chats.ChatException;
-import ru.senla.socialnetwork.exceptions.communities.CommunityException;
-import ru.senla.socialnetwork.exceptions.friendRequests.FriendRequestException;
-import ru.senla.socialnetwork.exceptions.users.UserException;
+import ru.senla.socialnetwork.exceptions.auth.UserNotRegisteredException;
 
 @ControllerAdvice
 @Slf4j
@@ -54,6 +53,25 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler(ConstraintViolationException.class)
+  public ResponseEntity<ProblemDetail> handleConstraintViolation(
+      ConstraintViolationException ex, WebRequest request) {
+    log.warn("Ошибка валидации параметров: {}", ex.getMessage());
+
+    ProblemDetail problemDetail = problemDetailBuilder(
+        "Ошибка валидации параметров",
+        request,
+        HttpStatus.BAD_REQUEST,
+        ex);
+
+    List<String> errors = ex.getConstraintViolations().stream()
+        .map(v -> v.getPropertyPath() + ": " + v.getMessage())
+        .toList();
+    problemDetail.setProperty("errors", errors);
+
+    return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
+  }
+
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(
       MethodArgumentNotValidException ex,
@@ -75,26 +93,18 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     return new ResponseEntity<>(problemDetail, headers, HttpStatus.BAD_REQUEST);
   }
 
-  @ExceptionHandler(AuthenticationException.class)
+  @ExceptionHandler({
+      AuthenticationException.class,
+      UserNotRegisteredException.class
+  })
   protected ResponseEntity<ProblemDetail> handleAuthenticationException(
-      AuthenticationException ex, WebRequest request) {
+      Exception ex, WebRequest request) {
     log.warn("Ошибка аутентификации: {}", ex.getMessage());
 
     ProblemDetail problemDetail = problemDetailBuilder("Ошибка аутентификации",
         request, HttpStatus.UNAUTHORIZED, ex);
 
     return new ResponseEntity<>(problemDetail, HttpStatus.UNAUTHORIZED);
-  }
-
-  @ExceptionHandler(UserException.class)
-  protected ResponseEntity<ProblemDetail> handleUserNotRegisteredException(
-      UserException ex, WebRequest request) {
-    log.warn("{}: {}", ex.getAction(), ex.getMessage());
-
-    ProblemDetail problemDetail = problemDetailBuilder(ex.getAction(),
-        request, HttpStatus.BAD_REQUEST, ex);
-
-    return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(AccessDeniedException.class)
@@ -119,37 +129,32 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     return new ResponseEntity<>(problemDetail, HttpStatus.NOT_FOUND);
   }
 
-  @ExceptionHandler(FriendRequestException.class)
-  protected ResponseEntity<ProblemDetail> handleFriendRequestException(
-      FriendRequestException ex, WebRequest request) {
-    log.warn("Ошибка при действии с заявкой в друзья: {}", ex.getMessage());
-
-    ProblemDetail problemDetail = problemDetailBuilder("Ошибка при действии с заявкой в друзья",
-        request, HttpStatus.BAD_REQUEST, ex);
-
-    return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
-  }
-
-
-  @ExceptionHandler(ChatException.class)
-  protected ResponseEntity<ProblemDetail> handleFriendRequestException(
-      ChatException ex, WebRequest request) {
-    log.warn("{}: {}", ex.getAction(), ex.getMessage());
+  @ExceptionHandler(DataRetrievalFailureException.class)
+  protected ResponseEntity<ProblemDetail> handleDataRetrievalFailureException(
+      DataRetrievalFailureException ex, WebRequest request) {
+    log.error("Ошибка доступа к данным: {}", ex.getMessage());
 
     ProblemDetail problemDetail = problemDetailBuilder(
-        ex.getAction(), request, HttpStatus.BAD_REQUEST, ex);
+        "Ошибка доступа к данным",
+        request,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        ex
+    );
+    problemDetail.setDetail("Произошла ошибка при работе с базой данных");
 
-    return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(problemDetail, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
-  @ExceptionHandler(CommunityException.class)
-  protected ResponseEntity<ProblemDetail> handleFriendRequestException(
-      CommunityException ex, WebRequest request) {
-    log.warn("{}: {}", ex.getAction(), ex.getMessage());
+  @ExceptionHandler({SocialNetworkException.class})
+  public ResponseEntity<ProblemDetail> handleBusinessExceptions(
+      Exception ex, WebRequest request) {
+    String title = ex instanceof SocialNetworkException
+        ? ((SocialNetworkException)ex).getAction()
+        : "Возникла бизнес-ошибка во время работы приложения";
 
-    ProblemDetail problemDetail = problemDetailBuilder(
-        ex.getAction(), request, HttpStatus.BAD_REQUEST, ex);
+    log.warn("{}: {}", title, ex.getMessage());
 
+    ProblemDetail problemDetail = problemDetailBuilder(title, request, HttpStatus.BAD_REQUEST, ex);
     return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
   }
 

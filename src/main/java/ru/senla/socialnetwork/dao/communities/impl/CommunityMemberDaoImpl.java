@@ -19,14 +19,15 @@ public class CommunityMemberDaoImpl extends HibernateAbstractDao<CommunityMember
   }
 
   @Override
-  public Optional<CommunityMember> findByCommunityAndUser(Long communityId, Long userId) {
-    log.debug("Поиск участника сообщества {} для пользователя {}", communityId, userId);
+  public Optional<CommunityMember> findByCommunityAndUser(Long communityId, String userEmail) {
+    log.debug("Поиск участника сообщества {} для пользователя {}", communityId, userEmail);
     try {
       return sessionFactory.getCurrentSession()
-          .createQuery("FROM CommunityMember cm WHERE cm.community.id = :communityId AND cm.user.id = :userId",
+          .createQuery("FROM CommunityMember cm WHERE cm.community.id = :communityId " +
+                  "AND lower(cm.user.email) = lower(:userEmail)",
               CommunityMember.class)
           .setParameter("communityId", communityId)
-          .setParameter("userId", userId)
+          .setParameter("userEmail", userEmail)
           .uniqueResultOptional();
     } catch (HibernateException e) {
       log.error("Ошибка при поиске участника сообщества: {}", e.getMessage());
@@ -36,16 +37,20 @@ public class CommunityMemberDaoImpl extends HibernateAbstractDao<CommunityMember
 
   @Override
   public List<CommunityMember> findAllByCommunity(Long communityId) {
-    log.debug("Поиск всех участников сообщества {}", communityId);
+    log.debug("Поиск всех активных участников сообщества {}", communityId);
     try {
+      String hql = "FROM CommunityMember cm " +
+          "WHERE cm.community.id = :communityId " +
+          "AND (cm.leaveDate IS NULL OR cm.joinDate > cm.leaveDate)";
+
       return sessionFactory.getCurrentSession()
-          .createQuery("FROM CommunityMember cm WHERE cm.community.id = :communityId",
-              CommunityMember.class)
+          .createQuery(hql, CommunityMember.class)
           .setParameter("communityId", communityId)
           .getResultList();
     } catch (HibernateException e) {
-      log.error("Ошибка при поиске участников сообщества: {}", e.getMessage());
-      throw new DataRetrievalFailureException("Ошибка при поиске участников сообщества", e);
+      log.error("Ошибка при поиске активных участников сообщества: {}", e.getMessage());
+      throw new DataRetrievalFailureException(
+          "Ошибка при поиске активных участников сообщества", e);
     }
   }
 }

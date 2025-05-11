@@ -6,9 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.senla.socialnetwork.dto.friendRequests.FriendRequestDTO;
+import ru.senla.socialnetwork.dto.friendRequests.RespondRequestDTO;
 import ru.senla.socialnetwork.dto.mappers.FriendRequestMapper;
 import ru.senla.socialnetwork.dto.mappers.UserMapper;
-import ru.senla.socialnetwork.dto.users.UserDTO;
+import ru.senla.socialnetwork.dto.users.UserResponseDTO;
 import ru.senla.socialnetwork.exceptions.friendRequests.SelfFriendshipException;
 import ru.senla.socialnetwork.model.friendRequests.FriendStatus;
 import ru.senla.socialnetwork.model.users.User;
@@ -24,7 +25,6 @@ public class FriendRequestFacadeImpl implements FriendRequestFacade {
   private final UserService userService;
   private final FriendRequestMapper friendRequestMapper;
 
-
   @Override
   public List<FriendRequestDTO> getAllByUser(String userEmail) {
     User user = userService.getUserByEmail(userEmail);
@@ -32,7 +32,7 @@ public class FriendRequestFacadeImpl implements FriendRequestFacade {
   }
 
   @Override
-  public List<UserDTO> getFriendsByUser(String userEmail) {
+  public List<UserResponseDTO> getFriendsByUser(String userEmail) {
     User user = userService.getUserByEmail(userEmail);
     return UserMapper.INSTANCE.toListUserResponseDTO(friendRequestService.getFriendsByUser(user.getId()));
   }
@@ -40,42 +40,47 @@ public class FriendRequestFacadeImpl implements FriendRequestFacade {
   @Override
   public List<FriendRequestDTO> getIncomingRequests(String userEmail, FriendStatus status) {
     User user = userService.getUserByEmail(userEmail);
-    return friendRequestMapper.toListDTO(
-        friendRequestService.getIncomingRequests(user.getId(), status));
+    return friendRequestMapper.toListDTO(friendRequestService.getIncomingRequests(user.getId(), status));
   }
 
   @Override
   public List<FriendRequestDTO> getOutgoingRequests(String userEmail) {
     User user = userService.getUserByEmail(userEmail);
-    return friendRequestMapper.toListDTO(
-        friendRequestService.getOutgoingRequests(user.getId()));
+    return friendRequestMapper.toListDTO(friendRequestService.getOutgoingRequests(user.getId()));
   }
 
   @Override
-  public FriendRequestDTO sendRequest(String senderEmail, String recipientEmail) {
+  public FriendRequestDTO send(String senderEmail, String recipientEmail) {
     if (senderEmail.equals(recipientEmail)) {
       throw new SelfFriendshipException();
     }
     User sender = userService.getUserByEmail(senderEmail);
     User recipient = userService.getUserByEmail(recipientEmail);
-    return friendRequestMapper.toDto(friendRequestService.sendRequest(sender, recipient));
+    return friendRequestMapper.toDTO(friendRequestService.send(sender, recipient));
   }
 
   @Override
-  public FriendRequestDTO replyToRequest(String senderEmail, String recipientEmail, FriendStatus status) {
-    if (status != FriendStatus.ACCEPTED && status != FriendStatus.REJECTED) {
-      throw new IllegalArgumentException("Недопустимый статус для ответа: " + status);
-    }
+  public FriendRequestDTO cancel(String senderEmail, String recipientEmail) {
     User sender = userService.getUserByEmail(senderEmail);
     User recipient = userService.getUserByEmail(recipientEmail);
-
-    return friendRequestMapper.toDto(friendRequestService.replyToRequest(sender, recipient, status));
+    return friendRequestMapper.toDTO(friendRequestService.cancel(sender, recipient));
   }
 
   @Override
-  public void unfriend(String userEmail, String unfriendEmail) {
+  public FriendRequestDTO respond(RespondRequestDTO requestDTO, String recipientEmail) {
+    if (requestDTO.respondStatus().equals(FriendStatus.PENDING)) {
+      throw new IllegalArgumentException("Недопустимый статус для ответа: " + requestDTO.respondStatus());
+    }
+    User sender = userService.getUserByEmail(requestDTO.senderEmail());
+    User recipient = userService.getUserByEmail(recipientEmail);
+
+    return friendRequestMapper.toDTO(friendRequestService.replyToRequest(sender, recipient, requestDTO.respondStatus()));
+  }
+
+  @Override
+  public FriendRequestDTO unfriend(String userEmail, String unfriendEmail) {
     User user = userService.getUserByEmail(userEmail);
     User unfriend = userService.getUserByEmail(unfriendEmail);
-    friendRequestService.unfriend(user, unfriend);
+    return friendRequestMapper.toDTO(friendRequestService.unfriend(user, unfriend));
   }
 }

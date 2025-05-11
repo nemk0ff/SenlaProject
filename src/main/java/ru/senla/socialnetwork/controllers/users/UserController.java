@@ -1,17 +1,20 @@
 package ru.senla.socialnetwork.controllers.users;
 
+import jakarta.validation.constraints.Email;
 import java.time.LocalDate;
 import org.springframework.http.ResponseEntity;
-import ru.senla.socialnetwork.dto.users.ChangeEmailDTO;
-import ru.senla.socialnetwork.dto.users.UserEditDTO;
+import org.springframework.security.core.Authentication;
+import ru.senla.socialnetwork.dto.users.UserRequestDTO;
 import ru.senla.socialnetwork.model.users.Gender;
 
 public interface UserController {
   ResponseEntity<?> get(Long id);
 
+  ResponseEntity<?> get(String email);
+
   ResponseEntity<?> find(String name, String surname, Gender gender, LocalDate birthdate);
 
-  ResponseEntity<?> edit(UserEditDTO editDTO);
+  ResponseEntity<?> edit(UserRequestDTO editDTO, Authentication auth);
 
-  ResponseEntity<?> changeEmail(ChangeEmailDTO request);
+  ResponseEntity<?> changeEmail(@Email String newEmail, Authentication auth);
 }

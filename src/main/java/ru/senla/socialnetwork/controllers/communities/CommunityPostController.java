@@ -1,21 +1,21 @@
 package ru.senla.socialnetwork.controllers.communities;
 
-import java.util.List;
 import org.springframework.http.ResponseEntity;
-import ru.senla.socialnetwork.dto.communitites.CommunityPostDTO;
+import org.springframework.security.core.Authentication;
 import ru.senla.socialnetwork.dto.communitites.CreateCommunityPostDTO;
 import ru.senla.socialnetwork.dto.communitites.UpdateCommunityPostDTO;
 
 public interface CommunityPostController {
-  ResponseEntity<CommunityPostDTO> create(
-      Long communityId, CreateCommunityPostDTO dto, String authorEmail);
+  ResponseEntity<?> getAllPosts(Long communityId);
 
-  ResponseEntity<String> delete(Long communityId, Long postId, String memberEmail);
+  ResponseEntity<?> getPinnedPosts(Long communityId);
 
-  ResponseEntity<CommunityPostDTO> update(Long communityId, Long postId,
-      UpdateCommunityPostDTO dto, String memberEmail);
+  ResponseEntity<?> getById(Long communityId, Long postId);
 
-  ResponseEntity<List<CommunityPostDTO>> getAllPosts(Long communityId);
+  ResponseEntity<?> create(Long communityId, CreateCommunityPostDTO dto, Authentication auth);
 
-  ResponseEntity<CommunityPostDTO> getById(Long communityId, Long postId);
+  ResponseEntity<?> delete(Long communityId, Long postId, Authentication auth);
+
+  ResponseEntity<?> update(Long communityId, Long postId, UpdateCommunityPostDTO dto,
+                           Authentication auth);
 }

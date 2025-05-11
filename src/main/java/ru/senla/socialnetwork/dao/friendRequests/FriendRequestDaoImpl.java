@@ -23,16 +23,16 @@ public class FriendRequestDaoImpl extends HibernateAbstractDao<FriendRequest>
   public List<User> findFriendsByUserId(Long userId) {
     log.info("Получение списка друзей для user#{}...", userId);
     try {
-      String hql = "SELECT CASE WHEN fr.sender.id = :userId THEN fr.recipient ELSE fr.sender END " +
-          "FROM FriendRequest fr " +
-          "WHERE (fr.sender.id = :userId OR fr.recipient.id = :userId) " +
-          "AND fr.status = :status";
+      String hql = "SELECT fr.recipient FROM FriendRequest fr " +
+          "WHERE fr.sender.id = :userId AND fr.status = 'ACCEPTED' " +
+          "UNION " +
+          "SELECT fr.sender FROM FriendRequest fr " +
+          "WHERE fr.recipient.id = :userId AND fr.status = 'ACCEPTED'";
 
       List<User> friends = sessionFactory.getCurrentSession()
           .createQuery(hql, User.class)
           .setParameter("userId", userId)
-          .setParameter("status", FriendStatus.ACCEPTED)
-          .list();
+          .getResultList();
 
       log.info("Найдено {} друзей для user#{}", friends.size(), userId);
       return friends;

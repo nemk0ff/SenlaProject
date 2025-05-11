@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import ru.senla.socialnetwork.model.general.ContentFragment;
+import ru.senla.socialnetwork.model.ContentFragment;
 
 @Getter
 @Setter
@@ -20,14 +20,14 @@ import ru.senla.socialnetwork.model.general.ContentFragment;
 @SuperBuilder
 @Entity
 @DiscriminatorValue("MESSAGE")
-public final class ChatMessage extends ContentFragment {
+public final class Message extends ContentFragment {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "chat_id", nullable = false)
   private Chat chat;
 
   @ManyToOne
   @JoinColumn(name = "reply_to_id")
-  private ChatMessage replyTo;
+  private Message replyTo;
 
   @Column(name = "is_pinned")
   private Boolean isPinned;

@@ -8,9 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.senla.socialnetwork.dao.chats.ChatDao;
 import ru.senla.socialnetwork.dto.chats.CreateGroupChatDTO;
-import ru.senla.socialnetwork.dto.chats.CreatePersonalChatDTO;
 import ru.senla.socialnetwork.exceptions.chats.ChatException;
-import ru.senla.socialnetwork.exceptions.chats.ChatMemberException;
 import ru.senla.socialnetwork.model.chats.Chat;
 import ru.senla.socialnetwork.services.chats.ChatService;
 
@@ -22,11 +20,7 @@ public class ChatServiceImpl implements ChatService {
 
   @Override
   public List<Chat> getAllByUser(Long userId) {
-    List<Chat> chats = chatDao.findAllByUserId(userId);
-    if (chats.isEmpty()) {
-      throw new ChatMemberException("Пользователь " + userId + " не состоит в чатах");
-    }
-    return chats;
+    return chatDao.findAllActiveByUserId(userId);
   }
 
   @Override
@@ -40,13 +34,13 @@ public class ChatServiceImpl implements ChatService {
         .createdAt(ZonedDateTime.now())
         .build());
 
-    log.info("Создан групповой чат {} пользователем {}", request.name(), request.creatorEmail());
+    log.info("Создан групповой чат {}", request.name());
     return chat;
   }
 
   @Override
-  public Chat create(CreatePersonalChatDTO request, String chatName) {
-    if (chatDao.existsByMembers(request.creatorEmail(), request.friendEmail())) {
+  public Chat create(String firstEmail, String secondEmail, String chatName) {
+    if (chatDao.existsByMembers(firstEmail, secondEmail)) {
       throw new ChatException("Личный чат " + chatName + " уже существует");
     }
     Chat chat = chatDao.saveOrUpdate(Chat.builder()

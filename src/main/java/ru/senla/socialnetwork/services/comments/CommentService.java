@@ -2,7 +2,7 @@ package ru.senla.socialnetwork.services.comments;
 
 import java.util.List;
 import ru.senla.socialnetwork.model.comment.Comment;
-import ru.senla.socialnetwork.model.general.Post;
+import ru.senla.socialnetwork.model.Post;
 import ru.senla.socialnetwork.model.users.User;
 
 public interface CommentService {

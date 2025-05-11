@@ -1,28 +1,29 @@
 package ru.senla.socialnetwork.dao.chats.impl;
 
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Repository;
-import ru.senla.socialnetwork.dao.chats.ChatMessageDao;
+import ru.senla.socialnetwork.dao.chats.MessageDao;
 import ru.senla.socialnetwork.dao.HibernateAbstractDao;
-import ru.senla.socialnetwork.model.chats.ChatMessage;
+import ru.senla.socialnetwork.model.chats.Message;
 
 @Slf4j
 @Repository
-public class ChatMessageDaoImpl extends HibernateAbstractDao<ChatMessage> implements ChatMessageDao {
-  protected ChatMessageDaoImpl(SessionFactory sessionFactory) {
-    super(ChatMessage.class, sessionFactory);
+public class MessageDaoImpl extends HibernateAbstractDao<Message> implements MessageDao {
+  protected MessageDaoImpl(SessionFactory sessionFactory) {
+    super(Message.class, sessionFactory);
   }
 
   @Override
-  public List<ChatMessage> findByChatId(Long chatId) {
+  public List<Message> findByChatId(Long chatId) {
     log.info("Поиск сообщений чата {}", chatId);
     try {
-      String hql = "FROM ChatMessage m WHERE m.chat.id = :chatId ORDER BY m.createdAt DESC";
+      String hql = "FROM Message m WHERE m.chat.id = :chatId ORDER BY m.createdAt";
       return sessionFactory.getCurrentSession()
-          .createQuery(hql, ChatMessage.class)
+          .createQuery(hql, Message.class)
           .setParameter("chatId", chatId)
           .getResultList();
     } catch (Exception e) {
@@ -31,13 +32,13 @@ public class ChatMessageDaoImpl extends HibernateAbstractDao<ChatMessage> implem
   }
 
   @Override
-  public List<ChatMessage> findAnswers(Long chatId, Long messageId) {
+  public List<Message> findAnswers(Long chatId, Long messageId) {
     log.info("Поиск ответов на сообщение {} из чата {}", messageId, chatId);
     try {
-      String hql = "FROM ChatMessage m WHERE m.chat.id = :chatId " +
+      String hql = "FROM Message m WHERE m.chat.id = :chatId " +
           "AND m.replyTo.id = :messageId ORDER BY m.createdAt DESC";
       return sessionFactory.getCurrentSession()
-          .createQuery(hql, ChatMessage.class)
+          .createQuery(hql, Message.class)
           .setParameter("chatId", chatId)
           .setParameter("messageId", messageId)
           .getResultList();
@@ -47,17 +48,32 @@ public class ChatMessageDaoImpl extends HibernateAbstractDao<ChatMessage> implem
   }
 
   @Override
-  public List<ChatMessage> findPinnedByChatId(Long chatId) {
+  public List<Message> findPinnedByChatId(Long chatId) {
     log.info("Поиск закрепленных сообщений чата {}", chatId);
     try {
-      String hql = "FROM ChatMessage m WHERE m.chat.id = :chatId AND m.isPinned = true " +
+      String hql = "FROM Message m WHERE m.chat.id = :chatId AND m.isPinned = true " +
           "ORDER BY m.createdAt DESC";
       return sessionFactory.getCurrentSession()
-          .createQuery(hql, ChatMessage.class)
+          .createQuery(hql, Message.class)
           .setParameter("chatId", chatId)
           .getResultList();
     } catch (Exception e) {
       throw new DataRetrievalFailureException("Ошибка при поиске закрепленных сообщений чата", e);
+    }
+  }
+
+  @Override
+  public Optional<Message> findByIdAndChatId(Long messageId, Long chatId) {
+    log.info("Поиск сообщения {} в чате {}", messageId, chatId);
+    try {
+      String hql = "FROM Message m WHERE m.chat.id = :chatId AND m.id = :messageId";
+      return  sessionFactory.getCurrentSession()
+          .createQuery(hql, Message.class)
+          .setParameter("chatId", chatId)
+          .setParameter("messageId", messageId)
+          .uniqueResultOptional();
+    } catch (Exception e) {
+      throw new DataRetrievalFailureException("Ошибка при поиске сообщений чата", e);
     }
   }
 }

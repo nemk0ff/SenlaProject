@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.dto.auth.AuthRequestDTO;
+import ru.senla.socialnetwork.dto.auth.AuthResponseDTO;
 import ru.senla.socialnetwork.dto.auth.RegisterDTO;
-import ru.senla.socialnetwork.dto.mappers.UserMapper;
+import ru.senla.socialnetwork.dto.users.UserResponseDTO;
 import ru.senla.socialnetwork.services.auth.AuthService;
 
 @Slf4j
@@ -23,13 +24,18 @@ public class AuthControllerImpl implements AuthController {
   @PostMapping("/login")
   @Override
   public ResponseEntity<?> login(@RequestBody @Valid AuthRequestDTO request) {
-    return ResponseEntity.ok(authService.getAuthResponse(request));
+    log.info("Попытка входа пользователя с email: {}...", request.email());
+    AuthResponseDTO response = authService.getAuthResponse(request);
+    log.info("Успешный вход пользователя с email: {}.", request.email());
+    return ResponseEntity.ok(response);
   }
 
   @PostMapping("/register")
   @Override
   public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO registerDTO) {
-    return ResponseEntity.ok(UserMapper.INSTANCE
-        .toUserResponseDTO(authService.register(registerDTO)));
+    log.info("Попытка регистрации нового пользователя с email: {}...", registerDTO.email());
+    UserResponseDTO response = authService.register(registerDTO);
+    log.info("Успешная регистрация пользователя с email: {}", registerDTO.email());
+    return ResponseEntity.ok(response);
   }
 }

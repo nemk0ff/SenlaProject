@@ -1,6 +1,7 @@
 package ru.senla.socialnetwork.facades.chats.impl;
 
 import java.time.ZonedDateTime;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import ru.senla.socialnetwork.exceptions.chats.ChatMemberException;
 import ru.senla.socialnetwork.facades.chats.ChatMemberFacade;
 import ru.senla.socialnetwork.model.chats.Chat;
 import ru.senla.socialnetwork.model.chats.ChatMember;
-import ru.senla.socialnetwork.model.general.MemberRole;
+import ru.senla.socialnetwork.model.MemberRole;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.services.chats.ChatMemberService;
 import ru.senla.socialnetwork.services.chats.ChatService;
@@ -28,26 +29,29 @@ public class ChatMemberFacadeImpl implements ChatMemberFacade {
   private final UserService userService;
 
   @Override
-  public ChatMemberDTO addUserToChat(Long chatId, String userEmailToAdd) {
-    Chat chat = chatService.get(chatId);
-
-    if (chatMemberService.isChatMember(chat.getId(), userEmailToAdd)) {
-      throw new ChatMemberException("Пользователь уже в чате");
+  public ChatMemberDTO addUserToChat(Long chatId, String userEmailToAdd, String clientEmail) {
+    if (!chatMemberService.isChatMember(chatId, clientEmail)) {
+      throw new ChatMemberException("Вы не можете добавить участника, т.к. не являетесь участником этого чата");
     }
 
-    User userToAdd = userService.getUserByEmail(userEmailToAdd);
-    ChatMember newMember = ChatMember.builder()
-        .chat(chat)
-        .user(userToAdd)
-        .role(MemberRole.MEMBER)
-        .joinDate(ZonedDateTime.now())
-        .build();
+    Chat chat = chatService.get(chatId);
 
-    return chatMemberMapper.memberToDTO(chatMemberService.addUserToChat(chat, newMember));
+    Optional<ChatMember> existingMember = chatMemberService.getMaybeMember(chatId, userEmailToAdd);
+
+    if (existingMember.isPresent()) {
+      ChatMember member = existingMember.get();
+      if (member.isUserInGroup()) {
+        throw new ChatMemberException("Пользователь уже в чате");
+      }
+      return chatMemberMapper.toDTO(chatMemberService.recreate(member));
+    }
+
+    User user = userService.getUserByEmail(userEmailToAdd);
+    return chatMemberMapper.toDTO(chatMemberService.addUserToChat(chat, user));
   }
 
   @Override
-  public void removeUserFromChat(Long chatId, String userEmailToRemove, String currentUserEmail) {
+  public ChatMemberDTO removeUser(Long chatId, String userEmailToRemove, String currentUserEmail) {
     Chat chat = chatService.get(chatId);
     if (!chat.getIsGroup()) {
       throw new ChatMemberException("Нельзя удалить участника из личного чата. Удалите весь чат.");
@@ -63,44 +67,45 @@ public class ChatMemberFacadeImpl implements ChatMemberFacade {
         && !removingMember.getRole().equals(MemberRole.MEMBER)) {
       throw new ChatMemberException("Вы можете удалить из чата только обычного участника");
     }
-    chatMemberService.removeMember(removingMember);
+    return chatMemberMapper.toDTO(chatMemberService.removeMember(removingMember));
   }
 
   @Override
-  public ChatMemberDTO mute(Long chatId, String userEmailToMute, ZonedDateTime muteUntil) {
-    return chatMemberMapper.memberToDTO(chatMemberService.mute(chatId, userEmailToMute, muteUntil));
+  public ChatMemberDTO mute(Long chatId, String userEmailToMute,
+                            ZonedDateTime muteUntil, String clientEmail) {
+    ChatMember client = chatMemberService.getMember(chatId, clientEmail);
+    if(client.getRole().equals(MemberRole.MEMBER)) {
+      throw new ChatMemberException(
+          "У вас недостаточно прав, чтобы выдавать мут участникам этого чата");
+    }
+    return chatMemberMapper.toDTO(chatMemberService.mute(chatId, userEmailToMute, muteUntil));
   }
 
   @Override
-  public ChatMemberDTO unmute(Long chatId, String userEmailToMute) {
-    return chatMemberMapper.memberToDTO(chatMemberService.unmute(chatId, userEmailToMute));
+  public ChatMemberDTO unmute(Long chatId, String userEmailToMute, String clientEmail) {
+    ChatMember client = chatMemberService.getMember(chatId, clientEmail);
+    if(client.getRole().equals(MemberRole.MEMBER)) {
+      throw new ChatMemberException(
+          "У вас недостаточно прав, чтобы снимать мут с участников этого чата");
+    }
+    return chatMemberMapper.toDTO(chatMemberService.unmute(chatId, userEmailToMute));
   }
 
   @Override
-  public void leave(Long chatId, String userEmail) {
-    chatMemberService.leave(chatId, userEmail);
+  public ChatMemberDTO leave(Long chatId, String userEmail) {
+    return chatMemberMapper.toDTO(chatMemberService.leave(chatId, userEmail));
   }
 
   @Override
-  public ChatMemberDTO changeRole(Long chatId, String email, MemberRole role) {
-    return chatMemberMapper.memberToDTO(chatMemberService.changeRole(chatId, email, role));
-  }
-
-  @Override
-  public boolean isChatMember(Long chatId, String email) {
-    return chatMemberService.isChatMember(chatId, email);
-  }
-
-  @Override
-  public boolean isChatAdmin(Long chatId, String requesterEmail) {
-    ChatMember currentMember = chatMemberService.getMember(chatId, requesterEmail);
-    return currentMember.getRole().equals(MemberRole.ADMIN);
-  }
-
-  @Override
-  public boolean isChatAdminOrModerator(Long chatId, String requesterEmail) {
-    ChatMember currentMember = chatMemberService.getMember(chatId, requesterEmail);
-    return currentMember.getRole().equals(MemberRole.MODERATOR)
-        || currentMember.getRole().equals(MemberRole.ADMIN);
+  public ChatMemberDTO changeRole(Long chatId, String email, MemberRole role, String clientName) {
+    if(clientName.equals(email)) {
+      throw new ChatMemberException("Вы не можете изменить свою роль в чате");
+    }
+    ChatMember member = chatMemberService.getMember(chatId, email);
+    ChatMember client = chatMemberService.getMember(chatId, clientName);
+    if(!client.getRole().equals(MemberRole.ADMIN) || member.getRole().equals(MemberRole.ADMIN)) {
+      throw new ChatMemberException("У вас нет прав, чтобы изменить роль этого участника чата");
+    }
+    return chatMemberMapper.toDTO(chatMemberService.changeRole(chatId, member, role));
   }
 }

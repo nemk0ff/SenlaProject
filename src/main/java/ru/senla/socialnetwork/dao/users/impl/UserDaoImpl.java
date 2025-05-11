@@ -62,13 +62,20 @@ public class UserDaoImpl extends HibernateAbstractDao<User> implements UserDao {
 
   @Override
   public Optional<User> findByEmail(String email) {
+    log.info("Поиск пользователя по email {}", email);
     try {
-      return Optional.ofNullable(
+      Optional<User> user = Optional.ofNullable(
           sessionFactory.getCurrentSession()
               .createQuery("FROM User WHERE email = :email", User.class)
               .setParameter("email", email)
               .uniqueResult()
       );
+      if (user.isPresent()) {
+        log.info("Найден пользователь с email {}: id={}", email, user.get().getId());
+      } else {
+        log.info("Пользователь с email {} не найден", email);
+      }
+      return user;
     } catch (HibernateException e) {
       throw new DataRetrievalFailureException("Ошибка при поиске пользователя " + email, e);
     }

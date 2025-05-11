@@ -17,7 +17,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.senla.socialnetwork.model.general.MyEntity;
+import ru.senla.socialnetwork.model.MyEntity;
 
 @Getter
 @Setter
@@ -42,7 +42,7 @@ public final class Chat implements MyEntity {
   private ZonedDateTime createdAt;
 
   @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private List<ChatMessage> messages = new ArrayList<>();
+  private List<Message> messages = new ArrayList<>();
 
   @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<ChatMember> members = new ArrayList<>();

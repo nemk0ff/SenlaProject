@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import ru.senla.socialnetwork.dao.chats.ChatMemberDao;
 import ru.senla.socialnetwork.dao.HibernateAbstractDao;
 import ru.senla.socialnetwork.model.chats.ChatMember;
-import ru.senla.socialnetwork.model.general.MemberRole;
+import ru.senla.socialnetwork.model.MemberRole;
 
 @Slf4j
 @Repository
@@ -42,7 +42,7 @@ public class ChatMemberDaoImpl extends HibernateAbstractDao<ChatMember> implemen
     try {
       String hql = "FROM ChatMember cm " +
           "WHERE cm.chat.id = :chatId " +
-          "AND cm.user.email = :email";
+          "AND cm.user.email = :email ";
 
       Optional<ChatMember> member = sessionFactory.getCurrentSession()
           .createQuery(hql, ChatMember.class)
@@ -54,7 +54,30 @@ public class ChatMemberDaoImpl extends HibernateAbstractDao<ChatMember> implemen
       return member;
     } catch (Exception e) {
       throw new DataRetrievalFailureException(
-          "Ошибка при поиске участника чата", e);
+          "Ошибка при поиске активного участника чата", e);
+    }
+  }
+
+  @Override
+  public Optional<ChatMember> findActiveByChatIdAndUserEmail(Long chatId, String userEmail) {
+    log.info("Поиск активного участника чата {} с email {}", chatId, userEmail);
+    try {
+      String hql = "FROM ChatMember cm " +
+          "WHERE cm.chat.id = :chatId " +
+          "AND cm.user.email = :email " +
+          "AND (cm.leaveDate IS NULL OR cm.joinDate > cm.leaveDate)";
+
+      Optional<ChatMember> member = sessionFactory.getCurrentSession()
+          .createQuery(hql, ChatMember.class)
+          .setParameter("chatId", chatId)
+          .setParameter("email", userEmail)
+          .uniqueResultOptional();
+
+      log.info("Найден активный участник: {}", member.orElse(null));
+      return member;
+    } catch (Exception e) {
+      throw new DataRetrievalFailureException(
+          "Ошибка при поиске активного участника чата", e);
     }
   }
 
@@ -83,11 +106,12 @@ public class ChatMemberDaoImpl extends HibernateAbstractDao<ChatMember> implemen
 
   @Override
   public long countByChatIdAndRole(Long chatId, MemberRole role) {
-    log.info("Подсчет участников чата {} с ролью {}", chatId, role);
+    log.info("Подсчет активных участников чата {} с ролью {}", chatId, role);
     try {
       String hql = "SELECT COUNT(cm) FROM ChatMember cm " +
           "WHERE cm.chat.id = :chatId " +
-          "AND cm.role = :role";
+          "AND cm.role = :role " +
+          "AND (cm.leaveDate IS NULL OR cm.joinDate > cm.leaveDate)";
 
       Long count = sessionFactory.getCurrentSession()
           .createQuery(hql, Long.class)
@@ -95,31 +119,32 @@ public class ChatMemberDaoImpl extends HibernateAbstractDao<ChatMember> implemen
           .setParameter("role", role)
           .getSingleResult();
 
-      log.info("Найдено {} участников с ролью {} в чате {}", count, role, chatId);
+      log.info("Найдено {} активных участников с ролью {} в чате {}", count, role, chatId);
       return count != null ? count : 0L;
     } catch (Exception e) {
       throw new DataRetrievalFailureException(
-          "Ошибка при подсчете участников чата", e);
+          "Ошибка при подсчете активных участников чата", e);
     }
   }
 
   @Override
   public long countByChatId(Long chatId) {
-    log.info("Подсчет общего количества участников чата {}", chatId);
+    log.info("Подсчет активных участников чата {}", chatId);
     try {
       String hql = "SELECT COUNT(cm) FROM ChatMember cm " +
-          "WHERE cm.chat.id = :chatId";
+          "WHERE cm.chat.id = :chatId " +
+          "AND (cm.leaveDate IS NULL OR cm.joinDate > cm.leaveDate)";
 
       Long count = sessionFactory.getCurrentSession()
           .createQuery(hql, Long.class)
           .setParameter("chatId", chatId)
           .getSingleResult();
 
-      log.info("В чате {} найдено {} участников", chatId, count);
+      log.info("В чате {} найдено {} активных участников", chatId, count);
       return count != null ? count : 0L;
     } catch (Exception e) {
       throw new DataRetrievalFailureException(
-          "Ошибка при подсчете участников чата", e);
+          "Ошибка при подсчете активных участников чата", e);
     }
   }
 }

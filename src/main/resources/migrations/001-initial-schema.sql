@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS friend_requests (
     id SERIAL PRIMARY KEY,
     sender_id INTEGER     NOT NULL REFERENCES users (id),
     recipient_id INTEGER     NOT NULL REFERENCES users (id),
-    status VARCHAR(10) NOT NULL CHECK (status IN ('PENDING', 'ACCEPTED', 'REJECTED')),
+    status VARCHAR(10) NOT NULL CHECK (status IN ('PENDING', 'ACCEPTED', 'REJECTED', 'CANCELLED')),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
 
@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS group_members (
     is_banned BOOLEAN,
     banned_reason VARCHAR(255),
     join_date TIMESTAMP WITH TIME ZONE NOT NULL,
+    leave_date TIMESTAMP WITH TIME ZONE,
     role VARCHAR(32) NOT NULL,
     gm_type VARCHAR(32)
     );
@@ -57,7 +58,7 @@ CREATE TABLE IF NOT EXISTS posts (
     mood VARCHAR(32),
     location VARCHAR(255),
     body VARCHAR(2000),
-    created_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     post_type VARCHAR(32)
     );
 

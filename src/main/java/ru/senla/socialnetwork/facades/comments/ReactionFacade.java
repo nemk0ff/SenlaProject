@@ -1,8 +1,8 @@
 package ru.senla.socialnetwork.facades.comments;
 
 import java.util.List;
-import ru.senla.socialnetwork.dto.comments.CreateReactionDTO;
 import ru.senla.socialnetwork.dto.comments.ReactionDTO;
+import ru.senla.socialnetwork.model.comment.ReactionType;
 
 public interface ReactionFacade {
 
@@ -12,7 +12,7 @@ public interface ReactionFacade {
 
   ReactionDTO getById(Long reactionId, String clientEmail);
 
-  ReactionDTO setReaction(CreateReactionDTO request, String email);
+  ReactionDTO setReaction(Long commentId, ReactionType reactionType, String email);
 
   void removeReaction(Long id, String email);
 }

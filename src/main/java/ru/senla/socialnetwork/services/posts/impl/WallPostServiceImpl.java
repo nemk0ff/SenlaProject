@@ -1,6 +1,7 @@
 package ru.senla.socialnetwork.services.posts.impl;
 
 import jakarta.persistence.EntityNotFoundException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.senla.socialnetwork.dao.users.WallPostDao;
 import ru.senla.socialnetwork.dto.users.WallPostRequestDTO;
-import ru.senla.socialnetwork.exceptions.users.WallPostException;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.model.users.WallPost;
 import ru.senla.socialnetwork.services.posts.WallPostService;
@@ -22,11 +22,7 @@ public class WallPostServiceImpl implements WallPostService {
 
   @Override
   public List<WallPost> getByUser(Long userId) {
-    List<WallPost> posts = wallPostDao.findAllByUser(userId);
-    if(posts.isEmpty()) {
-      throw new WallPostException("На стене пользователя " + userId + " нет постов.");
-    }
-    return posts;
+    return wallPostDao.findAllByUser(userId);
   }
 
   @Override
@@ -38,10 +34,11 @@ public class WallPostServiceImpl implements WallPostService {
   @Override
   public WallPost create(WallPostRequestDTO dto, User user) {
     WallPost newPost = WallPost.builder()
-        .wall_owner(user)
+        .wallOwner(user)
         .body(dto.body())
         .mood(dto.mood())
         .location(dto.location())
+        .createdAt(ZonedDateTime.now())
         .build();
     return wallPostDao.saveOrUpdate(newPost);
   }

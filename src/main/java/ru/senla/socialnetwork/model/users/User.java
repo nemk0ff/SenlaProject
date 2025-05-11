@@ -19,7 +19,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.senla.socialnetwork.model.general.MyEntity;
+import ru.senla.socialnetwork.model.MyEntity;
 import ru.senla.socialnetwork.model.chats.ChatMember;
 
 @Getter

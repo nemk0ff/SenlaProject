@@ -10,7 +10,7 @@ import ru.senla.socialnetwork.model.comment.Comment;
 public interface CommentMapper {
   @Mapping(source = "post.id", target = "postId")
   @Mapping(source = "author.id", target = "authorId")
-  CommentDTO toDto(Comment comment);
+  CommentDTO toDTO(Comment comment);
 
-  List<CommentDTO> toListDto(List<Comment> comments);
+  List<CommentDTO> toListDTO(List<Comment> comments);
 }

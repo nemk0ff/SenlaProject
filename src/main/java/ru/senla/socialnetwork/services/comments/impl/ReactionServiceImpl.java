@@ -29,7 +29,7 @@ public class ReactionServiceImpl implements ReactionService {
 
   @Override
   public Reaction get(Long reactionId) {
-    return reactionDao.find(reactionId).orElseThrow(
+    return reactionDao.get(reactionId).orElseThrow(
         () -> new ReactionException("Реакция не найдена"));
   }
 

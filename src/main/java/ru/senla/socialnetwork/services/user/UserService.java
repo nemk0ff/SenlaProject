@@ -2,7 +2,7 @@ package ru.senla.socialnetwork.services.user;
 
 import java.time.LocalDate;
 import java.util.List;
-import ru.senla.socialnetwork.dto.users.UserEditDTO;
+import ru.senla.socialnetwork.dto.users.UserRequestDTO;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.model.users.Gender;
 
@@ -11,7 +11,7 @@ public interface UserService {
 
   List<User> find(String name, String surname, Gender gender, LocalDate birthdate);
 
-  User edit(UserEditDTO editDTO);
+  User edit(UserRequestDTO editDTO, String clientEmail);
 
   User changeEmail(String oldEmail, String newEmail);
 

@@ -6,14 +6,16 @@ import ru.senla.socialnetwork.dto.communitites.CreateCommunityPostDTO;
 import ru.senla.socialnetwork.dto.communitites.UpdateCommunityPostDTO;
 
 public interface CommunityPostFacade {
-  CommunityPostDTO createPost(Long communityId, CreateCommunityPostDTO dto, String authorEmail);
+  List<CommunityPostDTO> getAllPosts(Long communityId);
 
-  void deletePost(Long communityId, Long postId, String requesterEmail);
+  List<CommunityPostDTO> getPinnedPosts(Long communityId);
+
+  CommunityPostDTO getPost(Long communityId, Long postId);
+
+  CommunityPostDTO createPost(Long communityId, CreateCommunityPostDTO dto, String clientEmail);
+
+  void deletePost(Long communityId, Long postId, String clientEmail);
 
   CommunityPostDTO updatePost(Long communityId, Long postId, UpdateCommunityPostDTO dto,
                               String requesterEmail);
-
-  List<CommunityPostDTO> getAllPosts(Long communityId);
-
-  CommunityPostDTO getPost(Long communityId, Long postId);
 }

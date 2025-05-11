@@ -13,5 +13,4 @@ public interface CommunityMapper {
   CommunityDTO toDTO(Community community);
 
   List<CommunityDTO> toListDTO(List<Community> communities);
-
 }

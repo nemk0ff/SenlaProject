@@ -9,6 +9,7 @@ import ru.senla.socialnetwork.dto.mappers.WallPostMapper;
 import ru.senla.socialnetwork.dto.users.WallPostRequestDTO;
 import ru.senla.socialnetwork.dto.users.WallPostResponseDTO;
 import ru.senla.socialnetwork.exceptions.users.WallPostException;
+import ru.senla.socialnetwork.model.users.ProfileType;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.model.users.WallPost;
 import ru.senla.socialnetwork.services.friendRequest.FriendRequestService;
@@ -28,10 +29,8 @@ public class WallPostFacadeImpl implements WallPostFacade {
   public List<WallPostResponseDTO> getByUser(String email, String clientEmail) {
     User postsOwner = userService.getUserByEmail(email);
     User client = userService.getUserByEmail(clientEmail);
-    if (userService.isAdmin(clientEmail)
-        || friendRequestService.isFriends(postsOwner.getId(), client.getId())
-        || email.equals(clientEmail)) {
-      return WallPostMapper.INSTANCE.toListDto(wallPostService.getByUser(postsOwner.getId()));
+    if (hasAccess(postsOwner, client)) {
+      return WallPostMapper.INSTANCE.toListDTO(wallPostService.getByUser(postsOwner.getId()));
     }
     throw new WallPostException("У вас нет доступа к просмотру стены пользователя " + email);
   }
@@ -39,47 +38,51 @@ public class WallPostFacadeImpl implements WallPostFacade {
   @Override
   public WallPostResponseDTO getById(Long postId, String clientEmail) {
     WallPost post = wallPostService.get(postId);
-    User postAuthor = post.getWall_owner();
+    User postAuthor = post.getWallOwner();
     User client = userService.getUserByEmail(clientEmail);
-    if (userService.isAdmin(clientEmail)
-        || friendRequestService.isFriends(postAuthor.getId(), client.getId())
-        || postAuthor.getEmail().equals(clientEmail)) {
-      return WallPostMapper.INSTANCE.toDto(post);
+    if (hasAccess(postAuthor, client)) {
+      return WallPostMapper.INSTANCE.toDTO(post);
     }
     throw new WallPostException("У вас нет доступа к просмотру стены пользователя " + postAuthor.getEmail());
   }
 
   @Override
   public WallPostResponseDTO create(WallPostRequestDTO dto, String clientEmail) {
-    log.info("Создание нового поста {} на стене пользователя {}...", dto, clientEmail);
     User user = userService.getUserByEmail(clientEmail);
     WallPost savedPost = wallPostService.create(dto, user);
     log.info("Пост создан: {}", savedPost);
-    return WallPostMapper.INSTANCE.toDto(savedPost);
+    return WallPostMapper.INSTANCE.toDTO(savedPost);
   }
 
   @Override
   public void delete(Long postId, String clientEmail) {
-    log.info("Удаление поста {} пользователем {}...", postId, clientEmail);
     User user = userService.getUserByEmail(clientEmail);
     WallPost post = wallPostService.get(postId);
-    if(post.getWall_owner().equals(user) || userService.isAdmin(clientEmail)) {
+    if (post.getWallOwner().equals(user) || userService.isAdmin(clientEmail)) {
       wallPostService.delete(post);
       log.info("Пост удалён.");
+      return;
     }
     throw new WallPostException("У вас не хватает прав для удаления этого поста");
   }
 
   @Override
   public WallPostResponseDTO update(Long postId, WallPostRequestDTO dto, String clientEmail) {
-    log.info("Обновление поста {} пользователем {}...", postId, clientEmail);
     User user = userService.getUserByEmail(clientEmail);
     WallPost post = wallPostService.get(postId);
-    if(post.getWall_owner().equals(user)) {
+    if (post.getWallOwner().equals(user)) {
       WallPost updatedPost = wallPostService.update(post, dto);
       log.info("Пост обновлён: {}", updatedPost);
-      return WallPostMapper.INSTANCE.toDto(updatedPost);
+      return WallPostMapper.INSTANCE.toDTO(updatedPost);
     }
     throw new WallPostException("У вас не хватает прав для удаления этого поста");
+  }
+
+  private boolean hasAccess(User postAuthor, User client) {
+    return userService.isAdmin(client.getEmail())
+        || postAuthor.getEmail().equals(client.getEmail())
+        || postAuthor.getProfileType().equals(ProfileType.OPEN)
+        || (friendRequestService.isFriends(postAuthor.getId(), client.getId())
+        && postAuthor.getProfileType().equals(ProfileType.CLOSED));
   }
 }

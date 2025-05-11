@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -30,32 +30,44 @@ public class CommunityControllerImpl implements CommunityController {
 
   @Override
   @PostMapping
-  @PreAuthorize("#dto.owner() == authentication.name")
-  public ResponseEntity<CommunityDTO> create(@Valid @RequestBody CreateCommunityDTO dto) {
-    CommunityDTO created = communityFacade.create(dto);
+  public ResponseEntity<?> create(
+      @Valid @RequestBody CreateCommunityDTO dto,
+      Authentication auth) {
+    log.info("Пользователь {} создает новое сообщество '{}'", auth.getName(), dto.name());
+    CommunityDTO created = communityFacade.create(dto, auth.getName());
+    log.info("Создано сообщество id={}, название: '{}', владелец: {}",
+        created.id(), created.name(), auth.getName());
     return ResponseEntity.status(HttpStatus.CREATED).body(created);
   }
 
   @Override
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasRole('ADMIN') or @communityMemberFacadeImpl.isAdmin(#id, authentication.name)")
-  public ResponseEntity<String> delete(@PathVariable Long id) {
-    communityFacade.delete(id);
+  public ResponseEntity<?> delete(
+      @PathVariable Long id,
+      Authentication auth) {
+    log.info("Пользователь {} удаляет сообщества id={}", auth.getName(), id);
+    communityFacade.delete(id, auth.getName());
+    log.warn("Сообщество id={} удалено пользователем {}", id, auth.getName());
     return ResponseEntity.ok("Сообщество " + id + " удалено");
   }
 
   @Override
   @GetMapping("/{id}")
-  public ResponseEntity<CommunityDTO> get(@PathVariable Long id) {
+  public ResponseEntity<?> get(@PathVariable Long id) {
+    log.info("Запрос информации о сообществе id={}", id);
     CommunityDTO community = communityFacade.get(id);
+    log.info("Возвращена информация о сообществе id={}, название: '{}'", id, community.name());
     return ResponseEntity.ok(community);
   }
 
   @Override
   @PatchMapping
-  @PreAuthorize("@communityMemberFacadeImpl.isAdmin(#changeCommunityDTO.id(), authentication.name)")
-  public ResponseEntity<CommunityDTO> change(@Valid @RequestBody
-                                             ChangeCommunityDTO changeCommunityDTO) {
-    return ResponseEntity.ok(communityFacade.change(changeCommunityDTO));
+  public ResponseEntity<?> change(
+      @Valid @RequestBody ChangeCommunityDTO changeCommunityDTO,
+      Authentication auth) {
+    log.info("Пользователь {} изменяет сообщество ID: {}", auth.getName(), changeCommunityDTO.id());
+    CommunityDTO updated = communityFacade.change(changeCommunityDTO, auth.getName());
+    log.info("Сообщество ID: {} успешно обновлено. Новое название: '{}'", updated.id(), updated.name());
+    return ResponseEntity.ok(updated);
   }
 }

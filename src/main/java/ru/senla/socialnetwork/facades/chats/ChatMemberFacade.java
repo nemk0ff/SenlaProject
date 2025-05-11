@@ -3,25 +3,18 @@ package ru.senla.socialnetwork.facades.chats;
 
 import java.time.ZonedDateTime;
 import ru.senla.socialnetwork.dto.chats.ChatMemberDTO;
-import ru.senla.socialnetwork.model.general.MemberRole;
+import ru.senla.socialnetwork.model.MemberRole;
 
 public interface ChatMemberFacade {
-  ChatMemberDTO addUserToChat(Long chatId, String userEmailToAdd);
+  ChatMemberDTO addUserToChat(Long chatId, String userEmailToAdd, String client);
 
-  void removeUserFromChat(Long chatId, String userEmailToRemove, String currentUserEmail);
+  ChatMemberDTO removeUser(Long chatId, String userEmailToRemove, String currentUserEmail);
 
-  ChatMemberDTO mute(Long chatId, String userEmailToMute, ZonedDateTime muteUntil);
+  ChatMemberDTO mute(Long chatId, String userEmailToMute, ZonedDateTime muteUntil, String clientEmail);
 
-  ChatMemberDTO unmute(Long chatId, String userEmailToMute);
+  ChatMemberDTO unmute(Long chatId, String userEmailToMute, String clientEmail);
 
-  void leave(Long chatId, String userEmail);
+  ChatMemberDTO leave(Long chatId, String userEmail);
 
-  ChatMemberDTO changeRole(Long chatId, String email,
-                           MemberRole role);
-
-  boolean isChatMember(Long chatId, String email);
-
-  boolean isChatAdmin(Long chatId, String requesterEmail);
-
-  boolean isChatAdminOrModerator(Long chatId, String requesterEmail);
+  ChatMemberDTO changeRole(Long chatId, String email, MemberRole role, String clientName);
 }

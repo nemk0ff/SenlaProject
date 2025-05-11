@@ -10,9 +10,4 @@ public class SocialNetworkException extends RuntimeException {
     super(message);
     this.action = action;
   }
-
-  public SocialNetworkException(String message) {
-    super(message);
-    action = "В программе возникла ошибка";
-  }
 }

@@ -13,7 +13,7 @@ public interface FriendRequestMapper {
 
   @Mapping(target = "senderEmail", source = "sender.email")
   @Mapping(target = "recipientEmail", source = "recipient.email")
-  FriendRequestDTO toDto(FriendRequest friendRequest);
+  FriendRequestDTO toDTO(FriendRequest friendRequest);
 
   List<FriendRequestDTO> toListDTO(List<FriendRequest> friendRequests);
 

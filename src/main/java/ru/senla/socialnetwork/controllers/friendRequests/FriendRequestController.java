@@ -2,25 +2,26 @@ package ru.senla.socialnetwork.controllers.friendRequests;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
-import ru.senla.socialnetwork.dto.friendRequests.RemoveFriendRequestDTO;
+import org.springframework.security.core.Authentication;
 import ru.senla.socialnetwork.dto.friendRequests.RespondRequestDTO;
-import ru.senla.socialnetwork.dto.friendRequests.SendRequestDTO;
 import ru.senla.socialnetwork.model.friendRequests.FriendStatus;
 
 public interface FriendRequestController {
 
-  ResponseEntity<?> showFriends(String userEmail);
+  ResponseEntity<?> showAllByUser(@Email String userEmail);
 
-  ResponseEntity<?> showOutgoingRequests(String userEmail);
+  ResponseEntity<?> showFriends(@Email String userEmail);
 
-  ResponseEntity<?> showIncomingRequests(@Email String recipientEmail,
-                                         @NotNull FriendStatus status);
+  ResponseEntity<?> showOutgoingRequests(Authentication auth);
 
-  ResponseEntity<?> sendRequest(@Valid SendRequestDTO request);
+  ResponseEntity<?> showIncomingRequests(FriendStatus status, Authentication auth);
 
-  ResponseEntity<?> respondRequest(@Valid RespondRequestDTO request);
+  ResponseEntity<?> sendRequest(@Email String recipient, Authentication auth);
 
-  ResponseEntity<?> removeFriend(@Valid RemoveFriendRequestDTO request);
+  ResponseEntity<?> cancelRequest(@Email String recipient, Authentication auth);
+
+  ResponseEntity<?> respondRequest(@Valid RespondRequestDTO request, Authentication auth);
+
+  ResponseEntity<?> removeFriend(@Email String recipient, Authentication auth);
 }

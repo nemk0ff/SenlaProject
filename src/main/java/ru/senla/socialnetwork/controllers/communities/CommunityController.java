@@ -1,16 +1,16 @@
 package ru.senla.socialnetwork.controllers.communities;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import ru.senla.socialnetwork.dto.communitites.ChangeCommunityDTO;
-import ru.senla.socialnetwork.dto.communitites.CommunityDTO;
 import ru.senla.socialnetwork.dto.communitites.CreateCommunityDTO;
 
 public interface CommunityController {
-  ResponseEntity<CommunityDTO> create(CreateCommunityDTO dto);
+  ResponseEntity<?> create(CreateCommunityDTO dto, Authentication auth);
 
-  ResponseEntity<String> delete(Long id);
+  ResponseEntity<?> delete(Long id, Authentication auth);
 
-  ResponseEntity<CommunityDTO> get(Long id);
+  ResponseEntity<?> get(Long id);
 
-  ResponseEntity<CommunityDTO> change(ChangeCommunityDTO changeCommunityDTO);
+  ResponseEntity<?> change(ChangeCommunityDTO changeCommunityDTO, Authentication auth);
 }

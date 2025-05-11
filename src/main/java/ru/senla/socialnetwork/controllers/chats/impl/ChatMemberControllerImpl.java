@@ -1,12 +1,13 @@
 package ru.senla.socialnetwork.controllers.chats.impl;
 
+import jakarta.validation.constraints.Email;
 import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,9 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.chats.ChatMemberController;
 import ru.senla.socialnetwork.dto.chats.ChatMemberDTO;
 import ru.senla.socialnetwork.facades.chats.ChatMemberFacade;
-import ru.senla.socialnetwork.model.general.MemberRole;
+import ru.senla.socialnetwork.model.MemberRole;
 
 @Slf4j
+@Validated
 @RestController
 @AllArgsConstructor
 @RequestMapping("/chats/{chatId}/members")
@@ -27,62 +29,79 @@ public class ChatMemberControllerImpl implements ChatMemberController {
 
   @Override
   @PostMapping
-  @PreAuthorize("@chatMemberFacadeImpl.isChatMember(#chatId, authentication.name)")
-  public ResponseEntity<ChatMemberDTO> addMember(
+  public ResponseEntity<?> addMember(
       @PathVariable Long chatId,
-      @RequestParam String userEmail) {
-    return ResponseEntity.ok(chatMemberFacade.addUserToChat(chatId, userEmail));
-  }
-
-  @Override
-  @DeleteMapping("/{email}")
-  @PreAuthorize("authentication.name != #email")
-  public ResponseEntity<Void> removeMember(
-      @PathVariable Long chatId,
-      @PathVariable String email,
+      @RequestParam @Email String email,
       Authentication auth) {
-    chatMemberFacade.removeUserFromChat(chatId, email, auth.getName());
-    return ResponseEntity.noContent().build();
+    log.info("Добавление участника {} в чат {} пользователем {}",
+        email, chatId, auth.getName());
+    ChatMemberDTO result = chatMemberFacade.addUserToChat(chatId, email, auth.getName());
+    log.info("Участник {} успешно добавлен в чат {}", email, chatId);
+    return ResponseEntity.ok(result);
   }
 
   @Override
-  @PostMapping("/{email}/mute")
-  @PreAuthorize("@chatMemberFacadeImpl.isChatAdminOrModerator(#chatId, #email)")
-  public ResponseEntity<ChatMemberDTO> muteMember(
+  @DeleteMapping
+  public ResponseEntity<?> removeMember(
       @PathVariable Long chatId,
-      @PathVariable String email,
+      @RequestParam @Email String email,
+      Authentication auth) {
+    log.info("Удаление участника {} из чата {} пользователем {}",
+        email, chatId, auth.getName());
+    ChatMemberDTO result = chatMemberFacade.removeUser(chatId, email, auth.getName());
+    log.info("Участник {} успешно удален из чата {}", email, chatId);
+    return ResponseEntity.ok(result);
+  }
+
+  @Override
+  @PostMapping("/mute")
+  public ResponseEntity<?> muteMember(
+      @PathVariable Long chatId,
+      @RequestParam @Email String email,
       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-      ZonedDateTime muteUntil) {
-    return ResponseEntity.ok(chatMemberFacade.mute(chatId, email, muteUntil));
+      ZonedDateTime muteUntil,
+      Authentication auth) {
+    log.info("Мут участника {} в чате {} до {} пользователем {}",
+        email, chatId, muteUntil, auth.getName());
+    ChatMemberDTO result = chatMemberFacade.mute(chatId, email, muteUntil, auth.getName());
+    log.info("Участник {} успешно замьючен до {}", email, muteUntil);
+    return ResponseEntity.ok(result);
   }
 
   @Override
-  @PostMapping("/{email}/unmute")
-  @PreAuthorize("@chatMemberFacadeImpl.isChatAdminOrModerator(#chatId, #email)")
-  public ResponseEntity<ChatMemberDTO> unmuteMember(
+  @PostMapping("/unmute")
+  public ResponseEntity<?> unmuteMember(
       @PathVariable Long chatId,
-      @PathVariable String email) {
-    return ResponseEntity.ok(chatMemberFacade.unmute(chatId, email));
+      @RequestParam @Email String email,
+      Authentication auth) {
+    log.info("Размут участника {} в чате {} (инициатор: {})", email, chatId, auth.getName());
+    ChatMemberDTO result = chatMemberFacade.unmute(chatId, email, auth.getName());
+    log.info("Участник {} успешно размьючен", email);
+    return ResponseEntity.ok(result);
   }
 
   @Override
-  @PostMapping("/leave")
-  @PreAuthorize("@chatMemberFacadeImpl.isChatMember(#chatId, authentication.name)")
-  public ResponseEntity<Void> leaveChat(
+  @DeleteMapping("/leave")
+  public ResponseEntity<?> leaveChat(
       @PathVariable Long chatId,
-      String userEmail) {
-    chatMemberFacade.leave(chatId, userEmail);
-    return ResponseEntity.noContent().build();
+      Authentication auth) {
+    log.info("Выход пользователя {} из чата {}", auth.getName(), chatId);
+    ChatMemberDTO chatMember = chatMemberFacade.leave(chatId, auth.getName());
+    log.info("Пользователь {} вышел из чата {}", auth.getName(), chatId);
+    return ResponseEntity.ok(chatMember);
   }
 
   @Override
   @PostMapping("/role")
-  @PreAuthorize("!authentication.name.equals(#email) " +
-      "AND @chatMemberFacadeImpl.isChatAdmin(#chatId, #email)")
-  public ResponseEntity<ChatMemberDTO> changeMemberRole(
+  public ResponseEntity<?> changeMemberRole(
       @PathVariable Long chatId,
-      @RequestParam String email,
-      @RequestParam MemberRole role) {
-    return ResponseEntity.ok(chatMemberFacade.changeRole(chatId, email, role));
+      @RequestParam @Email String email,
+      @RequestParam MemberRole role,
+      Authentication auth) {
+    log.info("Изменение роли участника {} в чате {} на {} пользователем {}",
+        email, chatId, role, auth.getName());
+    ChatMemberDTO result = chatMemberFacade.changeRole(chatId, email, role, auth.getName());
+    log.info("Роль участника {} изменена на {}", email, role);
+    return ResponseEntity.ok(result);
   }
 }

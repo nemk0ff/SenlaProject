@@ -10,6 +10,7 @@ import ru.senla.socialnetwork.dao.communities.CommunityPostDao;
 import ru.senla.socialnetwork.dto.communitites.CreateCommunityPostDTO;
 import ru.senla.socialnetwork.dto.communitites.UpdateCommunityPostDTO;
 import ru.senla.socialnetwork.exceptions.communities.CommunityPostException;
+import ru.senla.socialnetwork.model.communities.Community;
 import ru.senla.socialnetwork.model.communities.CommunityMember;
 import ru.senla.socialnetwork.model.communities.CommunityPost;
 import ru.senla.socialnetwork.services.posts.CommunityPostService;
@@ -26,6 +27,11 @@ public class CommunityPostServiceImpl implements CommunityPostService {
   }
 
   @Override
+  public List<CommunityPost> getPinnedPosts(Long communityId) {
+    return communityPostDao.findPinnedByCommunity(communityId);
+  }
+
+  @Override
   public CommunityPost getPost(Long communityId, Long postId) {
     CommunityPost post = communityPostDao.find(postId)
         .orElseThrow(() -> new EntityNotFoundException("Пост не найден"));
@@ -37,13 +43,14 @@ public class CommunityPostServiceImpl implements CommunityPostService {
   }
 
   @Override
-  public CommunityPost createPost(Long communityId, CreateCommunityPostDTO dto,
+  public CommunityPost createPost(Community community, CreateCommunityPostDTO dto,
                                   CommunityMember author) {
     CommunityPost post = CommunityPost.builder()
         .author(author)
         .body(dto.body())
-        .isPinned(false)
-        .created_at(ZonedDateTime.now())
+        .community(community)
+        .isPinned(dto.isPinned())
+        .createdAt(ZonedDateTime.now())
         .build();
 
     return communityPostDao.saveOrUpdate(post);
@@ -57,6 +64,7 @@ public class CommunityPostServiceImpl implements CommunityPostService {
   @Override
   public CommunityPost updatePost(CommunityPost post, UpdateCommunityPostDTO dto) {
     post.setBody(dto.body());
+    post.setIsPinned(dto.isPinned());
     return communityPostDao.saveOrUpdate(post);
   }
 }

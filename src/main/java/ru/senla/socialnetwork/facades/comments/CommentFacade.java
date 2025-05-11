@@ -12,9 +12,9 @@ public interface CommentFacade {
 
   List<CommentDTO> getPostComments(Long postId, String email);
 
-  CommentDTO create(CreateCommentDTO commentDTO, String clientEmail);
+  CommentDTO create(Long postId, CreateCommentDTO commentDTO, String clientEmail);
 
-  CommentDTO update(UpdateCommentDTO commentDTO, String clientEmail);
+  CommentDTO update(Long id, UpdateCommentDTO commentDTO, String clientEmail);
 
   void delete(Long id, String clientEmail);
 }

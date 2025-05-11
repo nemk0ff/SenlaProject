@@ -12,7 +12,8 @@ public interface ReactionMapper {
   ReactionMapper INSTANCE = Mappers.getMapper(ReactionMapper.class);
 
   @Mapping(source = "owner.email", target = "email")
-  ReactionDTO toDto(Reaction reaction);
+  @Mapping(source = "comment.id", target = "commentId")
+  ReactionDTO toDTO(Reaction reaction);
 
-  List<ReactionDTO> toListDto(List<Reaction> reactions);
+  List<ReactionDTO> toListDTO(List<Reaction> reactions);
 }

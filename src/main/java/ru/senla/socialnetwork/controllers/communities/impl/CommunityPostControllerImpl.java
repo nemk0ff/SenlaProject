@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.communities.CommunityPostController;
 import ru.senla.socialnetwork.dto.communitites.CommunityPostDTO;
@@ -31,44 +30,72 @@ public class CommunityPostControllerImpl implements CommunityPostController {
 
   @Override
   @GetMapping
-  public ResponseEntity<List<CommunityPostDTO>> getAllPosts(
+  public ResponseEntity<?> getAllPosts(
       @PathVariable Long communityId) {
-    return ResponseEntity.ok(communityPostFacade.getAllPosts(communityId));
+    log.info("Запрос всех постов сообщества id={}", communityId);
+    List<CommunityPostDTO> posts = communityPostFacade.getAllPosts(communityId);
+    log.info("Возвращено {} постов сообщества id={}", posts.size(), communityId);
+    return ResponseEntity.ok(posts);
+  }
+
+  @Override
+  @GetMapping("/pinned")
+  public ResponseEntity<?> getPinnedPosts(
+      @PathVariable Long communityId) {
+    log.info("Запрос закреплённых постов сообщества id={}", communityId);
+    List<CommunityPostDTO> posts = communityPostFacade.getPinnedPosts(communityId);
+    log.info("Возвращено {} постов, закреплённых в сообществе id={}", posts.size(), communityId);
+    return ResponseEntity.ok(posts);
   }
 
   @Override
   @GetMapping("/{id}")
-  public ResponseEntity<CommunityPostDTO> getById(@PathVariable Long communityId,
-                                                  @PathVariable("id") Long postId) {
-    return ResponseEntity.ok(communityPostFacade.getPost(communityId, postId));
+  public ResponseEntity<?> getById(
+      @PathVariable Long communityId,
+      @PathVariable("id") Long postId) {
+    log.info("Запрос поста id={} в сообществе id={}", postId, communityId);
+    CommunityPostDTO post = communityPostFacade.getPost(communityId, postId);
+    log.info("Пост id={} найден. Автор: {}", postId, post.authorEmail());
+    return ResponseEntity.ok(post);
   }
 
+  @Override
   @PostMapping
-  @PreAuthorize("#authorEmail=authentication.name")
-  public ResponseEntity<CommunityPostDTO> create(
+  public ResponseEntity<?> create(
       @PathVariable Long communityId,
       @Valid @RequestBody CreateCommunityPostDTO dto,
-      @RequestParam String authorEmail) {
-    CommunityPostDTO createdPost = communityPostFacade.createPost(communityId, dto, authorEmail);
+      Authentication auth) {
+    log.info("Создание поста в сообществе id={} пользователем {}", communityId, auth.getName());
+    CommunityPostDTO createdPost = communityPostFacade.createPost(communityId, dto, auth.getName());
+    log.info("Создан пост id={} в сообществе id={}. Автор: {}",
+        createdPost.id(), communityId, auth.getName());
     return ResponseEntity.status(HttpStatus.CREATED).body(createdPost);
   }
 
+  @Override
   @DeleteMapping("/{postId}")
-  public ResponseEntity<String> delete(
+  public ResponseEntity<?> delete(
       @PathVariable Long communityId,
       @PathVariable Long postId,
-      @RequestParam String email) {
-    communityPostFacade.deletePost(communityId, postId, email);
+      Authentication auth) {
+    log.warn("Удаление поста id={} из сообщества id={}. Инициатор: {}",
+        postId, communityId, auth.getName());
+    communityPostFacade.deletePost(communityId, postId, auth.getName());
+    log.warn("Пост id={} удален из сообщества id={}", postId, communityId);
     return ResponseEntity.ok("Пост " + postId + " удалён");
   }
 
+  @Override
   @PatchMapping("/{postId}")
-  public ResponseEntity<CommunityPostDTO> update(
+  public ResponseEntity<?> update(
       @PathVariable Long communityId,
       @PathVariable Long postId,
       @Valid @RequestBody UpdateCommunityPostDTO dto,
-      @RequestParam String email) {
-    CommunityPostDTO updatedPost = communityPostFacade.updatePost(communityId, postId, dto, email);
+      Authentication auth) {
+    log.info("Обновление поста id={} в сообществе id={}. Инициатор: {}",
+        postId, communityId, auth.getName());
+    CommunityPostDTO updatedPost = communityPostFacade.updatePost(communityId, postId, dto, auth.getName());
+    log.info("Пост id={} успешно обновлен", postId);
     return ResponseEntity.ok(updatedPost);
   }
 }

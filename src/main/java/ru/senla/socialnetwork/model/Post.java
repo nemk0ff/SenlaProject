@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.model.general;
+package ru.senla.socialnetwork.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
@@ -35,7 +35,7 @@ public abstract class Post implements MyEntity {
   protected String body;
 
   @Column(name = "created_at", nullable = false)
-  protected ZonedDateTime created_at;
+  protected ZonedDateTime createdAt;
 
   public abstract String getPostType();
 }

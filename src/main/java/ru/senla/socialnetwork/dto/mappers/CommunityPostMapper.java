@@ -13,7 +13,7 @@ public interface CommunityPostMapper {
   CommunityPostMapper INSTANCE = Mappers.getMapper(CommunityPostMapper.class);
 
   @Mapping(target = "communityId", source = "community.id")
-  @Mapping(target = "authorId", source = "author.id")
+  @Mapping(target = "authorEmail", source = "author.user.email")
   CommunityPostDTO toDTO(CommunityPost post);
 
   List<CommunityPostDTO> toListDTO(List<CommunityPost> posts);

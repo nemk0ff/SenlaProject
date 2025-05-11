@@ -1,21 +1,23 @@
 package ru.senla.socialnetwork.controllers.chats;
 
+import jakarta.validation.constraints.Email;
 import java.time.ZonedDateTime;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import ru.senla.socialnetwork.dto.chats.ChatMemberDTO;
-import ru.senla.socialnetwork.model.general.MemberRole;
+import ru.senla.socialnetwork.model.MemberRole;
 
 public interface ChatMemberController {
-  ResponseEntity<ChatMemberDTO> addMember(Long chatId, String email);
+  ResponseEntity<?> addMember(Long chatId, @Email String email, Authentication auth);
 
-  ResponseEntity<Void> removeMember(Long chatId, String email, Authentication auth);
+  ResponseEntity<?> removeMember(Long chatId, @Email String email, Authentication auth);
 
-  ResponseEntity<ChatMemberDTO> muteMember(Long chatId, String email, ZonedDateTime muteUntil);
+  ResponseEntity<?> muteMember(Long chatId, @Email String email,
+                                           ZonedDateTime muteUntil, Authentication auth);
 
-  ResponseEntity<ChatMemberDTO> unmuteMember(Long chatId, String email);
+  ResponseEntity<?> unmuteMember(Long chatId, @Email String email, Authentication auth);
 
-  ResponseEntity<Void> leaveChat(Long chatId, String email);
+  ResponseEntity<?> leaveChat(Long chatId, Authentication auth);
 
-  ResponseEntity<ChatMemberDTO> changeMemberRole(Long chatId, String email, MemberRole role);
+  ResponseEntity<?> changeMemberRole(Long chatId, @Email String email, MemberRole role,
+                                     Authentication auth);
 }
