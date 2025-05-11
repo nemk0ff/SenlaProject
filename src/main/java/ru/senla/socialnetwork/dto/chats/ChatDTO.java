@@ -8,9 +8,7 @@ public record ChatDTO(
     Long id,
     String name,
     boolean isGroup,
-    @JsonFormat(shape = JsonFormat.Shape.STRING,
-        pattern = "dd-MM-yyyy HH:mm:ss [ZZZ]",
-        timezone = "UTC")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
     ZonedDateTime createdAt,
     List<ChatMemberDTO> members) {
 }

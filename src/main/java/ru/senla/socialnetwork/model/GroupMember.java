@@ -1,5 +1,6 @@
 package ru.senla.socialnetwork.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
@@ -40,9 +41,11 @@ public abstract class GroupMember implements MyEntity {
   protected User user;
 
   @Column(name = "join_date", nullable = false)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
   protected ZonedDateTime joinDate;
 
   @Column(name = "leave_date")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
   protected ZonedDateTime leaveDate;
 
   @Enumerated(EnumType.STRING)

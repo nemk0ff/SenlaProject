@@ -11,6 +11,8 @@ public interface CommunityMemberService {
 
   List<CommunityMember> getAll(Long communityId);
 
+  List<CommunityMember> getAllByUser(Long userId);
+
   CommunityMember joinCommunity(Community community, User user);
 
   CommunityMember leaveCommunity(CommunityMember member);

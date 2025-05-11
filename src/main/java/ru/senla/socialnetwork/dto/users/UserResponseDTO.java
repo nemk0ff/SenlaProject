@@ -18,6 +18,6 @@ public record UserResponseDTO(
     Gender gender,
     String aboutMe,
     ProfileType profileType,
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss XXX")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
     ZonedDateTime registeredAt) {
 }
