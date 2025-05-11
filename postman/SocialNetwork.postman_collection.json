@@ -1,0 +1,3182 @@
+{
+	"info": {
+		"_postman_id": "757cb897-49f3-4aae-9d70-2e36e00331cb",
+		"name": "SocialNetwork",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43132443"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Petrova Anna",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"petrova_anna@senla.ru\",\r\n    \"password\": \"user_password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user by id",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODI5MDg5LCJleHAiOjE3NDc0MzM4ODl9.xHr7NgANgJ9T-tG3Q2joCoBYLFd-9737rH0GQOOFHhc",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/users/3",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user by email",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODI5MDg5LCJleHAiOjE3NDc0MzM4ODl9.xHr7NgANgJ9T-tG3Q2joCoBYLFd-9737rH0GQOOFHhc",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/users?email=sidorov_dmitry@senla.ru",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "sidorov_dmitry@senla.ru"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Поиск по параметрам",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODI5MDg5LCJleHAiOjE3NDc0MzM4ODl9.xHr7NgANgJ9T-tG3Q2joCoBYLFd-9737rH0GQOOFHhc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/users/find?gender=MALE&name=Maxim",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"find"
+							],
+							"query": [
+								{
+									"key": "gender",
+									"value": "MALE"
+								},
+								{
+									"key": "name",
+									"value": "Maxim"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit profile",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODI5MDg5LCJleHAiOjE3NDc0MzM4ODl9.xHr7NgANgJ9T-tG3Q2joCoBYLFd-9737rH0GQOOFHhc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"gender\": \"FEMALE\",\r\n    \"profileType\": \"OPEN\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/users/edit",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"edit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change email",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODI5MDg5LCJleHAiOjE3NDc0MzM4ODl9.xHr7NgANgJ9T-tG3Q2joCoBYLFd-9737rH0GQOOFHhc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/users/change-email?newEmail=petrova@senla.ru",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"change-email"
+							],
+							"query": [
+								{
+									"key": "newEmail",
+									"value": "petrova@senla.ru"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Friends",
+			"item": [
+				{
+					"name": "Petrova Anna",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"petrova_anna@senla.ru\",\r\n    \"password\": \"user_password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Создание заявки от А к D",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODA1NjY4LCJleHAiOjE3NDY4OTIwNjh9.Y2Jy84vvjiIssF1KTtf5vVUnLSjQDhDslteGKzkJxAU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/friends/request?recipient=sidorov_dmitry@senla.ru",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"friends",
+								"request"
+							],
+							"query": [
+								{
+									"key": "recipient",
+									"value": "sidorov_dmitry@senla.ru"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Отмена заявки от А к D",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODA1NjY4LCJleHAiOjE3NDY4OTIwNjh9.Y2Jy84vvjiIssF1KTtf5vVUnLSjQDhDslteGKzkJxAU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/friends/request?recipient=sidorov_dmitry@senla.ru",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"friends",
+								"request"
+							],
+							"query": [
+								{
+									"key": "recipient",
+									"value": "sidorov_dmitry@senla.ru"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Создание заявки от А к D",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODA1NjY4LCJleHAiOjE3NDY4OTIwNjh9.Y2Jy84vvjiIssF1KTtf5vVUnLSjQDhDslteGKzkJxAU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/friends/request?recipient=sidorov_dmitry@senla.ru",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"friends",
+								"request"
+							],
+							"query": [
+								{
+									"key": "recipient",
+									"value": "sidorov_dmitry@senla.ru"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sidorov Dmitry",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"sidorov_dmitry@senla.ru\",\r\n    \"password\": \"user_password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Просмотр заявок D",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWRvcm92X2RtaXRyeUBzZW5sYS5ydSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3NDY4MDYxOTEsImV4cCI6MTc0Njg5MjU5MX0.tXLpNWUUiW2FDIkqN4CETzhEMRG9EMnTK99oeOGqM7U",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/friends/incoming?status=PENDING",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"friends",
+								"incoming"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "PENDING"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Просмотр заявок A",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODA1NjY4LCJleHAiOjE3NDY4OTIwNjh9.Y2Jy84vvjiIssF1KTtf5vVUnLSjQDhDslteGKzkJxAU",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/friends/outgoing",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"friends",
+								"outgoing"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Принятие заявки D",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWRvcm92X2RtaXRyeUBzZW5sYS5ydSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3NDY4MDYxOTEsImV4cCI6MTc0Njg5MjU5MX0.tXLpNWUUiW2FDIkqN4CETzhEMRG9EMnTK99oeOGqM7U",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"senderEmail\": \"petrova_anna@senla.ru\",\r\n    \"respondStatus\": \"ACCEPTED\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/friends/respond",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"friends",
+								"respond"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Просмотр друзей",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODA1NjY4LCJleHAiOjE3NDY4OTIwNjh9.Y2Jy84vvjiIssF1KTtf5vVUnLSjQDhDslteGKzkJxAU",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/friends?userEmail=sidorov_dmitry@senla.ru",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"friends"
+							],
+							"query": [
+								{
+									"key": "userEmail",
+									"value": "sidorov_dmitry@senla.ru"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Просмотр заявок",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWRvcm92X2RtaXRyeUBzZW5sYS5ydSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3NDY4MDYxOTEsImV4cCI6MTc0Njg5MjU5MX0.tXLpNWUUiW2FDIkqN4CETzhEMRG9EMnTK99oeOGqM7U",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/friends/requests?userEmail=sidorov_dmitry@senla.ru",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"friends",
+								"requests"
+							],
+							"query": [
+								{
+									"key": "userEmail",
+									"value": "sidorov_dmitry@senla.ru"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Удаление из друзей от D",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaWRvcm92X2RtaXRyeUBzZW5sYS5ydSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3NDY4MDYxOTEsImV4cCI6MTc0Njg5MjU5MX0.tXLpNWUUiW2FDIkqN4CETzhEMRG9EMnTK99oeOGqM7U",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/friends/remove?recipient=petrova_anna@senla.ru",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"friends",
+								"remove"
+							],
+							"query": [
+								{
+									"key": "recipient",
+									"value": "petrova_anna@senla.ru"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Wall Posts",
+			"item": [
+				{
+					"name": "Petrova Anna",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"petrova_anna@senla.ru\",\r\n    \"password\": \"user_password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Просмотр стены",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODM5NDAyLCJleHAiOjE3NDc0NDQyMDJ9.ZMKPG4AFZDbTW8DMnCV2Tw_cO6NQMQ3jfKtcnXJo6D4",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/posts?email=sidorov_dmitry@senla.ru",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"posts"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "sidorov_dmitry@senla.ru"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Просмотр поста на стене",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODM5NDAyLCJleHAiOjE3NDc0NDQyMDJ9.ZMKPG4AFZDbTW8DMnCV2Tw_cO6NQMQ3jfKtcnXJo6D4",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/posts/13",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"posts",
+								"13"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Создание поста",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODM5NDAyLCJleHAiOjE3NDc0NDQyMDJ9.ZMKPG4AFZDbTW8DMnCV2Tw_cO6NQMQ3jfKtcnXJo6D4",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"body\": \"Вчера ходила посмотреть на салют в парке Победы! Атмосфера просто вау! Как вам?\",\r\n    \"mood\": \"Праздники\",\r\n    \"location\": \"Парк победы, Поклонная гора\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/posts",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Редактирование поста",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODM5NDAyLCJleHAiOjE3NDc0NDQyMDJ9.ZMKPG4AFZDbTW8DMnCV2Tw_cO6NQMQ3jfKtcnXJo6D4",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"body\": \"Вчера ходила посмотреть на салют в парке Победы! Атмосфера просто вау! Как вам? Делитесь ощущениями в комментариях\",\r\n    \"mood\": \"Праздники\",\r\n    \"location\": \"Парк победы, Поклонная гора\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/posts/22",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"posts",
+								"22"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Удаление поста",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODM5NDAyLCJleHAiOjE3NDc0NDQyMDJ9.ZMKPG4AFZDbTW8DMnCV2Tw_cO6NQMQ3jfKtcnXJo6D4",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/posts/21",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"posts",
+								"21"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Chats",
+			"item": [
+				{
+					"name": "General",
+					"item": [
+						{
+							"name": "personal",
+							"item": [
+								{
+									"name": "Petrova Anna",
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\": \"petrova_anna@senla.ru\",\r\n    \"password\": \"user_password\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/auth/login",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"auth",
+												"login"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "создать личный чат",
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODg4NTYyLCJleHAiOjE3NDc0OTMzNjJ9.hJuq2VHX-qGcPtyEaaVLVC6-lsboFLdwQl17h0xsPBM",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/chats/personal?participant=volkov_andrey@senla.ru",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"chats",
+												"personal"
+											],
+											"query": [
+												{
+													"key": "participant",
+													"value": "volkov_andrey@senla.ru"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "просмотр информации о чате",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODg4NTYyLCJleHAiOjE3NDc0OTMzNjJ9.hJuq2VHX-qGcPtyEaaVLVC6-lsboFLdwQl17h0xsPBM",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/chats/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"chats",
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "удаление чата",
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODg4NTYyLCJleHAiOjE3NDc0OTMzNjJ9.hJuq2VHX-qGcPtyEaaVLVC6-lsboFLdwQl17h0xsPBM",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/chats/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"chats",
+												"1"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "group",
+							"item": [
+								{
+									"name": "Petrova Anna",
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\": \"petrova_anna@senla.ru\",\r\n    \"password\": \"user_password\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/auth/login",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"auth",
+												"login"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "создать групповой чат",
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODg4NTYyLCJleHAiOjE3NDc0OTMzNjJ9.hJuq2VHX-qGcPtyEaaVLVC6-lsboFLdwQl17h0xsPBM",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"отмечаем 9 мая\",\r\n    \"membersEmails\": [\r\n    \"ivanov_arkadiy@senla.ru\",\r\n    \"petrova_anna@senla.ru\",\r\n    \"volkov_andrey@senla.ru\"\r\n  ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/chats/group",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"chats",
+												"group"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "просмотр информации о чате",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODg4NTYyLCJleHAiOjE3NDc0OTMzNjJ9.hJuq2VHX-qGcPtyEaaVLVC6-lsboFLdwQl17h0xsPBM",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/chats/2",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"chats",
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "удаление чата",
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODg4NTYyLCJleHAiOjE3NDc0OTMzNjJ9.hJuq2VHX-qGcPtyEaaVLVC6-lsboFLdwQl17h0xsPBM",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080/chats/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"chats",
+												"1"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "просмотр чатов пользователя",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODg4NTYyLCJleHAiOjE3NDc0OTMzNjJ9.hJuq2VHX-qGcPtyEaaVLVC6-lsboFLdwQl17h0xsPBM",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/chats",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"chats"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Members",
+					"item": [
+						{
+							"name": "просмотр информации о чате",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODg4NTYyLCJleHAiOjE3NDc0OTMzNjJ9.hJuq2VHX-qGcPtyEaaVLVC6-lsboFLdwQl17h0xsPBM",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/chats/2",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"chats",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "добавить участника в групповой чат",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODg4NTYyLCJleHAiOjE3NDc0OTMzNjJ9.hJuq2VHX-qGcPtyEaaVLVC6-lsboFLdwQl17h0xsPBM",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/chats/2/members?userEmail=orlova_maria@senla.ru",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"chats",
+										"2",
+										"members"
+									],
+									"query": [
+										{
+											"key": "userEmail",
+											"value": "orlova_maria@senla.ru"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "удалить участника из чата",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODg4NTYyLCJleHAiOjE3NDc0OTMzNjJ9.hJuq2VHX-qGcPtyEaaVLVC6-lsboFLdwQl17h0xsPBM",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/chats/2/members?email=orlova_maria@senla.ru",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"chats",
+										"2",
+										"members"
+									],
+									"query": [
+										{
+											"key": "email",
+											"value": "orlova_maria@senla.ru"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "изменить роль участника ",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODg4NTYyLCJleHAiOjE3NDc0OTMzNjJ9.hJuq2VHX-qGcPtyEaaVLVC6-lsboFLdwQl17h0xsPBM",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/chats/2/members/role?email=orlova_maria@senla.ru&role=MODERATOR",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"chats",
+										"2",
+										"members",
+										"role"
+									],
+									"query": [
+										{
+											"key": "email",
+											"value": "orlova_maria@senla.ru"
+										},
+										{
+											"key": "role",
+											"value": "MODERATOR"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "выход из чата",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODg4NTYyLCJleHAiOjE3NDc0OTMzNjJ9.hJuq2VHX-qGcPtyEaaVLVC6-lsboFLdwQl17h0xsPBM",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/chats/2/members/leave",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"chats",
+										"2",
+										"members",
+										"leave"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Messages",
+					"item": [
+						{
+							"name": "Orlova Maria",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"petrova_anna@senla.ru\",\r\n    \"password\": \"user_password\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/auth/login",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "отправка сообщения",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvcmxvdmFfbWFyaWFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODk1NTA1LCJleHAiOjE3NDc1MDAzMDV9.PxRJoAYDLydlX9fRbocyB5JPe9xQtWOOn6PCziKe-Ag",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"body\": \"Всем привет! Анна приболела, корпоратив огранизую я) Пишите свои идеи, будем обсуждать\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/chats/2/messages",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"chats",
+										"2",
+										"messages"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ответ на сообщение",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvcmxvdmFfbWFyaWFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODk1NTA1LCJleHAiOjE3NDc1MDAzMDV9.PxRJoAYDLydlX9fRbocyB5JPe9xQtWOOn6PCziKe-Ag",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"body\": \"Предваритель планируется выезд на природу, снимем домик где-то в МО\",\r\n    \"replyToId\": 25\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/chats/2/messages",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"chats",
+										"2",
+										"messages"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "просмотр сообщений",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvcmxvdmFfbWFyaWFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODk1NTA1LCJleHAiOjE3NDc1MDAzMDV9.PxRJoAYDLydlX9fRbocyB5JPe9xQtWOOn6PCziKe-Ag",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/chats/2/messages",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"chats",
+										"2",
+										"messages"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "просмотр ответов",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvcmxvdmFfbWFyaWFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODk1NTA1LCJleHAiOjE3NDc1MDAzMDV9.PxRJoAYDLydlX9fRbocyB5JPe9xQtWOOn6PCziKe-Ag",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"body\": \"Всем привет! Анна приболела, корпоратив огранизую я) Пишите свои идеи, будем обсуждать\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/chats/2/messages/28/answers",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"chats",
+										"2",
+										"messages",
+										"28",
+										"answers"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "закрепить сообщение",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvcmxvdmFfbWFyaWFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODk1NTA1LCJleHAiOjE3NDc1MDAzMDV9.PxRJoAYDLydlX9fRbocyB5JPe9xQtWOOn6PCziKe-Ag",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"body\": \"Всем привет! Анна приболела, корпоратив огранизую я) Пишите свои идеи, будем обсуждать\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/chats/2/messages/28/pin",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"chats",
+										"2",
+										"messages",
+										"28",
+										"pin"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "посмотреть закрепы",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvcmxvdmFfbWFyaWFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODk1NTA1LCJleHAiOjE3NDc1MDAzMDV9.PxRJoAYDLydlX9fRbocyB5JPe9xQtWOOn6PCziKe-Ag",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"body\": \"Всем привет! Анна приболела, корпоратив огранизую я) Пишите свои идеи, будем обсуждать\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/chats/2/messages/pinned",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"chats",
+										"2",
+										"messages",
+										"pinned"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "открепить сообщение",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvcmxvdmFfbWFyaWFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODk1NTA1LCJleHAiOjE3NDc1MDAzMDV9.PxRJoAYDLydlX9fRbocyB5JPe9xQtWOOn6PCziKe-Ag",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"body\": \"Всем привет! Анна приболела, корпоратив огранизую я) Пишите свои идеи, будем обсуждать\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/chats/2/messages/28/pin",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"chats",
+										"2",
+										"messages",
+										"28",
+										"pin"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "посмотреть закрепы",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvcmxvdmFfbWFyaWFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODk1NTA1LCJleHAiOjE3NDc1MDAzMDV9.PxRJoAYDLydlX9fRbocyB5JPe9xQtWOOn6PCziKe-Ag",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"body\": \"Всем привет! Анна приболела, корпоратив огранизую я) Пишите свои идеи, будем обсуждать\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/chats/2/messages/pinned",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"chats",
+										"2",
+										"messages",
+										"pinned"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "удалить сообщение",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJvcmxvdmFfbWFyaWFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODk1NTA1LCJleHAiOjE3NDc1MDAzMDV9.PxRJoAYDLydlX9fRbocyB5JPe9xQtWOOn6PCziKe-Ag",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"body\": \"Всем привет! Анна приболела, корпоратив огранизую я) Пишите свои идеи, будем обсуждать\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/chats/2/messages/30",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"chats",
+										"2",
+										"messages",
+										"30"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "jwt",
+				"jwt": [
+					{
+						"key": "algorithm",
+						"value": "HS256",
+						"type": "string"
+					},
+					{
+						"key": "isSecretBase64Encoded",
+						"value": false,
+						"type": "boolean"
+					},
+					{
+						"key": "payload",
+						"value": "{}",
+						"type": "string"
+					},
+					{
+						"key": "addTokenTo",
+						"value": "header",
+						"type": "string"
+					},
+					{
+						"key": "headerPrefix",
+						"value": "Bearer",
+						"type": "string"
+					},
+					{
+						"key": "queryParamKey",
+						"value": "token",
+						"type": "string"
+					},
+					{
+						"key": "header",
+						"value": "{}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Community",
+			"item": [
+				{
+					"name": "General",
+					"item": [
+						{
+							"name": "Petrova Anna",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"petrova_anna@senla.ru\",\r\n    \"password\": \"user_password\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/auth/login",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "создать группу",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODk2OTgzLCJleHAiOjE3NDc1MDE3ODN9.JGmMbrdvgip-bwiBFT4YZ_g4TzinzNHhMq6cHKihDB8",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"owner\": \"petrova_anna@senla.ru\",\r\n    \"name\": \"Ламинирование ресниц у Анны\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/communities",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"communities"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "получить группу",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODk2OTgzLCJleHAiOjE3NDc1MDE3ODN9.JGmMbrdvgip-bwiBFT4YZ_g4TzinzNHhMq6cHKihDB8",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/communities/4",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"communities",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "изменить",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODk2OTgzLCJleHAiOjE3NDc1MDE3ODN9.JGmMbrdvgip-bwiBFT4YZ_g4TzinzNHhMq6cHKihDB8",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"4\",\r\n    \"name\": \"Ламинирование ресниц у Анны Петровой\",\r\n    \"description\": \"Для записи пишите в лс или звоните по телефону 112\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/communities",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"communities"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "удалить группу",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODk2OTgzLCJleHAiOjE3NDc1MDE3ODN9.JGmMbrdvgip-bwiBFT4YZ_g4TzinzNHhMq6cHKihDB8",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/communities/4",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"communities",
+										"4"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Members",
+					"item": [
+						{
+							"name": "Petrova Anna",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"petrova_anna@senla.ru\",\r\n    \"password\": \"user_password\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/auth/login",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "получить всех участников группы",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODk2OTgzLCJleHAiOjE3NDc1MDE3ODN9.JGmMbrdvgip-bwiBFT4YZ_g4TzinzNHhMq6cHKihDB8",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/communities/1/members",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"communities",
+										"1",
+										"members"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "подписывается на группу",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODk2OTgzLCJleHAiOjE3NDc1MDE3ODN9.JGmMbrdvgip-bwiBFT4YZ_g4TzinzNHhMq6cHKihDB8",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/communities/1/members",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"communities",
+										"1",
+										"members"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "отписывается от группы",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2ODk2OTgzLCJleHAiOjE3NDc1MDE3ODN9.JGmMbrdvgip-bwiBFT4YZ_g4TzinzNHhMq6cHKihDB8",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/communities/1/members",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"communities",
+										"1",
+										"members"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Arkadiy auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"ivanov_arkadiy@senla.ru\",\r\n    \"password\": \"user_password\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/auth/login",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ban Anna",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdmFub3ZfYXJrYWRpeUBzZW5sYS5ydSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3NDY4OTk4NDUsImV4cCI6MTc0NzUwNDY0NX0.VLoiAx4bALqWO4SUZqnRFUArioOMptUv7bQwpIMMAL8",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/communities/1/members/ban?email=petrova_anna@senla.ru&reason=нарушение правил: флуд",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"communities",
+										"1",
+										"members",
+										"ban"
+									],
+									"query": [
+										{
+											"key": "email",
+											"value": "petrova_anna@senla.ru"
+										},
+										{
+											"key": "reason",
+											"value": "нарушение правил: флуд"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "unban Anna",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdmFub3ZfYXJrYWRpeUBzZW5sYS5ydSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3NDY4OTk4NDUsImV4cCI6MTc0NzUwNDY0NX0.VLoiAx4bALqWO4SUZqnRFUArioOMptUv7bQwpIMMAL8",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/communities/1/members/unban?email=petrova_anna@senla.ru",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"communities",
+										"1",
+										"members",
+										"unban"
+									],
+									"query": [
+										{
+											"key": "email",
+											"value": "petrova_anna@senla.ru"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "give Moderator Anna",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdmFub3ZfYXJrYWRpeUBzZW5sYS5ydSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3NDY4OTk4NDUsImV4cCI6MTc0NzUwNDY0NX0.VLoiAx4bALqWO4SUZqnRFUArioOMptUv7bQwpIMMAL8",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/communities/1/members/role?email=petrova_anna@senla.ru&role=MODERATOR",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"communities",
+										"1",
+										"members",
+										"role"
+									],
+									"query": [
+										{
+											"key": "email",
+											"value": "petrova_anna@senla.ru"
+										},
+										{
+											"key": "role",
+											"value": "MODERATOR"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "give Member Anna",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdmFub3ZfYXJrYWRpeUBzZW5sYS5ydSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3NDY4OTk4NDUsImV4cCI6MTc0NzUwNDY0NX0.VLoiAx4bALqWO4SUZqnRFUArioOMptUv7bQwpIMMAL8",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/communities/1/members/role?email=petrova_anna@senla.ru&role=MEMBER",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"communities",
+										"1",
+										"members",
+										"role"
+									],
+									"query": [
+										{
+											"key": "email",
+											"value": "petrova_anna@senla.ru"
+										},
+										{
+											"key": "role",
+											"value": "MEMBER"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Posts",
+					"item": [
+						{
+							"name": "Arkadiy auth",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"ivanov_arkadiy@senla.ru\",\r\n    \"password\": \"user_password\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/auth/login",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Создать закреп",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdmFub3ZfYXJrYWRpeUBzZW5sYS5ydSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3NDY4OTk4NDUsImV4cCI6MTc0NzUwNDY0NX0.VLoiAx4bALqWO4SUZqnRFUArioOMptUv7bQwpIMMAL8",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"body\": \"Правила сообщества: в данном сообществе недопускается обсуждение чего-либо не по теме: политика, флуд и другой несоответствующий контент будут удалены, авторы будут забанены. По вопросам рекламы обращаться в лс к модераторам\",\r\n    \"isPinned\": \"true\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/communities/1/posts",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"communities",
+										"1",
+										"posts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Посмотреть посты",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdmFub3ZfYXJrYWRpeUBzZW5sYS5ydSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3NDY4OTk4NDUsImV4cCI6MTc0NzUwNDY0NX0.VLoiAx4bALqWO4SUZqnRFUArioOMptUv7bQwpIMMAL8",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:8080/communities/1/posts",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"communities",
+										"1",
+										"posts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Посмотреть закрепы",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdmFub3ZfYXJrYWRpeUBzZW5sYS5ydSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3NDY4OTk4NDUsImV4cCI6MTc0NzUwNDY0NX0.VLoiAx4bALqWO4SUZqnRFUArioOMptUv7bQwpIMMAL8",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"body\": \"Правила сообщества: в данном сообществе недопускается обсуждение чего-либо не по теме: политика, флуд и другой несоответствующий контент будут удалены, авторы будут забанены. По вопросам рекламы обращаться в лс к модераторам\",\r\n    \"isPinned\": \"true\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/communities/1/posts/pinned",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"communities",
+										"1",
+										"posts",
+										"pinned"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Посмотреть пост",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdmFub3ZfYXJrYWRpeUBzZW5sYS5ydSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3NDY4OTk4NDUsImV4cCI6MTc0NzUwNDY0NX0.VLoiAx4bALqWO4SUZqnRFUArioOMptUv7bQwpIMMAL8",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:8080/communities/1/posts/2",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"communities",
+										"1",
+										"posts",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Редактировать пост",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdmFub3ZfYXJrYWRpeUBzZW5sYS5ydSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3NDY4OTk4NDUsImV4cCI6MTc0NzUwNDY0NX0.VLoiAx4bALqWO4SUZqnRFUArioOMptUv7bQwpIMMAL8",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"body\":\"Сегодня сильное движение на нефтяном рынке, все в шорте?)\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/communities/1/posts/1",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"communities",
+										"1",
+										"posts",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdmFub3ZfYXJrYWRpeUBzZW5sYS5ydSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3NDYyNzg0MDcsImV4cCI6MTc0NjM2NDgwN30.oajlA-XRV4hkEMUc6csEMNW_twq8m51P0bE5tsCbmMk",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:8080/communities/1/posts/2?email=ivanov_arkadiy@senla.ru",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"communities",
+										"1",
+										"posts",
+										"2"
+									],
+									"query": [
+										{
+											"key": "email",
+											"value": "ivanov_arkadiy@senla.ru"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Comments",
+			"item": [
+				{
+					"name": "Petrova Anna",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"petrova_anna@senla.ru\",\r\n    \"password\": \"user_password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Arkadiy Ivanov",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"ivanov_arkadiy@senla.ru\",\r\n    \"password\": \"user_password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getById Anna",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2OTE5MjE5LCJleHAiOjE3NDc1MjQwMTl9.TPYlwYLCFNASCg-NNtRECQVTjDiiNciQWxurJ-5SrUU",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/comments/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"comments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "все комментарии поста",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2OTE5MjE5LCJleHAiOjE3NDc1MjQwMTl9.TPYlwYLCFNASCg-NNtRECQVTjDiiNciQWxurJ-5SrUU",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/comments/post/9",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"comments",
+								"post",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "создать коммент",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2OTE5MjE5LCJleHAiOjE3NDc1MjQwMTl9.TPYlwYLCFNASCg-NNtRECQVTjDiiNciQWxurJ-5SrUU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"body\": \"ого!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/comments/post/4",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"comments",
+								"post",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "редактировать коммент",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2OTE5MjE5LCJleHAiOjE3NDc1MjQwMTl9.TPYlwYLCFNASCg-NNtRECQVTjDiiNciQWxurJ-5SrUU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"body\": \"ого! круто!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/comments/25",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"comments",
+								"25"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "удалить коммент",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2OTE5MjE5LCJleHAiOjE3NDc1MjQwMTl9.TPYlwYLCFNASCg-NNtRECQVTjDiiNciQWxurJ-5SrUU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"body\": \"ого! круто!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/comments/25",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"comments",
+								"25"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reactions",
+			"item": [
+				{
+					"name": "Petrova Anna",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"petrova_anna@senla.ru\",\r\n    \"password\": \"user_password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAll (admin)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBzZW5sYS5ydSIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNzQ2OTE5MTA2LCJleHAiOjE3NDc1MjM5MDZ9.LseKkJO6JOeanxlxU70QT9Buy0au3YOuNYuf9m0Elis",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/reactions",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"reactions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Просмотр реакции по id",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2OTIyNjIxLCJleHAiOjE3NDc1Mjc0MjF9.y-uHAVRe5nWcLdSQFJ6MCV8g_tLsSOQqHiDnYAB8soM",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/reactions/23",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"reactions",
+								"23"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Создание реакции",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2OTIyNjIxLCJleHAiOjE3NDc1Mjc0MjF9.y-uHAVRe5nWcLdSQFJ6MCV8g_tLsSOQqHiDnYAB8soM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/reactions/comment/2?reactionType=LIKE",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"reactions",
+								"comment",
+								"2"
+							],
+							"query": [
+								{
+									"key": "reactionType",
+									"value": "LIKE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Удаление реакции",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2OTIyNjIxLCJleHAiOjE3NDc1Mjc0MjF9.y-uHAVRe5nWcLdSQFJ6MCV8g_tLsSOQqHiDnYAB8soM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/reactions/49",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"reactions",
+								"49"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Feed",
+			"item": [
+				{
+					"name": "новости",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZXRyb3ZhX2FubmFAc2VubGEucnUiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzQ2OTIyNjIxLCJleHAiOjE3NDc1Mjc0MjF9.y-uHAVRe5nWcLdSQFJ6MCV8g_tLsSOQqHiDnYAB8soM",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/feed",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"feed"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "login as admin",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"admin@senla.ru\",\r\n    \"password\": \"admin_password\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/auth/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
