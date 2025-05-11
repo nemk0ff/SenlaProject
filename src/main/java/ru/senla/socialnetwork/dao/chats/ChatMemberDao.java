@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import ru.senla.socialnetwork.dao.GenericDao;
 import ru.senla.socialnetwork.model.chats.ChatMember;
-import ru.senla.socialnetwork.model.general.MemberRole;
+import ru.senla.socialnetwork.model.MemberRole;
 
 public interface ChatMemberDao extends GenericDao<ChatMember> {
   void saveAll(List<ChatMember> members);

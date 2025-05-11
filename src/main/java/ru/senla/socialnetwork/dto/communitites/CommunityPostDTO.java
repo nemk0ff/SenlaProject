@@ -5,7 +5,7 @@ import java.time.ZonedDateTime;
 
 public record CommunityPostDTO(
     Long id,
-    Long authorId,
+    Long authorEmail,
     Long communityId,
     String body,
     @JsonFormat(shape = JsonFormat.Shape.STRING,

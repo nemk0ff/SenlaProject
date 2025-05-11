@@ -3,7 +3,7 @@ package ru.senla.socialnetwork.services.communities;
 import java.util.List;
 import ru.senla.socialnetwork.model.communities.Community;
 import ru.senla.socialnetwork.model.communities.CommunityMember;
-import ru.senla.socialnetwork.model.general.MemberRole;
+import ru.senla.socialnetwork.model.MemberRole;
 import ru.senla.socialnetwork.model.users.User;
 
 public interface CommunityMemberService {

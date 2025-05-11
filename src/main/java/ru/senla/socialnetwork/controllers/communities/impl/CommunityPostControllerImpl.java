@@ -55,7 +55,7 @@ public class CommunityPostControllerImpl implements CommunityPostController {
       @PathVariable("id") Long postId) {
     log.info("Запрос поста id={} в сообществе id={}", postId, communityId);
     CommunityPostDTO post = communityPostFacade.getPost(communityId, postId);
-    log.info("Пост id={} найден. Автор: {}", postId, post.authorId());
+    log.info("Пост id={} найден. Автор: {}", postId, post.authorEmail());
     return ResponseEntity.ok(post);
   }
 

@@ -2,7 +2,7 @@ package ru.senla.socialnetwork.facades.communities;
 
 import java.util.List;
 import ru.senla.socialnetwork.dto.communitites.CommunityMemberDTO;
-import ru.senla.socialnetwork.model.general.MemberRole;
+import ru.senla.socialnetwork.model.MemberRole;
 
 public interface CommunityMemberFacade {
   List<CommunityMemberDTO> getAll(Long communityId, String clientEmail);

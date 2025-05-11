@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.senla.socialnetwork.dao.communities.CommunityPostDao;
 import ru.senla.socialnetwork.dao.users.WallPostDao;
 import ru.senla.socialnetwork.model.communities.CommunityPost;
-import ru.senla.socialnetwork.model.general.Post;
+import ru.senla.socialnetwork.model.Post;
 import ru.senla.socialnetwork.model.users.WallPost;
 import ru.senla.socialnetwork.services.posts.GeneralPostService;
 

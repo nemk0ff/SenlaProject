@@ -8,6 +8,8 @@ import ru.senla.socialnetwork.model.comment.Reaction;
 public interface ReactionDao extends GenericDao<Reaction> {
   List<Reaction> getAll();
 
+  Optional<Reaction> get(Long id);
+
   List<Reaction> getAllByComment(Long commentId);
 
   Optional<Reaction> getByUserAndComment(Long userId, Long commentId);

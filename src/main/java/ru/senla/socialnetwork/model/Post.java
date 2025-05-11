@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.model.general;
+package ru.senla.socialnetwork.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;

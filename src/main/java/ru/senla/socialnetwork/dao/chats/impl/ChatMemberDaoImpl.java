@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import ru.senla.socialnetwork.dao.chats.ChatMemberDao;
 import ru.senla.socialnetwork.dao.HibernateAbstractDao;
 import ru.senla.socialnetwork.model.chats.ChatMember;
-import ru.senla.socialnetwork.model.general.MemberRole;
+import ru.senla.socialnetwork.model.MemberRole;
 
 @Slf4j
 @Repository

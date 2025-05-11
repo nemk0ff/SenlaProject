@@ -12,11 +12,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.comments.ReactionController;
-import ru.senla.socialnetwork.dto.comments.CreateReactionDTO;
 import ru.senla.socialnetwork.dto.comments.ReactionDTO;
 import ru.senla.socialnetwork.facades.comments.ReactionFacade;
+import ru.senla.socialnetwork.model.comment.ReactionType;
 
 @Slf4j
 @RestController
@@ -48,7 +49,7 @@ public class ReactionControllerImpl implements ReactionController {
   }
 
   @Override
-  @GetMapping("/{id}/reactions")
+  @GetMapping("/comment/{id}")
   public ResponseEntity<?> getByComment(
       @PathVariable("id") Long commentId,
       Authentication auth) {
@@ -59,20 +60,21 @@ public class ReactionControllerImpl implements ReactionController {
   }
 
   @Override
-  @PostMapping("/react")
+  @PostMapping("/comment/{id}")
   public ResponseEntity<?> createReaction(
-      CreateReactionDTO request,
+      @PathVariable("id") Long commentId,
+      @RequestParam ReactionType reactionType,
       Authentication auth) {
     log.info("Пользователь {} добавляет реакцию {} к комментарию id={}",
-        auth.getName(), request.type(), request.commentId());
-    ReactionDTO reaction = reactionFacade.setReaction(request, auth.getName());
+        auth.getName(), reactionType, commentId);
+    ReactionDTO reaction = reactionFacade.setReaction(commentId, reactionType, auth.getName());
     log.info("Создана реакция id={} типа {} к комментарию {}",
         reaction.id(), reaction.type(), reaction.commentId());
     return ResponseEntity.status(HttpStatus.CREATED).body(reaction);
   }
 
   @Override
-  @DeleteMapping("/react/{id}")
+  @DeleteMapping("/{id}")
   public ResponseEntity<?> removeReaction(
       @PathVariable("id") Long reactionId,
       Authentication auth) {

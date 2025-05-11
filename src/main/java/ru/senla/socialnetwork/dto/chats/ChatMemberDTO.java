@@ -2,7 +2,7 @@ package ru.senla.socialnetwork.dto.chats;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.ZonedDateTime;
-import ru.senla.socialnetwork.model.general.MemberRole;
+import ru.senla.socialnetwork.model.MemberRole;
 
 public record ChatMemberDTO(
     String email,

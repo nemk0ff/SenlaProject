@@ -3,6 +3,7 @@ package ru.senla.socialnetwork.facades.comments.impl;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.senla.socialnetwork.dto.comments.CommentDTO;
@@ -14,8 +15,8 @@ import ru.senla.socialnetwork.facades.comments.CommentFacade;
 import ru.senla.socialnetwork.model.comment.Comment;
 import ru.senla.socialnetwork.model.communities.CommunityMember;
 import ru.senla.socialnetwork.model.communities.CommunityPost;
-import ru.senla.socialnetwork.model.general.MemberRole;
-import ru.senla.socialnetwork.model.general.Post;
+import ru.senla.socialnetwork.model.MemberRole;
+import ru.senla.socialnetwork.model.Post;
 import ru.senla.socialnetwork.model.users.ProfileType;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.model.users.WallPost;
@@ -80,8 +81,8 @@ public class CommentFacadeImpl implements CommentFacade {
   }
 
   @Override
-  public CommentDTO create(CreateCommentDTO commentDTO, String clientEmail) {
-    Post post = generalPostService.getPost(commentDTO.postId());
+  public CommentDTO create(Long postId, CreateCommentDTO commentDTO, String clientEmail) {
+    Post post = generalPostService.getPost(postId);
     User client = userService.getUserByEmail(clientEmail);
     if (!userService.isAdmin(clientEmail)) {
       if (post.getPostType().equals("WallPost")) {
@@ -99,8 +100,8 @@ public class CommentFacadeImpl implements CommentFacade {
   }
 
   @Override
-  public CommentDTO update(UpdateCommentDTO commentDTO, String clientEmail) {
-    Comment comment = commentService.getById(commentDTO.commentId());
+  public CommentDTO update(Long id, UpdateCommentDTO commentDTO, String clientEmail) {
+    Comment comment = commentService.getById(id);
     User client = userService.getUserByEmail(clientEmail);
     if (!client.equals(comment.getAuthor())) {
       throw new CommentException("Вы не можете редактировать чужие комментарии");
@@ -125,6 +126,10 @@ public class CommentFacadeImpl implements CommentFacade {
         }
       } else if (post.getPostType().equals("CommunityPost")) {
         CommunityPost communityPost = (CommunityPost) comment.getPost();
+        if(!communityMemberService.isMember(communityPost.getId(), clientEmail)) {
+          throw new CommentException("У вас нет доступа, т.к. вы не являетесь участником " +
+              "сообщества " + communityPost.getCommunity().getId());
+        }
         CommunityMember member = communityMemberService.get(
             communityPost.getCommunity().getId(), clientEmail);
         if (member.getRole().equals(MemberRole.MEMBER)) {

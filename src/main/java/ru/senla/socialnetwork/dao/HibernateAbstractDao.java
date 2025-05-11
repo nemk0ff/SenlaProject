@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.springframework.dao.DataRetrievalFailureException;
-import ru.senla.socialnetwork.model.general.MyEntity;
+import ru.senla.socialnetwork.model.MyEntity;
 
 @Slf4j
 public abstract class HibernateAbstractDao<T extends MyEntity> implements GenericDao<T> {

@@ -2,7 +2,7 @@ package ru.senla.socialnetwork.controllers.communities;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import ru.senla.socialnetwork.model.general.MemberRole;
+import ru.senla.socialnetwork.model.MemberRole;
 
 public interface CommunityMemberController {
   ResponseEntity<?> getAll(Long communityId, Authentication auth);

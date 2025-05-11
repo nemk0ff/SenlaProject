@@ -4,8 +4,7 @@ import jakarta.validation.constraints.Email;
 import java.time.ZonedDateTime;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import ru.senla.socialnetwork.dto.chats.ChatMemberDTO;
-import ru.senla.socialnetwork.model.general.MemberRole;
+import ru.senla.socialnetwork.model.MemberRole;
 
 public interface ChatMemberController {
   ResponseEntity<?> addMember(Long chatId, @Email String email, Authentication auth);

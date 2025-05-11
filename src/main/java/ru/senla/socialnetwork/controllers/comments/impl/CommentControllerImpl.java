@@ -1,5 +1,6 @@
 package ru.senla.socialnetwork.controllers.comments.impl;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.comments.CommentController;
@@ -58,13 +60,14 @@ public class CommentControllerImpl implements CommentController {
   }
 
   @Override
-  @PostMapping
+  @PostMapping("/post/{id}")
   public ResponseEntity<?> createComment(
-      CreateCommentDTO request,
+      @PathVariable("id") Long postId,
+      @RequestBody @Valid CreateCommentDTO request,
       Authentication auth) {
-    log.info("Пользователь {} создает комментарий к посту ID {}", auth.getName(), request.postId());
-    CommentDTO comment = commentFacade.create(request, auth.getName());
-    log.info("Создан комментарий id={} к посту id={}", comment.id(), request.postId());
+    log.info("Пользователь {} создает комментарий к посту ID {}", auth.getName(), postId);
+    CommentDTO comment = commentFacade.create(postId, request, auth.getName());
+    log.info("Создан комментарий id={} к посту id={}", comment.id(), postId);
     return ResponseEntity.status(HttpStatus.CREATED).body(comment);
   }
 
@@ -72,10 +75,10 @@ public class CommentControllerImpl implements CommentController {
   @PutMapping("/{id}")
   public ResponseEntity<?> updateComment(
       @PathVariable("id") Long id,
-      UpdateCommentDTO request,
+      @RequestBody @Valid UpdateCommentDTO request,
       Authentication auth) {
     log.info("Пользователь {} обновляет комментарий id={}", auth.getName(), id);
-    CommentDTO updatedComment = commentFacade.update(request, auth.getName());
+    CommentDTO updatedComment = commentFacade.update(id, request, auth.getName());
     log.info("Комментарий id={} успешно обновлен", id);
     return ResponseEntity.ok(updatedComment);
   }

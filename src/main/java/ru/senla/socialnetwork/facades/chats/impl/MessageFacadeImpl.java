@@ -14,7 +14,7 @@ import ru.senla.socialnetwork.facades.chats.MessageFacade;
 import ru.senla.socialnetwork.model.chats.Chat;
 import ru.senla.socialnetwork.model.chats.ChatMember;
 import ru.senla.socialnetwork.model.chats.Message;
-import ru.senla.socialnetwork.model.general.MemberRole;
+import ru.senla.socialnetwork.model.MemberRole;
 import ru.senla.socialnetwork.services.chats.ChatMemberService;
 import ru.senla.socialnetwork.services.chats.MessageService;
 import ru.senla.socialnetwork.services.chats.impl.ChatServiceImpl;

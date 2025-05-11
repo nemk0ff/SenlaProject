@@ -14,8 +14,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import ru.senla.socialnetwork.model.general.ContentFragment;
-import ru.senla.socialnetwork.model.general.Post;
+import ru.senla.socialnetwork.model.ContentFragment;
+import ru.senla.socialnetwork.model.Post;
 
 @Getter
 @Setter

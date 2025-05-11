@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import ru.senla.socialnetwork.model.general.GroupMember;
+import ru.senla.socialnetwork.model.GroupMember;
 
 @Getter
 @Setter

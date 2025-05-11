@@ -3,7 +3,7 @@ package ru.senla.socialnetwork.facades.chats;
 
 import java.time.ZonedDateTime;
 import ru.senla.socialnetwork.dto.chats.ChatMemberDTO;
-import ru.senla.socialnetwork.model.general.MemberRole;
+import ru.senla.socialnetwork.model.MemberRole;
 
 public interface ChatMemberFacade {
   ChatMemberDTO addUserToChat(Long chatId, String userEmailToAdd, String client);

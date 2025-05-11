@@ -1,6 +1,7 @@
 package ru.senla.socialnetwork.dao.comments.impl;
 
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.springframework.dao.DataRetrievalFailureException;
@@ -14,6 +15,24 @@ import ru.senla.socialnetwork.model.comment.Comment;
 public class CommentDaoImpl extends HibernateAbstractDao<Comment> implements CommentDao {
   protected CommentDaoImpl(SessionFactory sessionFactory) {
     super(Comment.class, sessionFactory);
+  }
+
+  @Override
+  public Optional<Comment> getById(Long id) {
+    log.info("Получение комментария с id {} вместе с постом...", id);
+    try {
+      String hql = "SELECT c FROM Comment c " +
+          "LEFT JOIN FETCH c.author " +
+          "LEFT JOIN FETCH c.post p "+
+          "WHERE c.id = :id";
+      return sessionFactory.getCurrentSession()
+          .createQuery(hql, Comment.class)
+          .setParameter("id", id)
+          .uniqueResultOptional();
+    } catch (Exception e) {
+      throw new DataRetrievalFailureException(
+          "Ошибка при получении комментария с id " + id, e);
+    }
   }
 
   @Override

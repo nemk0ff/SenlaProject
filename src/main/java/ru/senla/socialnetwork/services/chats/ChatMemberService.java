@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import ru.senla.socialnetwork.model.chats.Chat;
 import ru.senla.socialnetwork.model.chats.ChatMember;
-import ru.senla.socialnetwork.model.general.MemberRole;
+import ru.senla.socialnetwork.model.MemberRole;
 import ru.senla.socialnetwork.model.users.User;
 
 public interface ChatMemberService {

@@ -12,8 +12,8 @@ import ru.senla.socialnetwork.exceptions.chats.ChatMemberException;
 import ru.senla.socialnetwork.exceptions.communities.CommunityMemberException;
 import ru.senla.socialnetwork.model.communities.Community;
 import ru.senla.socialnetwork.model.communities.CommunityMember;
-import ru.senla.socialnetwork.model.general.GroupMember;
-import ru.senla.socialnetwork.model.general.MemberRole;
+import ru.senla.socialnetwork.model.GroupMember;
+import ru.senla.socialnetwork.model.MemberRole;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.services.communities.CommunityMemberService;
 
