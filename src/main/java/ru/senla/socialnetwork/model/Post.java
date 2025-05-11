@@ -1,5 +1,6 @@
 package ru.senla.socialnetwork.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
@@ -35,6 +36,7 @@ public abstract class Post implements MyEntity {
   protected String body;
 
   @Column(name = "created_at", nullable = false)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
   protected ZonedDateTime createdAt;
 
   public abstract String getPostType();

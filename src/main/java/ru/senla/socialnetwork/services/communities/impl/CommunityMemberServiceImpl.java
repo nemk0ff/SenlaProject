@@ -40,6 +40,11 @@ public class CommunityMemberServiceImpl implements CommunityMemberService {
   }
 
   @Override
+  public List<CommunityMember> getAllByUser(Long userId) {
+    return communityMemberDao.findAllByUser(userId);
+  }
+
+  @Override
   public CommunityMember joinCommunity(Community community, User user) {
     log.info("Создание участника сообщества: id={}, email={}", community.getId(), user.getEmail());
     CommunityMember member = CommunityMember.builder()

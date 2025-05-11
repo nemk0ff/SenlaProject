@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.facades.wallposts;
+package ru.senla.socialnetwork.facades.wallposts.impl;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +9,7 @@ import ru.senla.socialnetwork.dto.mappers.WallPostMapper;
 import ru.senla.socialnetwork.dto.users.WallPostRequestDTO;
 import ru.senla.socialnetwork.dto.users.WallPostResponseDTO;
 import ru.senla.socialnetwork.exceptions.users.WallPostException;
+import ru.senla.socialnetwork.facades.wallposts.WallPostFacade;
 import ru.senla.socialnetwork.model.users.ProfileType;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.model.users.WallPost;

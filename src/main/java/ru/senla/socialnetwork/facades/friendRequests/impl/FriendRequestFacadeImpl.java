@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.facades.friendRequests;
+package ru.senla.socialnetwork.facades.friendRequests.impl;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -11,15 +11,16 @@ import ru.senla.socialnetwork.dto.mappers.FriendRequestMapper;
 import ru.senla.socialnetwork.dto.mappers.UserMapper;
 import ru.senla.socialnetwork.dto.users.UserResponseDTO;
 import ru.senla.socialnetwork.exceptions.friendRequests.SelfFriendshipException;
+import ru.senla.socialnetwork.facades.friendRequests.FriendRequestFacade;
 import ru.senla.socialnetwork.model.friendRequests.FriendStatus;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.services.friendRequest.FriendRequestService;
 import ru.senla.socialnetwork.services.user.UserService;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
-@Slf4j
 public class FriendRequestFacadeImpl implements FriendRequestFacade {
   private final FriendRequestService friendRequestService;
   private final UserService userService;

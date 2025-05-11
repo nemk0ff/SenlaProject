@@ -9,6 +9,7 @@ import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 import ru.senla.socialnetwork.dao.HibernateAbstractDao;
 import ru.senla.socialnetwork.dao.communities.CommunityMemberDao;
+import ru.senla.socialnetwork.model.communities.Community;
 import ru.senla.socialnetwork.model.communities.CommunityMember;
 
 @Repository
@@ -51,6 +52,28 @@ public class CommunityMemberDaoImpl extends HibernateAbstractDao<CommunityMember
       log.error("Ошибка при поиске активных участников сообщества: {}", e.getMessage());
       throw new DataRetrievalFailureException(
           "Ошибка при поиске активных участников сообщества", e);
+    }
+  }
+
+  @Override
+  public List<CommunityMember> findAllByUser(Long userId) {
+    log.info("Получение списка всех участников сообществ, " +
+            "которыми является пользователь id={}...", userId);
+    try {
+      String hql = "SELECT c FROM CommunityMember c " +
+          "LEFT JOIN FETCH c.community WHERE c.user.id = :userId";
+
+      List<CommunityMember> communities = sessionFactory.getCurrentSession()
+          .createQuery(hql, CommunityMember.class)
+          .setParameter("userId", userId)
+          .getResultList();
+
+      log.info("Найдено {} сообществ, на которые подписан пользователь id={}",
+          communities.size(), userId);
+      return communities;
+    } catch (Exception e) {
+      throw new DataRetrievalFailureException(
+          "Ошибка при получении списка всех сообществ пользователя id=" + userId, e);
     }
   }
 }

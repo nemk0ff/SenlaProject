@@ -20,7 +20,7 @@ public class CommunityDaoImpl extends HibernateAbstractDao<Community> implements
   public List<Community> getAll() {
     log.info("Получение списка всех сообществ...");
     try {
-      String hql = "SELECT c FROM Community c LEFT JOIN FETCH c.owner";
+      String hql = "SELECT c FROM Community c";
 
       List<Community> communities = sessionFactory.getCurrentSession()
           .createQuery(hql, Community.class)

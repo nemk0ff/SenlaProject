@@ -1,7 +1,7 @@
 package ru.senla.socialnetwork.services.friendRequest;
 
 import jakarta.persistence.EntityNotFoundException;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -62,7 +62,7 @@ public class FriendRequestServiceImpl implements FriendRequestService {
           .sender(sender)
           .recipient(recipient)
           .status(FriendStatus.PENDING)
-          .createdAt(LocalDateTime.now())
+          .createdAt(ZonedDateTime.now())
           .build());
     }
     log.info("Заявка между {} и {} уже существует, проверяем наличие несоответствий...",

@@ -9,17 +9,10 @@ public record CommunityMemberDTO(
     String email,
     MemberRole role,
     Long communityId,
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING,
-        pattern = "dd-MM-yyyy HH:mm:ss [ZZZ]",
-        timezone = "UTC")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
     ZonedDateTime joinDate,
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING,
-        pattern = "dd-MM-yyyy HH:mm:ss [ZZZ]",
-        timezone = "UTC")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
     ZonedDateTime leaveDate,
-
     Boolean isBanned,
     String bannedReason) {
 }

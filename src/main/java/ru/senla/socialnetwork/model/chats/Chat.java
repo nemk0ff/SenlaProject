@@ -1,5 +1,6 @@
 package ru.senla.socialnetwork.model.chats;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,6 +40,7 @@ public final class Chat implements MyEntity {
   private Boolean isGroup;
 
   @Column(name = "created_at")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
   private ZonedDateTime createdAt;
 
   @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

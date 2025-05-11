@@ -1,5 +1,6 @@
 package ru.senla.socialnetwork.model.users;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -67,6 +68,7 @@ public final class User implements MyEntity {
   private String aboutMe;
 
   @Column(name = "registered_at")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
   private ZonedDateTime registeredAt;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

@@ -1,5 +1,6 @@
 package ru.senla.socialnetwork.model.friendRequests;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -45,5 +47,6 @@ public final class FriendRequest implements MyEntity {
   private FriendStatus status;
 
   @Column(name = "created_at")
-  private LocalDateTime createdAt;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+  private ZonedDateTime createdAt;
 }

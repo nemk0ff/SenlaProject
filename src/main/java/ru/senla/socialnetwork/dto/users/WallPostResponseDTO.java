@@ -2,6 +2,7 @@ package ru.senla.socialnetwork.dto.users;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.ZonedDateTime;
+import ru.senla.socialnetwork.dto.PostDTO;
 
 public record WallPostResponseDTO(
     Long id,
@@ -9,6 +10,6 @@ public record WallPostResponseDTO(
     String mood,
     String body,
     String location,
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss XXX")
-    ZonedDateTime createdAt) {
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+    ZonedDateTime createdAt) implements PostDTO {
 }

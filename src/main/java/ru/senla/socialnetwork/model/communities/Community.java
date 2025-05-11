@@ -1,5 +1,6 @@
 package ru.senla.socialnetwork.model.communities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,5 +35,6 @@ public final class Community implements MyEntity {
   private String description;
 
   @Column(name = "created_at")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
   private ZonedDateTime created_at;
 }
