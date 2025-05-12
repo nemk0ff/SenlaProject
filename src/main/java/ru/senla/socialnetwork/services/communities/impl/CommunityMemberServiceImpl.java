@@ -25,7 +25,7 @@ public class CommunityMemberServiceImpl implements CommunityMemberService {
 
   @Override
   public CommunityMember get(Long communityId, String userEmail) {
-    CommunityMember member = communityMemberDao.findByCommunityAndUser(communityId, userEmail).
+    CommunityMember member = communityMemberDao.findByCommunityIdAndUserEmail(communityId, userEmail).
         orElseThrow(() -> new EntityNotFoundException("Участник сообщества не найден"));
     if (!member.isUserInGroup()) {
       throw new ChatMemberException("Пользователь " + userEmail + " не является участником " +
@@ -36,12 +36,12 @@ public class CommunityMemberServiceImpl implements CommunityMemberService {
 
   @Override
   public List<CommunityMember> getAll(Long communityId) {
-    return communityMemberDao.findAllByCommunity(communityId);
+    return communityMemberDao.findAllByCommunityId(communityId);
   }
 
   @Override
   public List<CommunityMember> getAllByUser(Long userId) {
-    return communityMemberDao.findAllByUser(userId);
+    return communityMemberDao.findAllByUserId(userId);
   }
 
   @Override
@@ -66,7 +66,7 @@ public class CommunityMemberServiceImpl implements CommunityMemberService {
 
   @Override
   public CommunityMember recreate(Long communityId, String userEmail) {
-    Optional<CommunityMember> maybeMember = communityMemberDao.findByCommunityAndUser(
+    Optional<CommunityMember> maybeMember = communityMemberDao.findByCommunityIdAndUserEmail(
         communityId, userEmail);
     if (maybeMember.isEmpty()) {
       throw new CommunityMemberException("Ошибка при повторном вступлении в сообщество: участник " +
@@ -101,14 +101,14 @@ public class CommunityMemberServiceImpl implements CommunityMemberService {
 
   @Override
   public boolean isMember(Long communityId, String userEmail) {
-    Optional<CommunityMember> maybeMember = communityMemberDao.findByCommunityAndUser(
+    Optional<CommunityMember> maybeMember = communityMemberDao.findByCommunityIdAndUserEmail(
         communityId, userEmail);
     return maybeMember.map(GroupMember::isUserInGroup).orElse(false);
   }
 
   @Override
   public boolean isMemberExists(Long communityId, String userEmail) {
-    return communityMemberDao.findByCommunityAndUser(communityId, userEmail).isPresent();
+    return communityMemberDao.findByCommunityIdAndUserEmail(communityId, userEmail).isPresent();
   }
 
   @Override

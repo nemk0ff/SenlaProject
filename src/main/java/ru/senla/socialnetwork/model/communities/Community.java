@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
@@ -15,13 +16,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.senla.socialnetwork.model.MyEntity;
 
+@Entity
+@Table(name = "communities")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
-@Table(name = "communities")
+@NamedQuery(name = "Community.findAll",
+    query = "SELECT c FROM Community c")
 public final class Community implements MyEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
