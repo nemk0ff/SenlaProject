@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,13 +18,19 @@ import lombok.experimental.SuperBuilder;
 import ru.senla.socialnetwork.model.ContentFragment;
 import ru.senla.socialnetwork.model.Post;
 
+@Entity
+@DiscriminatorValue("COMMENT")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@Entity
-@DiscriminatorValue("COMMENT")
+@NamedQuery(name = "Comment.find",
+    query = "SELECT c FROM Comment c WHERE c.id = :id")
+@NamedQuery(name = "Comment.findAll",
+    query = "SELECT c FROM Comment c ")
+@NamedQuery(name = "Comment.findAllByPostId",
+    query = "SELECT c FROM Comment c WHERE c.post.id = :postId")
 public final class Comment extends ContentFragment {
 
   @ManyToOne(fetch = FetchType.LAZY)

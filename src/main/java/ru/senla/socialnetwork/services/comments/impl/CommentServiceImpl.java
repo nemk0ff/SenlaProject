@@ -19,7 +19,7 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   public List<Comment> getAll() {
-    List<Comment> comments = commentDao.getAll();
+    List<Comment> comments = commentDao.findAll();
     if (comments.isEmpty()) {
       throw new CommentException("Не найдено комментариев");
     }
@@ -28,12 +28,12 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   public List<Comment> getAllByPost(Long postId) {
-    return commentDao.getAllByPost(postId);
+    return commentDao.findAllByPostId(postId);
   }
 
   @Override
   public Comment getById(Long commentId) {
-    return commentDao.getById(commentId)
+    return commentDao.find(commentId)
         .orElseThrow(() -> new CommentException("Комментарий " + commentId + " не найден"));
   }
 
