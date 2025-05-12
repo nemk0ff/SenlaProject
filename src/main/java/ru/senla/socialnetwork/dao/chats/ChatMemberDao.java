@@ -9,13 +9,11 @@ import ru.senla.socialnetwork.model.MemberRole;
 public interface ChatMemberDao extends GenericDao<ChatMember> {
   void saveAll(List<ChatMember> members);
 
-  List<ChatMember> findMembersByChatId(Long chatId);
+  List<ChatMember> findAllByChatId(Long chatId);
 
   Optional<ChatMember> findByChatIdAndUserEmail(Long chatId, String userEmail);
 
   Optional<ChatMember> findActiveByChatIdAndUserEmail(Long chatId, String userEmail);
-
-  boolean existsByChatIdAndUserEmail(Long chatId, String userEmail);
 
   long countByChatIdAndRole(Long chatId, MemberRole role);
 

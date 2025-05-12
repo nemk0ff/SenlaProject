@@ -10,5 +10,5 @@ public interface ChatDao extends GenericDao<Chat> {
 
   Optional<Chat> findWithMembersAndUsers(Long chatId);
 
-  List<Chat> findAllActiveByUserId(Long userId);
+  List<Chat> findAllChatsByUserId(Long userId);
 }

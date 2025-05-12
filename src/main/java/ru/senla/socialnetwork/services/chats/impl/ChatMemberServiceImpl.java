@@ -125,7 +125,7 @@ public class ChatMemberServiceImpl implements ChatMemberService {
 
   @Override
   public List<ChatMember> getMembers(Long chatId) {
-    return chatMemberDao.findMembersByChatId(chatId);
+    return chatMemberDao.findAllByChatId(chatId);
   }
 
   @Override
