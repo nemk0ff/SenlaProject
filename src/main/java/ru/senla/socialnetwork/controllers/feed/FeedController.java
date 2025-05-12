@@ -6,5 +6,4 @@ import ru.senla.socialnetwork.dto.PostDTO;
 
 public interface FeedController {
   List<PostDTO> newsFeed(Authentication auth);
-
 }

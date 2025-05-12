@@ -5,5 +5,4 @@ import ru.senla.socialnetwork.dto.PostDTO;
 
 public interface FeedFacade {
   List<PostDTO> getNews(String clientEmail);
-
 }

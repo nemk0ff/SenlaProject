@@ -4,7 +4,6 @@ import java.util.List;
 import ru.senla.socialnetwork.dto.friendRequests.FriendRequestDTO;
 import ru.senla.socialnetwork.dto.friendRequests.RespondRequestDTO;
 import ru.senla.socialnetwork.dto.users.UserResponseDTO;
-import ru.senla.socialnetwork.model.friendRequests.FriendRequest;
 import ru.senla.socialnetwork.model.friendRequests.FriendStatus;
 
 public interface FriendRequestFacade {

@@ -149,7 +149,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
   public ResponseEntity<ProblemDetail> handleBusinessExceptions(
       Exception ex, WebRequest request) {
     String title = ex instanceof SocialNetworkException
-        ? ((SocialNetworkException)ex).getAction()
+        ? ((SocialNetworkException) ex).getAction()
         : "Возникла бизнес-ошибка во время работы приложения";
 
     log.warn("{}: {}", title, ex.getMessage());

@@ -7,17 +7,18 @@ import ru.senla.socialnetwork.model.users.Gender;
 import ru.senla.socialnetwork.model.users.ProfileType;
 
 public record RegisterDTO(
-    @NotBlank (message = "email не должен быть пустым")
+    @NotBlank(message = "email не должен быть пустым")
     String email,
-    @NotBlank (message = "пароль не должен быть пустым")
+    @NotBlank(message = "пароль не должен быть пустым")
     String password,
-    @NotBlank (message = "введите ваше имя")
+    @NotBlank(message = "введите ваше имя")
     String name,
-    @NotBlank (message = "введите вашу фамилию")
+    @NotBlank(message = "введите вашу фамилию")
     String surname,
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     LocalDate birthDate,
     Gender gender,
     String aboutMe,
     ProfileType profileType
-) {}
+) {
+}

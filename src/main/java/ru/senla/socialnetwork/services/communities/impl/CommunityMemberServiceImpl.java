@@ -27,7 +27,7 @@ public class CommunityMemberServiceImpl implements CommunityMemberService {
   public CommunityMember get(Long communityId, String userEmail) {
     CommunityMember member = communityMemberDao.findByCommunityAndUser(communityId, userEmail).
         orElseThrow(() -> new EntityNotFoundException("Участник сообщества не найден"));
-    if(!member.isUserInGroup()) {
+    if (!member.isUserInGroup()) {
       throw new ChatMemberException("Пользователь " + userEmail + " не является участником " +
           "сообщества с момента " + member.getLeaveDate());
     }
@@ -68,7 +68,7 @@ public class CommunityMemberServiceImpl implements CommunityMemberService {
   public CommunityMember recreate(Long communityId, String userEmail) {
     Optional<CommunityMember> maybeMember = communityMemberDao.findByCommunityAndUser(
         communityId, userEmail);
-    if(maybeMember.isEmpty()) {
+    if (maybeMember.isEmpty()) {
       throw new CommunityMemberException("Ошибка при повторном вступлении в сообщество: участник " +
           "не найден в базе данных");
     }
@@ -125,18 +125,18 @@ public class CommunityMemberServiceImpl implements CommunityMemberService {
   public void checkIsAdminOrModer(Long communityId, String userEmail) {
     log.info("Проверка, имеет ли пользователь {} права админа или модератора в сообществе {}...",
         userEmail, communityId);
-    if(hasRight(communityId, userEmail, MemberRole.MEMBER)) {
+    if (hasRight(communityId, userEmail, MemberRole.MEMBER)) {
       throw new CommunityMemberException("У вас недостаточно прав для выполнения этой операции");
     }
     log.info("Пользователь {} имеет права админа или модератора в сообществе {}, проверка " +
-            "пройдена.", userEmail, communityId);
+        "пройдена.", userEmail, communityId);
   }
 
   @Override
   public void checkIsAdmin(Long communityId, String userEmail) {
     log.info("Проверка, имеет ли пользователь {} права админа в сообществе {}...",
         userEmail, communityId);
-    if(!hasRight(communityId, userEmail, MemberRole.ADMIN)) {
+    if (!hasRight(communityId, userEmail, MemberRole.ADMIN)) {
       throw new CommunityMemberException("У вас недостаточно прав для выполнения этой операции");
     }
     log.info("Пользователь {} имеет права админа в сообществе {}, проверка " +

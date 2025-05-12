@@ -5,4 +5,5 @@ import jakarta.validation.constraints.NotBlank;
 public record MessageRequestDTO(
     @NotBlank(message = "Укажите тело сообщения") String body,
     Long replyToId
-) {}
+) {
+}

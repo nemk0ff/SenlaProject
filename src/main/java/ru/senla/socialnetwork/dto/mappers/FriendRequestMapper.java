@@ -16,5 +16,4 @@ public interface FriendRequestMapper {
   FriendRequestDTO toDTO(FriendRequest friendRequest);
 
   List<FriendRequestDTO> toListDTO(List<FriendRequest> friendRequests);
-
 }

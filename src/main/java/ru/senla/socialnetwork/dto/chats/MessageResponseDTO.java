@@ -12,4 +12,5 @@ public record MessageResponseDTO(
     ZonedDateTime createdAt,
     Long replyToId,
     Boolean isPinned
-) {}
+) {
+}

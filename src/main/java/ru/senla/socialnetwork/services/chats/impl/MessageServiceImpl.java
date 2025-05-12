@@ -66,7 +66,7 @@ public class MessageServiceImpl implements MessageService {
   @Override
   public List<Message> getPinned(Long chatId) {
     List<Message> messages = messageDao.findPinnedByChatId(chatId);
-    if(messages.isEmpty()){
+    if (messages.isEmpty()) {
       throw new ChatMemberException("В чате нет закреплённых сообщений");
     }
     return messages;

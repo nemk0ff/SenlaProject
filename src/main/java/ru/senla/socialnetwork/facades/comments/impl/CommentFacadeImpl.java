@@ -3,7 +3,6 @@ package ru.senla.socialnetwork.facades.comments.impl;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.senla.socialnetwork.dto.comments.CommentDTO;
@@ -126,7 +125,7 @@ public class CommentFacadeImpl implements CommentFacade {
         }
       } else if (post.getPostType().equals("CommunityPost")) {
         CommunityPost communityPost = (CommunityPost) comment.getPost();
-        if(!communityMemberService.isMember(communityPost.getId(), clientEmail)) {
+        if (!communityMemberService.isMember(communityPost.getId(), clientEmail)) {
           throw new CommentException("У вас нет доступа, т.к. вы не являетесь участником " +
               "сообщества " + communityPost.getCommunity().getId());
         }

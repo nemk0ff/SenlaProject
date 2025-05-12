@@ -4,4 +4,5 @@ import jakarta.validation.constraints.NotBlank;
 
 public record UpdateCommunityPostDTO(
     @NotBlank String body,
-    boolean isPinned) {}
+    boolean isPinned) {
+}

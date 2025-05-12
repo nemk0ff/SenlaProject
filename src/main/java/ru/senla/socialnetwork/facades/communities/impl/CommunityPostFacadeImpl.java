@@ -59,7 +59,7 @@ public class CommunityPostFacadeImpl implements CommunityPostFacade {
 
   @Override
   public void deletePost(Long communityId, Long postId, String clientEmail) {
-    if(!userService.isAdmin(clientEmail)) {
+    if (!userService.isAdmin(clientEmail)) {
       checkAccess(communityId, postId, clientEmail);
     }
     CommunityPost post = communityPostService.getPost(communityId, postId);
@@ -77,7 +77,7 @@ public class CommunityPostFacadeImpl implements CommunityPostFacade {
   private void checkAccess(Long communityId, Long postId, String clientEmail) {
     CommunityMember member = communityMemberService.get(communityId, clientEmail);
     CommunityPost post = communityPostService.getPost(communityId, postId);
-    if(!post.getAuthor().equals(member)) {
+    if (!post.getAuthor().equals(member)) {
       communityMemberService.checkIsAdminOrModer(communityId, clientEmail);
     }
   }

@@ -7,4 +7,5 @@ import ru.senla.socialnetwork.model.friendRequests.FriendStatus;
 public record RespondRequestDTO(
     @Email String senderEmail,
     @NotNull FriendStatus respondStatus
-) {}
+) {
+}

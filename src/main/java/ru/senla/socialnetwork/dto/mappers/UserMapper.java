@@ -5,7 +5,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import ru.senla.socialnetwork.dto.auth.RegisterDTO;
 import ru.senla.socialnetwork.dto.users.UserResponseDTO;
-import ru.senla.socialnetwork.dto.users.UserRequestDTO;
 import ru.senla.socialnetwork.model.users.User;
 
 @Mapper

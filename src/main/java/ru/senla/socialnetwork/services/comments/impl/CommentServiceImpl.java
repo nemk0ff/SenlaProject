@@ -20,7 +20,7 @@ public class CommentServiceImpl implements CommentService {
   @Override
   public List<Comment> getAll() {
     List<Comment> comments = commentDao.getAll();
-    if(comments.isEmpty()) {
+    if (comments.isEmpty()) {
       throw new CommentException("Не найдено комментариев");
     }
     return comments;

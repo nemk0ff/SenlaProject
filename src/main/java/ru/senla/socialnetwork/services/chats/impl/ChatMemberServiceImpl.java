@@ -111,7 +111,7 @@ public class ChatMemberServiceImpl implements ChatMemberService {
     ChatMember member = chatMemberDao.findActiveByChatIdAndUserEmail(chatId, email)
         .orElseThrow(() -> new EntityNotFoundException(
             "Участник " + email + " чата id= " + chatId + " не найден"));
-    if(!member.isUserInGroup()) {
+    if (!member.isUserInGroup()) {
       throw new ChatMemberException(
           "Пользователь " + email + " не является участником чата с момента " + member.getLeaveDate());
     }

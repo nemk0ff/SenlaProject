@@ -103,7 +103,7 @@ public class ChatFacadeImpl implements ChatFacade {
     if (!userService.isAdmin(clientEmail)) {
       try {
         ChatMember member = chatMemberService.getMember(chatId, clientEmail);
-        if(!member.getRole().equals(MemberRole.ADMIN)) {
+        if (!member.getRole().equals(MemberRole.ADMIN)) {
           throw new ChatException("У вас недостаточно прав для удаления этого чата");
         }
       } catch (EntityNotFoundException e) {
@@ -119,7 +119,7 @@ public class ChatFacadeImpl implements ChatFacade {
 
   @Override
   public ChatDTO get(Long chatId, String clientEmail) {
-    if(chatMemberService.isChatMember(chatId, clientEmail)){
+    if (chatMemberService.isChatMember(chatId, clientEmail)) {
       return chatMapper.toChatDTO(chatService.get(chatId));
     }
     throw new ChatException("У вас нет доступа к этому чату, т.к. вы не являетесь участником");

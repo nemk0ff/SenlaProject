@@ -11,4 +11,5 @@ public record UserRequestDTO(
     Gender gender,
     ProfileType profileType,
     String aboutMe
-) {}
+) {
+}

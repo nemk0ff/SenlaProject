@@ -23,7 +23,7 @@ public class CommentDaoImpl extends HibernateAbstractDao<Comment> implements Com
     try {
       String hql = "SELECT c FROM Comment c " +
           "LEFT JOIN FETCH c.author " +
-          "LEFT JOIN FETCH c.post p "+
+          "LEFT JOIN FETCH c.post p " +
           "WHERE c.id = :id";
       return sessionFactory.getCurrentSession()
           .createQuery(hql, Comment.class)

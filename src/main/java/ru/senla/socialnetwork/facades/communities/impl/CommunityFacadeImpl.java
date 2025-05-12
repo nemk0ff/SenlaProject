@@ -52,8 +52,8 @@ public class CommunityFacadeImpl implements CommunityFacade {
   public void delete(Long communityId, String clientEmail) {
     User client = userService.getUserByEmail(clientEmail);
 
-    if(!client.getRole().equals(UserRole.ADMIN)) {
-      if(communityMemberService.isMember(communityId, clientEmail)) {
+    if (!client.getRole().equals(UserRole.ADMIN)) {
+      if (communityMemberService.isMember(communityId, clientEmail)) {
         communityMemberService.checkIsAdmin(communityId, clientEmail);
       } else {
         throw new CommunityException("Недостаточно прав для выполнения этой операции");

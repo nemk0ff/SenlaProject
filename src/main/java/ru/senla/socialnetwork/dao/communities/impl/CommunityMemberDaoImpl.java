@@ -9,7 +9,6 @@ import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 import ru.senla.socialnetwork.dao.HibernateAbstractDao;
 import ru.senla.socialnetwork.dao.communities.CommunityMemberDao;
-import ru.senla.socialnetwork.model.communities.Community;
 import ru.senla.socialnetwork.model.communities.CommunityMember;
 
 @Repository

@@ -90,14 +90,14 @@ public class MessageFacadeImpl implements MessageFacade {
   }
 
   private void checkIsMember(Long chatId, String email) {
-    if(!chatMemberService.isChatMember(chatId, email)) {
+    if (!chatMemberService.isChatMember(chatId, email)) {
       throw new MessageException("Недостаточно прав для выполнения этой операции");
     }
   }
 
   private void checkIsAdminOrModerator(Long chatId, String email) {
     ChatMember member = chatMemberService.getMember(chatId, email);
-    if(member.getRole().equals(MemberRole.MEMBER)) {
+    if (member.getRole().equals(MemberRole.MEMBER)) {
       throw new ChatMemberException("Недостаточно прав для выполнения этой операции");
     }
   }

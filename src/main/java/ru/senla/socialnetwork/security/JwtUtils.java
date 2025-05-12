@@ -14,7 +14,7 @@ public class JwtUtils {
       "my-very-secure-key-256-bits-long-1234567890".getBytes()
   );
   private static final MacAlgorithm ALGORITHM = Jwts.SIG.HS256;
-  private static final long EXPIRATION_TIME_MS = 1000*60*60*24*7;
+  private static final long EXPIRATION_TIME_MS = 1000 * 60 * 60 * 24 * 7;
 
   public static String generateToken(String username, String role) {
     return Jwts.builder()

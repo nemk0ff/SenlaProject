@@ -23,7 +23,7 @@ public class ReactionDaoImpl extends HibernateAbstractDao<Reaction> implements R
     try {
       String hql = "SELECT r FROM Reaction r " +
           "LEFT JOIN FETCH r.comment " +
-          "LEFT JOIN FETCH r.comment.post "+
+          "LEFT JOIN FETCH r.comment.post " +
           "WHERE r.id = :id";
       return sessionFactory.getCurrentSession()
           .createQuery(hql, Reaction.class)
