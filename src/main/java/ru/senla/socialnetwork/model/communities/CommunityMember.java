@@ -22,15 +22,15 @@ import ru.senla.socialnetwork.model.GroupMember;
 @AllArgsConstructor
 @SuperBuilder
 @NamedQuery(name = "CommunityMember.findByCommunityIdAndUserEmail",
-    query = "FROM CommunityMember cm WHERE cm.community.id = :communityId " +
-        "AND lower(cm.user.email) = lower(:userEmail)")
+    query = "FROM CommunityMember cm JOIN FETCH cm.user JOIN FETCH cm.community " +
+        "WHERE cm.community.id = :communityId AND lower(cm.user.email) = lower(:userEmail)")
 @NamedQuery(name = "CommunityMember.findAllByCommunityId",
-    query = "FROM CommunityMember cm " +
+    query = "FROM CommunityMember cm JOIN FETCH cm.user JOIN FETCH cm.community " +
         "WHERE cm.community.id = :communityId " +
         "AND (cm.leaveDate IS NULL OR cm.joinDate > cm.leaveDate)")
 @NamedQuery(name = "CommunityMember.findAllByUserId",
-    query = "SELECT c FROM CommunityMember c " +
-        "LEFT JOIN FETCH c.community WHERE c.user.id = :userId")
+    query = "SELECT c FROM CommunityMember c JOIN FETCH c.user JOIN FETCH c.community " +
+        "JOIN FETCH c.community WHERE c.user.id = :userId")
 public final class CommunityMember extends GroupMember {
   @ManyToOne
   @JoinColumn(name = "community_id")

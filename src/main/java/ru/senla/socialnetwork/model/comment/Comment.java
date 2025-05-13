@@ -26,11 +26,16 @@ import ru.senla.socialnetwork.model.Post;
 @AllArgsConstructor
 @SuperBuilder
 @NamedQuery(name = "Comment.find",
-    query = "SELECT c FROM Comment c WHERE c.id = :id")
+    query = "SELECT c FROM Comment c " +
+        "JOIN FETCH c.post JOIN FETCH c.author JOIN FETCH c.reactions " +
+        "WHERE c.id = :id")
 @NamedQuery(name = "Comment.findAll",
-    query = "SELECT c FROM Comment c ")
+    query = "SELECT c FROM Comment c " +
+        "JOIN FETCH c.post JOIN FETCH c.author JOIN FETCH c.reactions")
 @NamedQuery(name = "Comment.findAllByPostId",
-    query = "SELECT c FROM Comment c WHERE c.post.id = :postId")
+    query = "SELECT c FROM Comment c " +
+        "JOIN FETCH c.post JOIN FETCH c.author JOIN FETCH c.reactions " +
+        "WHERE c.post.id = :postId")
 public final class Comment extends ContentFragment {
 
   @ManyToOne(fetch = FetchType.LAZY)

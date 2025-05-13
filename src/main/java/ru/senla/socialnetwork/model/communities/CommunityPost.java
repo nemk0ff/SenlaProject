@@ -24,9 +24,11 @@ import ru.senla.socialnetwork.model.Post;
 @AllArgsConstructor
 @SuperBuilder
 @NamedQuery(name = "CommunityPost.findAllByCommunityId",
-    query = "FROM CommunityPost cp WHERE cp.community.id = :communityId")
+    query = "FROM CommunityPost cp JOIN FETCH cp.community JOIN FETCH cp.author " +
+        "WHERE cp.community.id = :communityId")
 @NamedQuery(name = "CommunityPost.findPinnedByCommunityId",
-    query = "FROM CommunityPost cp WHERE cp.community.id = :communityId AND cp.isPinned")
+    query = "FROM CommunityPost cp JOIN FETCH cp.community JOIN FETCH cp.author " +
+        "WHERE cp.community.id = :communityId AND cp.isPinned")
 public final class CommunityPost extends Post {
   @OneToOne
   @JoinColumn(name = "author_id", nullable = false)

@@ -25,13 +25,12 @@ import ru.senla.socialnetwork.model.GroupMember;
 @AllArgsConstructor
 @SuperBuilder
 @NamedQuery(name = "ChatMember.findAllByChatId",
-    query = "FROM ChatMember WHERE chat.id = :chatId")
+    query = "FROM ChatMember c JOIN FETCH c.user WHERE c.chat.id = :chatId")
 @NamedQuery(name = "ChatMember.findByChatIdAndUserEmail",
     query = "FROM ChatMember cm WHERE cm.chat.id = :chatId AND cm.user.email = :email ")
 @NamedQuery(name = "ChatMember.findActiveByChatIdAndUserEmail",
-    query = "FROM ChatMember cm WHERE cm.chat.id = :chatId " +
-        "AND cm.user.email = :email " +
-        "AND (cm.leaveDate IS NULL OR cm.joinDate > cm.leaveDate)")
+    query = "FROM ChatMember cm JOIN FETCH cm.user WHERE cm.chat.id = :chatId " +
+        "AND cm.user.email = :email AND (cm.leaveDate IS NULL OR cm.joinDate > cm.leaveDate)")
 @NamedQuery(name = "ChatMember.countByChatIdAndRole",
     query = "SELECT COUNT(cm) FROM ChatMember cm " +
         "WHERE cm.chat.id = :chatId " +

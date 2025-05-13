@@ -9,6 +9,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
@@ -23,13 +24,15 @@ import lombok.Setter;
 import ru.senla.socialnetwork.model.MyEntity;
 import ru.senla.socialnetwork.model.chats.ChatMember;
 
+@Entity
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
-@Table(name = "users")
+@NamedQuery(name = "User.findByEmail",
+    query = "FROM User WHERE email = :email")
 public final class User implements MyEntity {
 
   @Id
