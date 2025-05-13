@@ -57,8 +57,8 @@ public class ChatControllerImpl implements ChatController {
       @RequestParam @Email String participant,
       Authentication auth) {
     log.info("Создание персонального чата между {} и {}", auth.getName(), participant);
-    ChatDTO chat = chatFacade.create(participant, auth.getName());
-    log.info("Создан персональный чат ID: {} между {} и {}", chat.id(), auth.getName(), participant);
+    ChatDTO chat = chatFacade.create(auth.getName(), participant);
+    log.info("Создан персональный чат id={} между {} и {}", chat.id(), auth.getName(), participant);
     return ResponseEntity.status(HttpStatus.CREATED).body(chat);
   }
 

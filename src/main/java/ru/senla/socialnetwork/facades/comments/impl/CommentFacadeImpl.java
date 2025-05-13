@@ -49,9 +49,7 @@ public class CommentFacadeImpl implements CommentFacade {
     if (!userService.isAdmin(clientEmail)) {
       if (comment.getPost().getPostType().equals("WallPost")) {
         WallPost post = (WallPost) comment.getPost();
-        if (!client.equals(post.getWallOwner())
-            && !friendRequestService.isFriends(post.getWallOwner().getId(), client.getId())
-            && post.getWallOwner().getProfileType().equals(ProfileType.CLOSED)) {
+        if (userHasNoRights(client, post)) {
           throw new CommentException("Вы не можете увидеть комментарий под этим постом, т.к. вы " +
               "не являетесь другом автора поста, а его профиль является закрытым");
         }
@@ -68,9 +66,7 @@ public class CommentFacadeImpl implements CommentFacade {
     if (!userService.isAdmin(clientEmail)) {
       if (post.getPostType().equals("WallPost")) {
         WallPost wallpost = (WallPost) post;
-        if (!client.equals(wallpost.getWallOwner())
-            && !friendRequestService.isFriends(wallpost.getWallOwner().getId(), client.getId())
-            && wallpost.getWallOwner().getProfileType().equals(ProfileType.CLOSED)) {
+        if (userHasNoRights(client, wallpost)) {
           throw new CommentException("Вы не можете увидеть комментарии под этим постом, т.к. вы " +
               "не являетесь другом автора поста, а его профиль является закрытым");
         }
@@ -86,8 +82,7 @@ public class CommentFacadeImpl implements CommentFacade {
     if (!userService.isAdmin(clientEmail)) {
       if (post.getPostType().equals("WallPost")) {
         WallPost wallpost = (WallPost) post;
-        if (!friendRequestService.isFriends(wallpost.getWallOwner().getId(), client.getId())
-            && wallpost.getWallOwner().getProfileType().equals(ProfileType.CLOSED)) {
+        if (userHasNoRights(client, wallpost)) {
           throw new CommentException("Вы не можете комментировать этот пост, т.к. вы " +
               "не являетесь другом автора поста, а его профиль является закрытым");
         }
@@ -138,5 +133,13 @@ public class CommentFacadeImpl implements CommentFacade {
     }
     commentService.delete(comment);
     log.info("Комментарий {} удален", id);
+  }
+
+  private boolean userHasNoRights(User client, WallPost post) {
+    // Если client не автор поста, не друг автора и профиль автора закрыт,
+    // то операция не может быть выполнена
+    return !client.equals(post.getWallOwner())
+        && !friendRequestService.isFriends(post.getWallOwner().getId(), client.getId())
+        && post.getWallOwner().getProfileType().equals(ProfileType.CLOSED);
   }
 }
