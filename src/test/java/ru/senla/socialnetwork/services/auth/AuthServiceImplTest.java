@@ -25,7 +25,7 @@ import ru.senla.socialnetwork.exceptions.auth.IllegalPasswordException;
 import ru.senla.socialnetwork.exceptions.auth.UserNotRegisteredException;
 import ru.senla.socialnetwork.exceptions.users.EmailAlreadyExistsException;
 import ru.senla.socialnetwork.model.users.User;
-import static ru.senla.socialnetwork.services.TestConstants.*;
+import static ru.senla.socialnetwork.TestConstants.*;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceImplTest {
@@ -45,15 +45,15 @@ class AuthServiceImplTest {
   void setUp() {
     testUser = User.builder()
         .id(TEST_USER_ID)
-        .email(TEST_EMAIL)
+        .email(TEST_EMAIL_1)
         .password(TEST_ENCODED_PASSWORD)
         .name(TEST_NAME)
         .role(TEST_ROLE)
         .build();
 
-    authRequest = new AuthRequestDTO(TEST_EMAIL, TEST_PASSWORD);
+    authRequest = new AuthRequestDTO(TEST_EMAIL_1, TEST_PASSWORD);
     registerDTO = new RegisterDTO(
-        TEST_EMAIL, TEST_PASSWORD, TEST_NAME, TEST_SURNAME,
+        TEST_EMAIL_1, TEST_PASSWORD, TEST_NAME, TEST_SURNAME,
         TEST_BIRTHDATE, TEST_GENDER, TEST_ABOUT_ME, TEST_PROFILE_TYPE);
   }
 
@@ -61,20 +61,20 @@ class AuthServiceImplTest {
   class GetAuthResponseTests {
     @Test
     void getAuthResponse_whenValidCredentials_thenReturnAuthResponse() {
-      when(userDao.findByEmail(TEST_EMAIL)).thenReturn(Optional.of(testUser));
+      when(userDao.findByEmail(TEST_EMAIL_1)).thenReturn(Optional.of(testUser));
       when(passwordEncoder.matches(TEST_PASSWORD, TEST_ENCODED_PASSWORD)).thenReturn(true);
 
       AuthResponseDTO response = authService.getAuthResponse(authRequest);
 
       assertThat(response.role()).isEqualTo("ROLE_USER");
       assertThat(response.token()).isNotBlank();
-      verify(userDao).findByEmail(TEST_EMAIL);
+      verify(userDao).findByEmail(TEST_EMAIL_1);
       verify(passwordEncoder).matches(TEST_PASSWORD, TEST_ENCODED_PASSWORD);
     }
 
     @Test
     void getAuthResponse_whenInvalidPassword_thenThrowIllegalPasswordException() {
-      when(userDao.findByEmail(TEST_EMAIL)).thenReturn(Optional.of(testUser));
+      when(userDao.findByEmail(TEST_EMAIL_1)).thenReturn(Optional.of(testUser));
       when(passwordEncoder.matches(TEST_PASSWORD, TEST_ENCODED_PASSWORD)).thenReturn(false);
 
       assertThatThrownBy(() -> authService.getAuthResponse(authRequest))
@@ -83,11 +83,11 @@ class AuthServiceImplTest {
 
     @Test
     void getAuthResponse_whenUserNotFound_thenThrowUserNotRegisteredException() {
-      when(userDao.findByEmail(TEST_EMAIL)).thenReturn(Optional.empty());
+      when(userDao.findByEmail(TEST_EMAIL_1)).thenReturn(Optional.empty());
 
       assertThatThrownBy(() -> authService.getAuthResponse(authRequest))
           .isInstanceOf(UserNotRegisteredException.class)
-          .hasMessageContaining(TEST_EMAIL);
+          .hasMessageContaining(TEST_EMAIL_1);
     }
   }
 
@@ -95,26 +95,26 @@ class AuthServiceImplTest {
   class RegisterTests {
     @Test
     void register_whenNewUser_thenReturnUserResponse() {
-      when(userDao.findByEmail(TEST_EMAIL)).thenReturn(Optional.empty());
+      when(userDao.findByEmail(TEST_EMAIL_1)).thenReturn(Optional.empty());
       when(passwordEncoder.encode(TEST_PASSWORD)).thenReturn(TEST_ENCODED_PASSWORD);
       when(userDao.saveOrUpdate(any(User.class))).thenReturn(testUser);
 
       UserResponseDTO response = authService.register(registerDTO);
 
-      assertThat(response.email()).isEqualTo(TEST_EMAIL);
+      assertThat(response.email()).isEqualTo(TEST_EMAIL_1);
       assertThat(response.name()).isEqualTo(TEST_NAME);
-      verify(userDao).findByEmail(TEST_EMAIL);
+      verify(userDao).findByEmail(TEST_EMAIL_1);
       verify(passwordEncoder).encode(TEST_PASSWORD);
       verify(userDao).saveOrUpdate(any(User.class));
     }
 
     @Test
     void register_whenEmailExists_thenThrowEmailAlreadyExistsException() {
-      when(userDao.findByEmail(TEST_EMAIL)).thenReturn(Optional.of(testUser));
+      when(userDao.findByEmail(TEST_EMAIL_1)).thenReturn(Optional.of(testUser));
 
       assertThatThrownBy(() -> authService.register(registerDTO))
           .isInstanceOf(EmailAlreadyExistsException.class)
-          .hasMessageContaining(TEST_EMAIL);
+          .hasMessageContaining(TEST_EMAIL_1);
     }
   }
 
@@ -122,25 +122,25 @@ class AuthServiceImplTest {
   class LoadUserByUsernameTests {
     @Test
     void loadUserByUsername_whenUserExists_thenReturnUserDetails() {
-      when(userDao.findByEmail(TEST_EMAIL)).thenReturn(Optional.of(testUser));
+      when(userDao.findByEmail(TEST_EMAIL_1)).thenReturn(Optional.of(testUser));
 
-      UserDetails userDetails = authService.loadUserByUsername(TEST_EMAIL);
+      UserDetails userDetails = authService.loadUserByUsername(TEST_EMAIL_1);
 
-      assertThat(userDetails.getUsername()).isEqualTo(TEST_EMAIL);
+      assertThat(userDetails.getUsername()).isEqualTo(TEST_EMAIL_1);
       assertThat(userDetails.getPassword()).isEqualTo(TEST_ENCODED_PASSWORD);
       assertThat(userDetails.getAuthorities())
           .extracting("authority")
           .containsExactly("ROLE_USER");
-      verify(userDao).findByEmail(TEST_EMAIL);
+      verify(userDao).findByEmail(TEST_EMAIL_1);
     }
 
     @Test
     void loadUserByUsername_whenUserNotExists_thenThrowUserNotRegisteredException() {
-      when(userDao.findByEmail(TEST_EMAIL)).thenReturn(Optional.empty());
+      when(userDao.findByEmail(TEST_EMAIL_1)).thenReturn(Optional.empty());
 
-      assertThatThrownBy(() -> authService.loadUserByUsername(TEST_EMAIL))
+      assertThatThrownBy(() -> authService.loadUserByUsername(TEST_EMAIL_1))
           .isInstanceOf(UserNotRegisteredException.class)
-          .hasMessageContaining(TEST_EMAIL);
+          .hasMessageContaining(TEST_EMAIL_1);
     }
   }
 }

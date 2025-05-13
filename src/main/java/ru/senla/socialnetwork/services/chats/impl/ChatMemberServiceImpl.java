@@ -19,9 +19,9 @@ import ru.senla.socialnetwork.services.chats.ChatMemberService;
 @Service
 @AllArgsConstructor
 public class ChatMemberServiceImpl implements ChatMemberService {
-  private static final int MAX_CHAT_SIZE = 100;
-  private static final int MAX_MODERATORS_NUMBER = 10;
-  private static final int MAX_ADMINS_NUMBER = 3;
+  public static final int MAX_CHAT_SIZE = 100;
+  public static final int MAX_MODERATORS_NUMBER = 10;
+  public static final int MAX_ADMINS_NUMBER = 3;
 
   private final ChatMemberDao chatMemberDao;
 
@@ -64,15 +64,16 @@ public class ChatMemberServiceImpl implements ChatMemberService {
   @Override
   public ChatMember unmute(Long chatId, String userEmail) {
     log.info("Снятие mute с пользователя {} в чате {}", userEmail, chatId);
-    ChatMember memberToMute = getMember(chatId, userEmail);
-    if (memberToMute.getMutedUntil().isBefore(ZonedDateTime.now())) {
+    ChatMember member = getMember(chatId, userEmail);
+    if (member.getMutedUntil() == null || member.getMutedUntil().isBefore(ZonedDateTime.now())) {
       throw new ChatMemberException("Пользователь не является замьюченным");
     }
-    memberToMute.setMutedUntil(ZonedDateTime.now());
-    ChatMember updatedMember = chatMemberDao.saveOrUpdate(memberToMute);
+    member.setMutedUntil(null);
+    ChatMember updatedMember = chatMemberDao.saveOrUpdate(member);
     log.info("Пользователь {} размьючен в чате {}", userEmail, chatId);
     return updatedMember;
   }
+
 
   @Override
   public ChatMember leave(Long chatId, String userEmail) {
