@@ -30,13 +30,10 @@ import ru.senla.socialnetwork.model.GroupMember;
     query = "FROM ChatMember cm JOIN FETCH cm.user WHERE cm.chat.id = :chatId " +
         "AND cm.user.email = :email AND (cm.leaveDate IS NULL OR cm.joinDate > cm.leaveDate)")
 @NamedQuery(name = "ChatMember.countByChatIdAndRole",
-    query = "SELECT COUNT(cm) FROM ChatMember cm " +
-        "WHERE cm.chat.id = :chatId " +
-        "AND cm.role = :role " +
+    query = "SELECT COUNT(cm) FROM ChatMember cm WHERE cm.chat.id = :chatId AND cm.role = :role " +
         "AND (cm.leaveDate IS NULL OR cm.joinDate > cm.leaveDate)")
 @NamedQuery(name = "ChatMember.countByChatId",
-    query = "SELECT COUNT(cm) FROM ChatMember cm " +
-        "WHERE cm.chat.id = :chatId " +
+    query = "SELECT COUNT(cm) FROM ChatMember cm WHERE cm.chat.id = :chatId " +
         "AND (cm.leaveDate IS NULL OR cm.joinDate > cm.leaveDate)")
 public final class ChatMember extends GroupMember {
   @ManyToOne

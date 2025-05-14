@@ -28,4 +28,8 @@ public interface TestConstants {
   Long TEST_MESSAGE_ID = 1L;
   Long TEST_REPLY_TO_ID = 2L;
   String TEST_BODY = "Test message body";
+
+  Long TEST_COMMUNITY_ID = 1L;
+  String TEST_COMMUNITY_NAME = "Test Community";
+  String BAN_REASON = "Test ban reason";
 }
