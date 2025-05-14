@@ -18,7 +18,7 @@ import org.mockito.Mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static ru.senla.socialnetwork.TestConstants.BAN_REASON;
+import static ru.senla.socialnetwork.TestConstants.TEST_BAN_REASON;
 import static ru.senla.socialnetwork.TestConstants.TEST_COMMUNITY_ID;
 import static ru.senla.socialnetwork.TestConstants.TEST_COMMUNITY_NAME;
 import static ru.senla.socialnetwork.TestConstants.TEST_EMAIL_1;
@@ -206,17 +206,17 @@ class CommunityMemberServiceImplTest {
           .thenAnswer(invocation -> invocation.getArgument(0));
 
       CommunityMember result = communityMemberService.banMember(
-          testMember, BAN_REASON);
+          testMember, TEST_BAN_REASON);
 
       assertThat(result)
           .hasFieldOrPropertyWithValue("isBanned", true)
-          .hasFieldOrPropertyWithValue("bannedReason", BAN_REASON);
+          .hasFieldOrPropertyWithValue("bannedReason", TEST_BAN_REASON);
     }
 
     @Test
     void unbanMember_thenSetBannedFalseAndNullReason() {
       testMember.setIsBanned(true);
-      testMember.setBannedReason(BAN_REASON);
+      testMember.setBannedReason(TEST_BAN_REASON);
 
       when(communityMemberDao.saveOrUpdate(any(CommunityMember.class)))
           .thenAnswer(invocation -> invocation.getArgument(0));

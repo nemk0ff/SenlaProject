@@ -1,6 +1,5 @@
 package ru.senla.socialnetwork.services.chats;
 
-
 import jakarta.persistence.EntityNotFoundException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

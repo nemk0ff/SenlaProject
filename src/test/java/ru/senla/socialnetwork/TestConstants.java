@@ -23,7 +23,7 @@ public interface TestConstants {
   Long TEST_CHAT_ID = 1L;
   String TEST_CHAT_NAME = "Test Chat";
   ZonedDateTime TEST_DATE = ZonedDateTime.now();
-  ZonedDateTime FUTURE_DATE = TEST_DATE.plusDays(1);
+  ZonedDateTime TEST_FUTURE_DATE = TEST_DATE.plusDays(1);
 
   Long TEST_MESSAGE_ID = 1L;
   Long TEST_REPLY_TO_ID = 2L;
@@ -31,5 +31,12 @@ public interface TestConstants {
 
   Long TEST_COMMUNITY_ID = 1L;
   String TEST_COMMUNITY_NAME = "Test Community";
-  String BAN_REASON = "Test ban reason";
+  String TEST_BAN_REASON = "Test ban reason";
+
+  Long TEST_POST_ID = 1L;
+  String TEST_MOOD = "Test mood";
+  String TEST_LOCATION = "Test location";
+  Long TEST_COMMENT_ID = 1L;
+
+  Long TEST_REACTION_ID = 1L;
 }

@@ -107,9 +107,9 @@ class ChatMemberServiceImplTest {
           .thenReturn(Optional.of(testMember));
       when(chatMemberDao.saveOrUpdate(any(ChatMember.class))).thenReturn(testMember);
 
-      ChatMember result = chatMemberService.mute(TEST_CHAT_ID, TEST_EMAIL_1, FUTURE_DATE);
+      ChatMember result = chatMemberService.mute(TEST_CHAT_ID, TEST_EMAIL_1, TEST_FUTURE_DATE);
 
-      assertThat(result.getMutedUntil()).isEqualTo(FUTURE_DATE);
+      assertThat(result.getMutedUntil()).isEqualTo(TEST_FUTURE_DATE);
       verify(chatMemberDao).saveOrUpdate(testMember);
     }
 
@@ -118,7 +118,7 @@ class ChatMemberServiceImplTest {
       when(chatMemberDao.findActiveByChatIdAndUserEmail(TEST_CHAT_ID, TEST_EMAIL_1))
           .thenReturn(Optional.empty());
 
-      assertThatThrownBy(() -> chatMemberService.mute(TEST_CHAT_ID, TEST_EMAIL_1, FUTURE_DATE))
+      assertThatThrownBy(() -> chatMemberService.mute(TEST_CHAT_ID, TEST_EMAIL_1, TEST_FUTURE_DATE))
           .isInstanceOf(EntityNotFoundException.class);
     }
 
@@ -128,7 +128,7 @@ class ChatMemberServiceImplTest {
       when(chatMemberDao.findActiveByChatIdAndUserEmail(TEST_CHAT_ID, TEST_EMAIL_1))
           .thenReturn(Optional.of(testMember));
 
-      assertThatThrownBy(() -> chatMemberService.mute(TEST_CHAT_ID, TEST_EMAIL_1, FUTURE_DATE))
+      assertThatThrownBy(() -> chatMemberService.mute(TEST_CHAT_ID, TEST_EMAIL_1, TEST_FUTURE_DATE))
           .isInstanceOf(ChatMemberException.class)
           .hasMessageContaining("Можно мьютить только обычных участников");
     }
@@ -144,7 +144,7 @@ class ChatMemberServiceImplTest {
           .user(testUser)
           .role(MemberRole.MEMBER)
           .joinDate(ZonedDateTime.now().minusDays(1))
-          .mutedUntil(FUTURE_DATE)
+          .mutedUntil(TEST_FUTURE_DATE)
           .build();
       when(chatMemberDao.findActiveByChatIdAndUserEmail(TEST_CHAT_ID, TEST_EMAIL_1))
           .thenReturn(Optional.of(mutedMember));

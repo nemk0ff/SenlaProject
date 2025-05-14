@@ -21,8 +21,7 @@ import ru.senla.socialnetwork.model.Post;
 @AllArgsConstructor
 @SuperBuilder
 @NamedQuery(name = "Wall.findAllByUserId",
-    query = "FROM WallPost wp JOIN FETCH wp.wallOwner " +
-        "WHERE wp.wallOwner.id = :userId")
+    query = "FROM WallPost wp JOIN FETCH wp.wallOwner WHERE wp.wallOwner.id = :userId")
 public final class WallPost extends Post {
   @ManyToOne
   @JoinColumn(name = "wall_owner_id", nullable = false)
