@@ -36,11 +36,11 @@ import ru.senla.socialnetwork.model.users.User;
 @NamedQuery(name = "Reaction.findAll",
     query = "SELECT r FROM Reaction r JOIN FETCH r.owner JOIN FETCH r.comment")
 @NamedQuery(name = "Reaction.findAllByCommentId",
-    query = "SELECT r FROM Reaction r JOIN FETCH r.owner JOIN FETCH r.comment" +
+    query = "SELECT r FROM Reaction r JOIN FETCH r.owner JOIN FETCH r.comment " +
         "WHERE r.comment.id = :commentId")
 @NamedQuery(name = "Reaction.findByUserIdAndCommentId",
-    query = "FROM Reaction JOIN FETCH r.owner JOIN FETCH r.comment" +
-        "WHERE comment.id = :commentId AND owner.id = :ownerId")
+    query = "FROM Reaction r JOIN FETCH r.owner JOIN FETCH r.comment " +
+        "WHERE r.comment.id = :commentId AND r.owner.id = :ownerId")
 public final class Reaction implements MyEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
