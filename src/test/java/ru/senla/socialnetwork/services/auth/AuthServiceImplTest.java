@@ -44,7 +44,7 @@ class AuthServiceImplTest {
   @BeforeEach
   void setUp() {
     testUser = User.builder()
-        .id(TEST_USER_ID)
+        .id(TEST_USER_ID_1)
         .email(TEST_EMAIL_1)
         .password(TEST_ENCODED_PASSWORD)
         .name(TEST_NAME)

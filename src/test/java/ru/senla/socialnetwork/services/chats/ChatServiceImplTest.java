@@ -54,22 +54,22 @@ class ChatServiceImplTest {
     @Test
     void getAllByUser_whenUserExists_thenReturnChats() {
       List<Chat> expectedChats = List.of(testChat);
-      when(chatDao.findAllChatsByUserId(TEST_USER_ID)).thenReturn(expectedChats);
+      when(chatDao.findAllChatsByUserId(TEST_USER_ID_1)).thenReturn(expectedChats);
 
-      List<Chat> result = chatService.getAllByUser(TEST_USER_ID);
+      List<Chat> result = chatService.getAllByUser(TEST_USER_ID_1);
 
       assertThat(result).isEqualTo(expectedChats);
-      verify(chatDao).findAllChatsByUserId(TEST_USER_ID);
+      verify(chatDao).findAllChatsByUserId(TEST_USER_ID_1);
     }
 
     @Test
     void getAllByUser_whenNoChats_thenReturnEmptyList() {
-      when(chatDao.findAllChatsByUserId(TEST_USER_ID)).thenReturn(List.of());
+      when(chatDao.findAllChatsByUserId(TEST_USER_ID_1)).thenReturn(List.of());
 
-      List<Chat> result = chatService.getAllByUser(TEST_USER_ID);
+      List<Chat> result = chatService.getAllByUser(TEST_USER_ID_1);
 
       assertThat(result).isEmpty();
-      verify(chatDao).findAllChatsByUserId(TEST_USER_ID);
+      verify(chatDao).findAllChatsByUserId(TEST_USER_ID_1);
     }
   }
 

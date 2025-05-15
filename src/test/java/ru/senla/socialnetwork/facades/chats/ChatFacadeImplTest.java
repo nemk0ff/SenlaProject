@@ -1,4 +1,4 @@
-package ru.senla.socialnetwork.facades;
+package ru.senla.socialnetwork.facades.chats;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.time.ZonedDateTime;
@@ -58,7 +58,7 @@ class ChatFacadeImplTest {
   @BeforeEach
   void setUp() {
     testUser = User.builder()
-        .id(TEST_USER_ID)
+        .id(TEST_USER_ID_1)
         .email(TEST_EMAIL_1)
         .build();
 
@@ -86,28 +86,28 @@ class ChatFacadeImplTest {
       List<ChatDTO> expectedDTOs = List.of(testChatDTO);
 
       when(userService.getUserByEmail(TEST_EMAIL_1)).thenReturn(testUser);
-      when(chatService.getAllByUser(TEST_USER_ID)).thenReturn(chats);
+      when(chatService.getAllByUser(TEST_USER_ID_1)).thenReturn(chats);
       when(chatMapper.toListChatDTO(chats)).thenReturn(expectedDTOs);
 
       List<ChatDTO> result = chatFacade.getUserChats(TEST_EMAIL_1);
 
       assertThat(result).isEqualTo(expectedDTOs);
       verify(userService).getUserByEmail(TEST_EMAIL_1);
-      verify(chatService).getAllByUser(TEST_USER_ID);
+      verify(chatService).getAllByUser(TEST_USER_ID_1);
       verify(chatMapper).toListChatDTO(chats);
     }
 
     @Test
     void getUserChats_whenNoChats_thenReturnEmptyList() {
       when(userService.getUserByEmail(TEST_EMAIL_1)).thenReturn(testUser);
-      when(chatService.getAllByUser(TEST_USER_ID)).thenReturn(List.of());
+      when(chatService.getAllByUser(TEST_USER_ID_1)).thenReturn(List.of());
       when(chatMapper.toListChatDTO(List.of())).thenReturn(List.of());
 
       List<ChatDTO> result = chatFacade.getUserChats(TEST_EMAIL_1);
 
       assertThat(result).isEmpty();
       verify(userService).getUserByEmail(TEST_EMAIL_1);
-      verify(chatService).getAllByUser(TEST_USER_ID);
+      verify(chatService).getAllByUser(TEST_USER_ID_1);
       verify(chatMapper).toListChatDTO(List.of());
     }
   }
@@ -116,8 +116,8 @@ class ChatFacadeImplTest {
   class CreateGroupChatTests {
     @Test
     void create_whenValidGroupChat_thenReturnChatDTO() {
-      User creatorUser = User.builder().id(1L).email(TEST_EMAIL_1).build();
-      User memberUser = User.builder().id(2L).email(TEST_EMAIL_2).build();
+      User creatorUser = User.builder().id(TEST_USER_ID_1).email(TEST_EMAIL_1).build();
+      User memberUser = User.builder().id(TEST_USER_ID_2).email(TEST_EMAIL_2).build();
       Chat createdChat = Chat.builder()
           .id(TEST_CHAT_ID)
           .name(TEST_CHAT_NAME)
@@ -172,8 +172,14 @@ class ChatFacadeImplTest {
   class CreatePersonalChatTests {
     @Test
     void create_whenValidPersonalChat_thenReturnChatDTO() {
-      User creator = User.builder().id(1L).email(TEST_EMAIL_1).build();
-      User participant = User.builder().id(2L).email(TEST_EMAIL_2).build();
+      User creator = User.builder().
+          id(TEST_USER_ID_1)
+          .email(TEST_EMAIL_1)
+          .build();
+      User participant = User.builder()
+          .id(TEST_USER_ID_2)
+          .email(TEST_EMAIL_2)
+          .build();
 
       String chatName = TEST_EMAIL_1 + " - " + TEST_EMAIL_2;
       Chat createdChat = Chat.builder()

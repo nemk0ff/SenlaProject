@@ -50,7 +50,7 @@ class CommunityPostServiceImplTest {
         .build();
 
     testAuthor = CommunityMember.builder()
-        .id(TEST_USER_ID)
+        .id(TEST_USER_ID_1)
         .build();
 
     testPost = CommunityPost.builder()

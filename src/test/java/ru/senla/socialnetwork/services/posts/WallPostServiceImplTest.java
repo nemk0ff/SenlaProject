@@ -41,7 +41,7 @@ class WallPostServiceImplTest {
   @BeforeEach
   void setUp() {
     testUser = User.builder()
-        .id(TEST_USER_ID)
+        .id(TEST_USER_ID_1)
         .email(TEST_EMAIL_1)
         .name(TEST_NAME)
         .build();
@@ -62,22 +62,22 @@ class WallPostServiceImplTest {
   class GetByUserTests {
     @Test
     void getByUser_whenPostsExist_thenReturnPosts() {
-      when(wallPostDao.findAllByUser(TEST_USER_ID)).thenReturn(List.of(testPost));
+      when(wallPostDao.findAllByUser(TEST_USER_ID_1)).thenReturn(List.of(testPost));
 
-      List<WallPost> result = wallPostService.getByUser(TEST_USER_ID);
+      List<WallPost> result = wallPostService.getByUser(TEST_USER_ID_1);
 
       assertThat(result).containsExactly(testPost);
-      verify(wallPostDao).findAllByUser(TEST_USER_ID);
+      verify(wallPostDao).findAllByUser(TEST_USER_ID_1);
     }
 
     @Test
     void getByUser_whenNoPosts_thenReturnEmptyList() {
-      when(wallPostDao.findAllByUser(TEST_USER_ID)).thenReturn(List.of());
+      when(wallPostDao.findAllByUser(TEST_USER_ID_1)).thenReturn(List.of());
 
-      List<WallPost> result = wallPostService.getByUser(TEST_USER_ID);
+      List<WallPost> result = wallPostService.getByUser(TEST_USER_ID_1);
 
       assertThat(result).isEmpty();
-      verify(wallPostDao).findAllByUser(TEST_USER_ID);
+      verify(wallPostDao).findAllByUser(TEST_USER_ID_1);
     }
   }
 

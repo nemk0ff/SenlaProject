@@ -22,7 +22,7 @@ import static ru.senla.socialnetwork.TestConstants.TEST_BAN_REASON;
 import static ru.senla.socialnetwork.TestConstants.TEST_COMMUNITY_ID;
 import static ru.senla.socialnetwork.TestConstants.TEST_COMMUNITY_NAME;
 import static ru.senla.socialnetwork.TestConstants.TEST_EMAIL_1;
-import static ru.senla.socialnetwork.TestConstants.TEST_USER_ID;
+import static ru.senla.socialnetwork.TestConstants.TEST_USER_ID_1;
 import ru.senla.socialnetwork.dao.communities.CommunityMemberDao;
 import ru.senla.socialnetwork.exceptions.chats.ChatMemberException;
 import ru.senla.socialnetwork.exceptions.communities.CommunityMemberException;
@@ -52,7 +52,7 @@ class CommunityMemberServiceImplTest {
         .build();
 
     testUser = User.builder()
-        .id(TEST_USER_ID)
+        .id(TEST_USER_ID_1)
         .email(TEST_EMAIL_1)
         .build();
 
@@ -122,10 +122,10 @@ class CommunityMemberServiceImplTest {
     @Test
     void getAllByUser_thenReturnMembers() {
       List<CommunityMember> expected = List.of(testMember);
-      when(communityMemberDao.findAllByUserId(TEST_USER_ID))
+      when(communityMemberDao.findAllByUserId(TEST_USER_ID_1))
           .thenReturn(expected);
 
-      List<CommunityMember> result = communityMemberService.getAllByUser(TEST_USER_ID);
+      List<CommunityMember> result = communityMemberService.getAllByUser(TEST_USER_ID_1);
 
       assertThat(result).isEqualTo(expected);
     }

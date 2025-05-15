@@ -7,7 +7,9 @@ import ru.senla.socialnetwork.model.users.ProfileType;
 import ru.senla.socialnetwork.model.users.UserRole;
 
 public interface TestConstants {
-  Long TEST_USER_ID = 1L;
+  Long TEST_USER_ID_1 = 1L;
+  Long TEST_USER_ID_2 = 1L;
+
   UserRole TEST_ROLE = UserRole.USER;
   String TEST_EMAIL_1 = "test_email@senla.ru";
   String TEST_EMAIL_2 = "test_email2@senla.ru";

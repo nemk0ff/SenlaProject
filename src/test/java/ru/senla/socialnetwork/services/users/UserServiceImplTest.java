@@ -41,7 +41,7 @@ class UserServiceImplTest {
   @BeforeEach
   void setUp() {
     testUser = User.builder()
-        .id(TEST_USER_ID)
+        .id(TEST_USER_ID_1)
         .email(TEST_EMAIL_1)
         .name(TEST_NAME)
         .surname(TEST_SURNAME)
@@ -59,21 +59,21 @@ class UserServiceImplTest {
   class GetTests {
     @Test
     void get_whenUserExists_thenReturnUser() {
-      when(userDao.find(TEST_USER_ID)).thenReturn(Optional.of(testUser));
+      when(userDao.find(TEST_USER_ID_1)).thenReturn(Optional.of(testUser));
 
-      User result = userService.get(TEST_USER_ID);
+      User result = userService.get(TEST_USER_ID_1);
 
       assertThat(result).isEqualTo(testUser);
-      verify(userDao).find(TEST_USER_ID);
+      verify(userDao).find(TEST_USER_ID_1);
     }
 
     @Test
     void get_whenUserNotExists_thenThrowException() {
-      when(userDao.find(TEST_USER_ID)).thenReturn(Optional.empty());
+      when(userDao.find(TEST_USER_ID_1)).thenReturn(Optional.empty());
 
-      assertThatThrownBy(() -> userService.get(TEST_USER_ID))
+      assertThatThrownBy(() -> userService.get(TEST_USER_ID_1))
           .isInstanceOf(EntityNotFoundException.class)
-          .hasMessageContaining("id" + TEST_USER_ID);
+          .hasMessageContaining("id" + TEST_USER_ID_1);
     }
   }
 
