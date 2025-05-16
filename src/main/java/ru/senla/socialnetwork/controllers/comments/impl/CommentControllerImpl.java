@@ -2,6 +2,7 @@ package ru.senla.socialnetwork.controllers.comments.impl;
 
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.comments.CommentController;
+import ru.senla.socialnetwork.dto.DeleteResponseDTO;
 import ru.senla.socialnetwork.dto.comments.CommentDTO;
 import ru.senla.socialnetwork.dto.comments.CreateCommentDTO;
 import ru.senla.socialnetwork.dto.comments.UpdateCommentDTO;
@@ -89,6 +91,8 @@ public class CommentControllerImpl implements CommentController {
     log.info("Пользователь {} удаляет комментарий id={}", auth.getName(), id);
     commentFacade.delete(id, auth.getName());
     log.info("Комментарий id={} успешно удален", id);
-    return ResponseEntity.ok("Комментарий " + id + " удален");
+    return ResponseEntity.ok(new DeleteResponseDTO(
+        "Комментарий успешно удален",
+        Map.of("commentId", id)));
   }
 }

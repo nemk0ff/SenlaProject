@@ -2,6 +2,7 @@ package ru.senla.socialnetwork.controllers.communities.impl;
 
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.communities.CommunityPostController;
+import ru.senla.socialnetwork.dto.DeleteResponseDTO;
 import ru.senla.socialnetwork.dto.communitites.CommunityPostDTO;
 import ru.senla.socialnetwork.dto.communitites.CreateCommunityPostDTO;
 import ru.senla.socialnetwork.dto.communitites.UpdateCommunityPostDTO;
@@ -82,7 +84,11 @@ public class CommunityPostControllerImpl implements CommunityPostController {
         postId, communityId, auth.getName());
     communityPostFacade.deletePost(communityId, postId, auth.getName());
     log.warn("Пост id={} удален из сообщества id={}", postId, communityId);
-    return ResponseEntity.ok("Пост " + postId + " удалён");
+    return ResponseEntity.ok(new DeleteResponseDTO(
+        "Пост сообщества успешно удалён",
+        Map.of(
+            "communityId", communityId,
+            "postId", postId)));
   }
 
   @Override

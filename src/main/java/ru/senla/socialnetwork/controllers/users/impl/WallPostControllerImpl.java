@@ -2,6 +2,7 @@ package ru.senla.socialnetwork.controllers.users.impl;
 
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -9,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.users.WallPostController;
+import ru.senla.socialnetwork.dto.DeleteResponseDTO;
 import ru.senla.socialnetwork.dto.users.WallPostRequestDTO;
 import ru.senla.socialnetwork.dto.users.WallPostResponseDTO;
 import ru.senla.socialnetwork.facades.wallposts.WallPostFacade;
@@ -66,7 +67,9 @@ public class WallPostControllerImpl implements WallPostController {
     log.info("Удаление поста id={} пользователем={}", postId, auth.getName());
     wallPostFacade.delete(postId, auth.getName());
     log.info("Пост id={} удален успешно", postId);
-    return ResponseEntity.ok("Пост " + postId + " удален");
+    return ResponseEntity.ok(new DeleteResponseDTO(
+        "Пост успешно удален",
+        Map.of("postId", postId)));
   }
 
   @PutMapping("/{postId}")

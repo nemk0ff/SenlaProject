@@ -31,8 +31,8 @@ import ru.senla.socialnetwork.model.MyEntity;
 @NamedQuery(name = "Chat.find",
     query = "SELECT c FROM Chat c JOIN FETCH c.members WHERE c.id = :id")
 @NamedQuery(name = "Chat.existsByMembers",
-    query = "SELECT CASE WHEN COUNT(cm1) > 0 THEN true ELSE false END " +
-        "FROM ChatMember cm1 JOIN ChatMember cm2 ON cm1.chat.id = cm2.chat.id " +
+    query = "SELECT COUNT(cm1.chat.id) FROM ChatMember cm1 " +
+        "JOIN ChatMember cm2 ON cm1.chat.id = cm2.chat.id " +
         "WHERE cm1.user.email = :email1 AND cm2.user.email = :email2 " +
         "AND cm1.chat.isGroup = false")
 @NamedQuery(name = "Chat.findWithMembersAndUsers",

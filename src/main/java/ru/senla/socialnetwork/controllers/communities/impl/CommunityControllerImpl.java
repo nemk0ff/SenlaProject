@@ -1,6 +1,7 @@
 package ru.senla.socialnetwork.controllers.communities.impl;
 
 import jakarta.validation.Valid;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -8,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.communities.CommunityController;
+import ru.senla.socialnetwork.dto.DeleteResponseDTO;
 import ru.senla.socialnetwork.dto.communitites.ChangeCommunityDTO;
 import ru.senla.socialnetwork.dto.communitites.CommunityDTO;
 import ru.senla.socialnetwork.dto.communitites.CreateCommunityDTO;
@@ -49,7 +50,9 @@ public class CommunityControllerImpl implements CommunityController {
     log.info("Пользователь {} удаляет сообщества id={}", auth.getName(), id);
     communityFacade.delete(id, auth.getName());
     log.warn("Сообщество id={} удалено пользователем {}", id, auth.getName());
-    return ResponseEntity.ok("Сообщество " + id + " удалено");
+    return ResponseEntity.ok(new DeleteResponseDTO(
+        "Сообщество успешно удалено",
+        Map.of("communityId", id)));
   }
 
   @Override
