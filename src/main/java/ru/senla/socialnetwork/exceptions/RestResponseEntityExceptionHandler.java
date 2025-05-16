@@ -145,7 +145,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     return new ResponseEntity<>(problemDetail, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
-  @ExceptionHandler({SocialNetworkException.class})
+  @ExceptionHandler(SocialNetworkException.class)
   public ResponseEntity<ProblemDetail> handleBusinessExceptions(
       Exception ex, WebRequest request) {
     String title = ex instanceof SocialNetworkException

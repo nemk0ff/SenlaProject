@@ -1,7 +1,9 @@
 package ru.senla.socialnetwork.controllers.users.impl;
 
 import jakarta.annotation.Nullable;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +30,8 @@ import ru.senla.socialnetwork.security.JwtUtils;
 import ru.senla.socialnetwork.services.user.UserService;
 
 @Slf4j
-@RestController
 @Validated
+@RestController
 @AllArgsConstructor
 @RequestMapping("/users")
 public class UserControllerImpl implements UserController {
@@ -72,7 +74,7 @@ public class UserControllerImpl implements UserController {
   @Override
   @PatchMapping("/edit")
   public ResponseEntity<?> edit(
-      @RequestBody UserRequestDTO editDTO,
+      @RequestBody @Valid UserRequestDTO editDTO,
       Authentication auth) {
     log.info("Запрос на редактирование пользователя: {}", auth.getName());
     UserResponseDTO updatedUser = UserMapper.INSTANCE
@@ -84,7 +86,7 @@ public class UserControllerImpl implements UserController {
   @Override
   @PatchMapping("/change-email")
   public ResponseEntity<?> changeEmail(
-      @RequestParam @Email String newEmail,
+      @RequestParam @NotBlank String newEmail,
       Authentication auth) {
     log.info("Смена email с {} на {}", auth.getName(), newEmail);
 
