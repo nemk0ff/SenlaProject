@@ -83,11 +83,11 @@ CREATE TABLE IF NOT EXISTS reactions (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
 
-DROP TABLE users CASCADE;
-DROP TABLE friend_requests CASCADE;
-DROP TABLE group_members CASCADE;
-DROP TABLE content_fragments CASCADE;
-DROP TABLE chats CASCADE;
-DROP TABLE communities CASCADE;
-DROP TABLE posts CASCADE;
-DROP TABLE reactions;
+-- DROP TABLE users CASCADE;
+-- DROP TABLE friend_requests CASCADE;
+-- DROP TABLE group_members CASCADE;
+-- DROP TABLE content_fragments CASCADE;
+-- DROP TABLE chats CASCADE;
+-- DROP TABLE communities CASCADE;
+-- DROP TABLE posts CASCADE;
+-- DROP TABLE reactions;
