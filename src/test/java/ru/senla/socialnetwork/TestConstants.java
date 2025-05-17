@@ -33,6 +33,7 @@ public interface TestConstants {
 
   Long TEST_COMMUNITY_ID = 1L;
   String TEST_COMMUNITY_NAME = "Test Community";
+  String TEST_COMMUNITY_DESCRIPTION = "Test Community Description";
   String TEST_BAN_REASON = "Test ban reason";
 
   Long TEST_POST_ID = 1L;
