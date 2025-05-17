@@ -19,23 +19,23 @@ public class ReactionServiceImpl implements ReactionService {
 
   @Override
   public List<Reaction> getAll() {
-    return reactionDao.getAll();
+    return reactionDao.findAll();
   }
 
   @Override
   public List<Reaction> getAllByComment(Long commentId) {
-    return reactionDao.getAllByComment(commentId);
+    return reactionDao.findAllByComment(commentId);
   }
 
   @Override
   public Reaction get(Long reactionId) {
-    return reactionDao.get(reactionId).orElseThrow(
+    return reactionDao.find(reactionId).orElseThrow(
         () -> new ReactionException("Реакция не найдена"));
   }
 
   @Override
   public Reaction save(Reaction reaction) {
-    Optional<Reaction> maybeReaction = reactionDao.getByUserAndComment(
+    Optional<Reaction> maybeReaction = reactionDao.findByUserIdAndCommentId(
         reaction.getComment().getId(), reaction.getOwner().getId());
     if (maybeReaction.isPresent()) {
       if (!maybeReaction.get().getType().equals(reaction.getType())) {

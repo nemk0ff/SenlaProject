@@ -1,5 +1,6 @@
 package ru.senla.socialnetwork.controllers.communities.impl;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,12 +8,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.communities.CommunityMemberController;
+import ru.senla.socialnetwork.dto.communitites.BanCommunityMemberDTO;
 import ru.senla.socialnetwork.dto.communitites.CommunityMemberDTO;
 import ru.senla.socialnetwork.facades.communities.CommunityMemberFacade;
 import ru.senla.socialnetwork.model.MemberRole;
@@ -62,15 +66,14 @@ public class CommunityMemberControllerImpl implements CommunityMemberController 
   @PostMapping("/ban")
   public ResponseEntity<?> banMember(
       @PathVariable Long communityId,
-      @RequestParam String email,
-      @RequestParam String reason,
+      @RequestBody @Valid BanCommunityMemberDTO dto,
       Authentication auth) {
     log.info("Пользователь {} блокирует {} в сообществе {} по причине '{}'...",
-        auth.getName(), email, communityId, reason);
+        auth.getName(), dto.email(), communityId, dto.reason());
     CommunityMemberDTO bannedMember = communityMemberFacade.banMember(
-        communityId, email, reason, auth.getName());
+        communityId, dto.email(), dto.reason(), auth.getName());
     log.info("Пользователь {} заблокирован в сообществе {} пользователем {}.",
-        email, communityId, auth.getName());
+        dto.email(), communityId, auth.getName());
     return ResponseEntity.ok(bannedMember);
   }
 
@@ -88,7 +91,7 @@ public class CommunityMemberControllerImpl implements CommunityMemberController 
   }
 
   @Override
-  @PostMapping("/role")
+  @PatchMapping("/role")
   public ResponseEntity<?> changeMemberRole(
       @PathVariable Long communityId,
       @RequestParam String email,

@@ -18,15 +18,11 @@ public class CommentDaoImpl extends HibernateAbstractDao<Comment> implements Com
   }
 
   @Override
-  public Optional<Comment> getById(Long id) {
+  public Optional<Comment> find(Long id) {
     log.info("Получение комментария с id {} вместе с постом...", id);
     try {
-      String hql = "SELECT c FROM Comment c " +
-          "LEFT JOIN FETCH c.author " +
-          "LEFT JOIN FETCH c.post p " +
-          "WHERE c.id = :id";
       return sessionFactory.getCurrentSession()
-          .createQuery(hql, Comment.class)
+          .createNamedQuery("Comment.find", Comment.class)
           .setParameter("id", id)
           .uniqueResultOptional();
     } catch (Exception e) {
@@ -36,15 +32,11 @@ public class CommentDaoImpl extends HibernateAbstractDao<Comment> implements Com
   }
 
   @Override
-  public List<Comment> getAll() {
+  public List<Comment> findAll() {
     log.info("Получение списка всех комментариев...");
     try {
-      String hql = "SELECT c FROM Comment c " +
-          "LEFT JOIN FETCH c.author " +
-          "LEFT JOIN FETCH c.post ";
-
       List<Comment> comments = sessionFactory.getCurrentSession()
-          .createQuery(hql, Comment.class)
+          .createNamedQuery("Comment.findAll", Comment.class)
           .list();
 
       log.info("Найдено {} комментариев", comments.size());
@@ -56,13 +48,11 @@ public class CommentDaoImpl extends HibernateAbstractDao<Comment> implements Com
   }
 
   @Override
-  public List<Comment> getAllByPost(Long postId) {
+  public List<Comment> findAllByPostId(Long postId) {
     log.info("Получение списка всех комментариев поста {}...", postId);
     try {
-      String hql = "SELECT c FROM Comment c LEFT JOIN FETCH c.author WHERE c.post.id = :postId";
-
       List<Comment> comments = sessionFactory.getCurrentSession()
-          .createQuery(hql, Comment.class)
+          .createNamedQuery("Comment.findAllByPostId", Comment.class)
           .setParameter("postId", postId)
           .list();
 

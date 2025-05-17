@@ -30,7 +30,6 @@ public class GeneralPostServiceImpl implements GeneralPostService {
     if (communityPost.isPresent()) {
       return communityPost.get();
     }
-
     throw new EntityNotFoundException("Пост " + postId + " не найден");
   }
 }

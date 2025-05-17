@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
   public User changeEmail(String oldEmail, String newEmail) {
     User user = getUserByEmail(oldEmail);
     if (oldEmail.equals(newEmail)) {
-      throw new UserException("Старый и новый email овпадают");
+      throw new UserException("Старый и новый email совпадают");
     }
     if (existsByEmail(newEmail)) {
       throw new EmailAlreadyExistsException(newEmail);

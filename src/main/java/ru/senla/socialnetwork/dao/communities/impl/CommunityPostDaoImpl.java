@@ -18,8 +18,7 @@ public class CommunityPostDaoImpl extends HibernateAbstractDao<CommunityPost> im
   @Override
   public List<CommunityPost> findAllByCommunity(Long communityId) {
     return sessionFactory.getCurrentSession()
-        .createQuery("FROM CommunityPost cp WHERE cp.community.id = :communityId",
-            CommunityPost.class)
+        .createNamedQuery("CommunityPost.findAllByCommunityId", CommunityPost.class)
         .setParameter("communityId", communityId)
         .getResultList();
   }
@@ -27,9 +26,7 @@ public class CommunityPostDaoImpl extends HibernateAbstractDao<CommunityPost> im
   @Override
   public List<CommunityPost> findPinnedByCommunity(Long communityId) {
     return sessionFactory.getCurrentSession()
-        .createQuery("FROM CommunityPost cp WHERE cp.community.id = :communityId" +
-                " AND cp.isPinned",
-            CommunityPost.class)
+        .createNamedQuery("CommunityPost.findPinnedByCommunityId", CommunityPost.class)
         .setParameter("communityId", communityId)
         .getResultList();
   }

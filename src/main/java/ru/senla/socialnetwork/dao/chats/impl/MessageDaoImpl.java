@@ -21,9 +21,8 @@ public class MessageDaoImpl extends HibernateAbstractDao<Message> implements Mes
   public List<Message> findByChatId(Long chatId) {
     log.info("Поиск сообщений чата {}", chatId);
     try {
-      String hql = "FROM Message m WHERE m.chat.id = :chatId ORDER BY m.createdAt";
       return sessionFactory.getCurrentSession()
-          .createQuery(hql, Message.class)
+          .createNamedQuery("Message.find", Message.class)
           .setParameter("chatId", chatId)
           .getResultList();
     } catch (Exception e) {
@@ -35,10 +34,8 @@ public class MessageDaoImpl extends HibernateAbstractDao<Message> implements Mes
   public List<Message> findAnswers(Long chatId, Long messageId) {
     log.info("Поиск ответов на сообщение {} из чата {}", messageId, chatId);
     try {
-      String hql = "FROM Message m WHERE m.chat.id = :chatId " +
-          "AND m.replyTo.id = :messageId ORDER BY m.createdAt DESC";
       return sessionFactory.getCurrentSession()
-          .createQuery(hql, Message.class)
+          .createNamedQuery("Message.findAnswers", Message.class)
           .setParameter("chatId", chatId)
           .setParameter("messageId", messageId)
           .getResultList();
@@ -51,10 +48,8 @@ public class MessageDaoImpl extends HibernateAbstractDao<Message> implements Mes
   public List<Message> findPinnedByChatId(Long chatId) {
     log.info("Поиск закрепленных сообщений чата {}", chatId);
     try {
-      String hql = "FROM Message m WHERE m.chat.id = :chatId AND m.isPinned = true " +
-          "ORDER BY m.createdAt DESC";
       return sessionFactory.getCurrentSession()
-          .createQuery(hql, Message.class)
+          .createNamedQuery("Message.findPinnedByChatId", Message.class)
           .setParameter("chatId", chatId)
           .getResultList();
     } catch (Exception e) {
@@ -66,9 +61,8 @@ public class MessageDaoImpl extends HibernateAbstractDao<Message> implements Mes
   public Optional<Message> findByIdAndChatId(Long messageId, Long chatId) {
     log.info("Поиск сообщения {} в чате {}", messageId, chatId);
     try {
-      String hql = "FROM Message m WHERE m.chat.id = :chatId AND m.id = :messageId";
-      return  sessionFactory.getCurrentSession()
-          .createQuery(hql, Message.class)
+      return sessionFactory.getCurrentSession()
+          .createNamedQuery("Message.findByIdAndChatId", Message.class)
           .setParameter("chatId", chatId)
           .setParameter("messageId", messageId)
           .uniqueResultOptional();

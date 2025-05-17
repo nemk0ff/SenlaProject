@@ -51,23 +51,18 @@ public class ChatFacadeImpl implements ChatFacade {
   @Override
   public ChatDTO create(String creatorEmail, String participantEmail) {
     User creator = userService.getUserByEmail(creatorEmail);
-    User friend = userService.getUserByEmail(participantEmail);
-    String chatName = creatorEmail + " - " + participantEmail;
+    User participant = userService.getUserByEmail(participantEmail);
 
-    // Создаём чат
+    String chatName = creatorEmail + " - " + participantEmail;
     Chat chat = chatService.create(creatorEmail, participantEmail, chatName);
 
-    // Создаём участников
-    List<ChatMember> chatMembers = new ArrayList<>();
-    chatMembers.add(createChatMember(chat, creator, MemberRole.ADMIN));
-    chatMembers.add(createChatMember(chat, friend, MemberRole.ADMIN));
+    List<ChatMember> members = List.of(
+        createChatMember(chat, creator, MemberRole.ADMIN),
+        createChatMember(chat, participant, MemberRole.ADMIN)
+    );
+    chatMemberService.saveMembers(members);
 
-    // Созраняем участников в бд
-    chatMemberService.saveMembers(chatMembers);
-    // Добавляем в чат созданных участников
-    chat.getMembers().addAll(chatMembers);
-
-    return get(chat.getId(), creatorEmail);
+    return chatMapper.toChatDTO(chat);
   }
 
   private ChatMember createChatMember(Chat chat, User user, MemberRole role) {

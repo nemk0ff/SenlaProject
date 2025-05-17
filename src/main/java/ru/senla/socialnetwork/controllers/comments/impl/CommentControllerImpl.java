@@ -2,6 +2,7 @@ package ru.senla.socialnetwork.controllers.comments.impl;
 
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,9 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.comments.CommentController;
+import ru.senla.socialnetwork.dto.DeleteResponseDTO;
 import ru.senla.socialnetwork.dto.comments.CommentDTO;
 import ru.senla.socialnetwork.dto.comments.CreateCommentDTO;
 import ru.senla.socialnetwork.dto.comments.UpdateCommentDTO;
@@ -25,12 +26,11 @@ import ru.senla.socialnetwork.facades.comments.CommentFacade;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping("/comments")
 public class CommentControllerImpl implements CommentController {
   private final CommentFacade commentFacade;
 
   @Override
-  @GetMapping
+  @GetMapping("/comments")
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<?> getAll() {
     log.info("Администратор запросил все комментарии");
@@ -40,7 +40,7 @@ public class CommentControllerImpl implements CommentController {
   }
 
   @Override
-  @GetMapping("/{id}")
+  @GetMapping("/comments/{id}")
   public ResponseEntity<?> get(@PathVariable("id") Long id, Authentication auth) {
     log.info("Пользователь {} запросил комментарий id={}", auth.getName(), id);
     CommentDTO comment = commentFacade.getById(id, auth.getName());
@@ -49,7 +49,7 @@ public class CommentControllerImpl implements CommentController {
   }
 
   @Override
-  @GetMapping("/post/{id}")
+  @GetMapping("/post/{id}/comments")
   public ResponseEntity<?> getPostComments(
       @PathVariable("id") Long postId,
       Authentication auth) {
@@ -60,7 +60,7 @@ public class CommentControllerImpl implements CommentController {
   }
 
   @Override
-  @PostMapping("/post/{id}")
+  @PostMapping(path = "/post/{id}/comments")
   public ResponseEntity<?> createComment(
       @PathVariable("id") Long postId,
       @RequestBody @Valid CreateCommentDTO request,
@@ -72,7 +72,7 @@ public class CommentControllerImpl implements CommentController {
   }
 
   @Override
-  @PutMapping("/{id}")
+  @PutMapping("/comments/{id}")
   public ResponseEntity<?> updateComment(
       @PathVariable("id") Long id,
       @RequestBody @Valid UpdateCommentDTO request,
@@ -84,13 +84,15 @@ public class CommentControllerImpl implements CommentController {
   }
 
   @Override
-  @DeleteMapping("/{id}")
+  @DeleteMapping("/comments/{id}")
   public ResponseEntity<?> deleteComment(
       @PathVariable("id") Long id,
       Authentication auth) {
     log.info("Пользователь {} удаляет комментарий id={}", auth.getName(), id);
     commentFacade.delete(id, auth.getName());
     log.info("Комментарий id={} успешно удален", id);
-    return ResponseEntity.ok("Комментарий " + id + " удален");
+    return ResponseEntity.ok(new DeleteResponseDTO(
+        "Комментарий успешно удален",
+        Map.of("commentId", id)));
   }
 }

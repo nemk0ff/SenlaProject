@@ -6,9 +6,9 @@ import ru.senla.socialnetwork.dao.GenericDao;
 import ru.senla.socialnetwork.model.comment.Comment;
 
 public interface CommentDao extends GenericDao<Comment> {
-  Optional<Comment> getById(Long id);
+  Optional<Comment> find(Long id);
 
-  List<Comment> getAll();
+  List<Comment> findAll();
 
-  List<Comment> getAllByPost(Long postId);
+  List<Comment> findAllByPostId(Long postId);
 }

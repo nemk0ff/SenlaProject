@@ -29,23 +29,25 @@ public class ChatMemberDaoImpl extends HibernateAbstractDao<ChatMember> implemen
   }
 
   @Override
-  public List<ChatMember> findMembersByChatId(Long chatId) {
-    return sessionFactory.getCurrentSession()
-        .createQuery("FROM ChatMember WHERE chat.id = :chatId", ChatMember.class)
-        .setParameter("chatId", chatId)
-        .getResultList();
+  public List<ChatMember> findAllByChatId(Long chatId) {
+    log.info("Поиск участников чата {}", chatId);
+    try {
+      return sessionFactory.getCurrentSession()
+          .createNamedQuery("ChatMember.findAllByChatId", ChatMember.class)
+          .setParameter("chatId", chatId)
+          .getResultList();
+    } catch (Exception e) {
+      throw new DataRetrievalFailureException(
+          "Ошибка при поиске участников чата " + chatId, e);
+    }
   }
 
   @Override
   public Optional<ChatMember> findByChatIdAndUserEmail(Long chatId, String userEmail) {
     log.info("Поиск участника чата {} с email {}", chatId, userEmail);
     try {
-      String hql = "FROM ChatMember cm " +
-          "WHERE cm.chat.id = :chatId " +
-          "AND cm.user.email = :email ";
-
       Optional<ChatMember> member = sessionFactory.getCurrentSession()
-          .createQuery(hql, ChatMember.class)
+          .createNamedQuery("ChatMember.findByChatIdAndUserEmail", ChatMember.class)
           .setParameter("chatId", chatId)
           .setParameter("email", userEmail)
           .uniqueResultOptional();
@@ -62,13 +64,8 @@ public class ChatMemberDaoImpl extends HibernateAbstractDao<ChatMember> implemen
   public Optional<ChatMember> findActiveByChatIdAndUserEmail(Long chatId, String userEmail) {
     log.info("Поиск активного участника чата {} с email {}", chatId, userEmail);
     try {
-      String hql = "FROM ChatMember cm " +
-          "WHERE cm.chat.id = :chatId " +
-          "AND cm.user.email = :email " +
-          "AND (cm.leaveDate IS NULL OR cm.joinDate > cm.leaveDate)";
-
       Optional<ChatMember> member = sessionFactory.getCurrentSession()
-          .createQuery(hql, ChatMember.class)
+          .createNamedQuery("ChatMember.findActiveByChatIdAndUserEmail", ChatMember.class)
           .setParameter("chatId", chatId)
           .setParameter("email", userEmail)
           .uniqueResultOptional();
@@ -82,39 +79,11 @@ public class ChatMemberDaoImpl extends HibernateAbstractDao<ChatMember> implemen
   }
 
   @Override
-  public boolean existsByChatIdAndUserEmail(Long chatId, String userEmail) {
-    log.info("Проверка существования участника {} в чате {}", userEmail, chatId);
-    try {
-      String hql = "SELECT COUNT(cm) > 0 FROM ChatMember cm " +
-          "WHERE cm.chat.id = :chatId " +
-          "AND cm.user.email = :email";
-
-      boolean exists = sessionFactory.getCurrentSession()
-          .createQuery(hql, Boolean.class)
-          .setParameter("chatId", chatId)
-          .setParameter("email", userEmail)
-          .getSingleResult();
-
-      log.info("Участник {} {} в чате {}",
-          userEmail, exists ? "найден" : "не найден", chatId);
-      return exists;
-    } catch (Exception e) {
-      throw new DataRetrievalFailureException(
-          "Ошибка при проверке существования участника", e);
-    }
-  }
-
-  @Override
   public long countByChatIdAndRole(Long chatId, MemberRole role) {
     log.info("Подсчет активных участников чата {} с ролью {}", chatId, role);
     try {
-      String hql = "SELECT COUNT(cm) FROM ChatMember cm " +
-          "WHERE cm.chat.id = :chatId " +
-          "AND cm.role = :role " +
-          "AND (cm.leaveDate IS NULL OR cm.joinDate > cm.leaveDate)";
-
       Long count = sessionFactory.getCurrentSession()
-          .createQuery(hql, Long.class)
+          .createNamedQuery("ChatMember.countByChatIdAndRole", Long.class)
           .setParameter("chatId", chatId)
           .setParameter("role", role)
           .getSingleResult();
@@ -131,12 +100,8 @@ public class ChatMemberDaoImpl extends HibernateAbstractDao<ChatMember> implemen
   public long countByChatId(Long chatId) {
     log.info("Подсчет активных участников чата {}", chatId);
     try {
-      String hql = "SELECT COUNT(cm) FROM ChatMember cm " +
-          "WHERE cm.chat.id = :chatId " +
-          "AND (cm.leaveDate IS NULL OR cm.joinDate > cm.leaveDate)";
-
       Long count = sessionFactory.getCurrentSession()
-          .createQuery(hql, Long.class)
+          .createNamedQuery("ChatMember.countByChatId", Long.class)
           .setParameter("chatId", chatId)
           .getSingleResult();
 

@@ -1,7 +1,7 @@
 INSERT INTO users (id, email, role, password, name, surname, birthdate, gender, about_me, profile_type, registered_at)
 VALUES
     (1, 'ivanov_arkadiy@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
-     'Arkadiy', 'Ivanov', '1995-05-15', 'MALE', 'MSU EF student / trader', 'OPEN', '2025-04-09 10:15:00+03'),
+     'Arkadiy', 'Ivanov', '1995-05-15', 'MALE', 'MSU EF student / trader', 'CLOSED', '2025-04-09 10:15:00+03'),
     (2, 'petrova_anna@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
      'Anna', 'Petrova', '1998-08-22', 'FEMALE', 'Python developer, Yandex', 'CLOSED', '2025-04-09 11:30:00+03'),
     (3, 'sidorov_dmitry@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
@@ -9,20 +9,20 @@ VALUES
     (4, 'smirnova_elena@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
      'Elena', 'Smirnova', '1990-03-10', 'FEMALE', 'Акционер технологических компаний', 'CLOSED', '2025-04-09 14:00:00+03'),
     (5, 'kozlov_alexey@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
-     'Alexey', 'Kozlov', '2000-01-01', 'MALE', 'Профессиональный рыбак, участник турниров', 'OPEN', '2025-04-09 15:15:00+03'),
+     'Alexey', 'Kozlov', '2000-01-01', 'MALE', 'Профессиональный рыбак, участник турниров', 'CLOSED', '2025-04-09 15:15:00+03'),
     (6, 'nikolaeva_olga@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
-     'Olga', 'Nikolaeva', '1997-07-18', 'FEMALE', 'Спортсменка, мастер спорта по плаванию', 'OPEN', '2025-04-09 16:30:00+03'),
+     'Olga', 'Nikolaeva', '1997-07-18', 'FEMALE', 'Спортсменка, мастер спорта по плаванию', 'CLOSED', '2025-04-09 16:30:00+03'),
     (7, 'fedorov_maxim@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
      'Maxim', 'Fedorov', '2002-09-25', 'MALE', 'Студент MBA, будущий предприниматель', 'CLOSED', '2025-04-09 17:45:00+03'),
     (8, 'morozova_ekaterina@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
-     'Ekaterina', 'Morozova', '1993-04-05', 'FEMALE', 'UX/UI дизайнер в крупной IT компании', 'OPEN', '2025-04-09 19:00:00+03'),
+     'Ekaterina', 'Morozova', '1993-04-05', 'FEMALE', 'UX/UI дизайнер в крупной IT компании', 'CLOSED', '2025-04-09 19:00:00+03'),
     (9, 'volkov_andrey@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
-     'Andrey', 'Volkov', '2005-12-12', 'MALE', 'Увлекаюсь робототехникой', 'OPEN', '2025-04-09 20:15:00+03'),
+     'Andrey', 'Volkov', '2005-12-12', 'MALE', 'Увлекаюсь робототехникой', 'CLOSED', '2025-04-09 20:15:00+03'),
     (10, 'orlova_maria@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
-     'Maria', 'Orlova', '2007-06-20', 'FEMALE', 'Будущий врач, учусь в медицинском колледже', 'OPEN', '2025-04-09 21:30:00+03'),
+     'Maria', 'Orlova', '2007-06-20', 'FEMALE', 'Будущий врач, учусь в медицинском колледже', 'CLOSED', '2025-04-09 21:30:00+03'),
     (11, 'admin@senla.ru', 'ADMIN', '$2a$10$zp4b4MEUJJPBESQka4E7tuHFYnGMAwYa2OqZxLo5LeNX66fLeKa4m',
      'Admin', 'Senla', '1995-04-20', 'MALE', 'Java Web Developer, Founder of this application', 'CLOSED', '2025-04-09 09:00:00+03');
-
+SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));
 
 INSERT INTO communities (name, description, created_at)
 VALUES
@@ -48,6 +48,9 @@ VALUES
 (9, 8, 3, '2025-04-12 13:10:00+03', 'MEMBER', 'COMMUNITY', false, NULL),
 (10, 10, 3, '2025-04-12 15:40:00+03', 'MEMBER', 'COMMUNITY', true, 'Оскорбление участников');
 
+SELECT setval('group_members_id_seq', (SELECT MAX(id) FROM group_members));
+
+
 -- Посты в сообществах
 INSERT INTO posts (author_id, community_id, body, created_at, post_type)
 VALUES
@@ -61,6 +64,8 @@ VALUES
 
     (6, 3, 'Подготовка к чемпионату Москвы - график тренировок', '2025-04-12 12:15:00+03', 'COMMUNITY'),
     (8, 3, 'Обзор новых гидрокостюмов 2025 года', '2025-04-12 17:50:00+03', 'COMMUNITY');
+
+SELECT setval('posts_id_seq', (SELECT MAX(id) FROM posts));
 
 -- Посты на стенах пользователей
 INSERT INTO posts (wall_owner_id, body, created_at, post_type, mood, location)
@@ -131,8 +136,6 @@ VALUES
 (13, 2, 11, 'Какие технологии планируешь использовать?', '2025-04-27 12:30:00+03', 'COMMENT');
 
 
-
-
 -- Комментарии к постам в сообществах
 INSERT INTO content_fragments (id, author_id, post_id, body, created_at, cf_type)
 VALUES
@@ -165,6 +168,8 @@ VALUES
 
 -- К посту о гидрокостюмах
 (24, 9, 8, 'Какой марки костюм тебе больше понравился?', '2025-04-12 18:30:00+03', 'COMMENT');
+
+SELECT setval('content_fragments_id_seq', (SELECT MAX(id) FROM content_fragments));
 
 
 

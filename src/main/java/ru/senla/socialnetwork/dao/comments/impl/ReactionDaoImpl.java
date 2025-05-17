@@ -18,15 +18,11 @@ public class ReactionDaoImpl extends HibernateAbstractDao<Reaction> implements R
   }
 
   @Override
-  public Optional<Reaction> get(Long id) {
+  public Optional<Reaction> find(Long id) {
     log.info("Получение реакции с id {} вместе с комментарием и постом...", id);
     try {
-      String hql = "SELECT r FROM Reaction r " +
-          "LEFT JOIN FETCH r.comment " +
-          "LEFT JOIN FETCH r.comment.post " +
-          "WHERE r.id = :id";
       return sessionFactory.getCurrentSession()
-          .createQuery(hql, Reaction.class)
+          .createNamedQuery("Reaction.find", Reaction.class)
           .setParameter("id", id)
           .uniqueResultOptional();
     } catch (Exception e) {
@@ -36,13 +32,11 @@ public class ReactionDaoImpl extends HibernateAbstractDao<Reaction> implements R
   }
 
   @Override
-  public List<Reaction> getAll() {
+  public List<Reaction> findAll() {
     log.info("Получение списка всех реакций...");
     try {
-      String hql = "SELECT r FROM Reaction r LEFT JOIN FETCH r.owner";
-
       List<Reaction> reactions = sessionFactory.getCurrentSession()
-          .createQuery(hql, Reaction.class)
+          .createNamedQuery("Reaction.findAll", Reaction.class)
           .list();
 
       log.info("Найдено {} реакций", reactions.size());
@@ -54,14 +48,11 @@ public class ReactionDaoImpl extends HibernateAbstractDao<Reaction> implements R
   }
 
   @Override
-  public List<Reaction> getAllByComment(Long commentId) {
+  public List<Reaction> findAllByComment(Long commentId) {
     log.info("Получение списка всех реакций комментария {}...", commentId);
     try {
-      String hql = "SELECT r FROM Reaction r LEFT JOIN FETCH r.owner " +
-          "WHERE r.comment.id = :commentId";
-
       List<Reaction> reactions = sessionFactory.getCurrentSession()
-          .createQuery(hql, Reaction.class)
+          .createNamedQuery("Reaction.findAllByCommentId", Reaction.class)
           .setParameter("commentId", commentId)
           .list();
 
@@ -74,12 +65,11 @@ public class ReactionDaoImpl extends HibernateAbstractDao<Reaction> implements R
   }
 
   @Override
-  public Optional<Reaction> getByUserAndComment(Long userId, Long commentId) {
+  public Optional<Reaction> findByUserIdAndCommentId(Long userId, Long commentId) {
     log.info("Поиск реакции по комментарию {} и пользователю {}...", commentId, userId);
     try {
       return sessionFactory.getCurrentSession()
-          .createQuery("FROM Reaction WHERE comment.id = :commentId AND owner.id = :ownerId",
-              Reaction.class)
+          .createNamedQuery("Reaction.findByUserIdAndCommentId", Reaction.class)
           .setParameter("commentId", commentId)
           .setParameter("ownerId", userId)
           .uniqueResultOptional();

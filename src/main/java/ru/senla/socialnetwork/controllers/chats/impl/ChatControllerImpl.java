@@ -3,6 +3,7 @@ package ru.senla.socialnetwork.controllers.chats.impl;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import java.util.List;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.chats.ChatController;
+import ru.senla.socialnetwork.dto.DeleteResponseDTO;
 import ru.senla.socialnetwork.dto.chats.ChatDTO;
 import ru.senla.socialnetwork.dto.chats.CreateGroupChatDTO;
 import ru.senla.socialnetwork.facades.chats.ChatFacade;
@@ -57,8 +59,8 @@ public class ChatControllerImpl implements ChatController {
       @RequestParam @Email String participant,
       Authentication auth) {
     log.info("Создание персонального чата между {} и {}", auth.getName(), participant);
-    ChatDTO chat = chatFacade.create(participant, auth.getName());
-    log.info("Создан персональный чат ID: {} между {} и {}", chat.id(), auth.getName(), participant);
+    ChatDTO chat = chatFacade.create(auth.getName(), participant);
+    log.info("Создан персональный чат id={} между {} и {}", chat.id(), auth.getName(), participant);
     return ResponseEntity.status(HttpStatus.CREATED).body(chat);
   }
 
@@ -71,7 +73,9 @@ public class ChatControllerImpl implements ChatController {
     log.info("Запрос на удаление чата id={}. пользователем id={}", chatId, currentUser);
     chatFacade.delete(chatId, auth.getName());
     log.info("Чат id={} успешно удален пользователем id={}", chatId, currentUser);
-    return ResponseEntity.ok("Чат " + chatId + " удалён");
+    return ResponseEntity.ok(new DeleteResponseDTO(
+        "Чат успешно удалён",
+        Map.of("chatId", chatId)));
   }
 
   @Override

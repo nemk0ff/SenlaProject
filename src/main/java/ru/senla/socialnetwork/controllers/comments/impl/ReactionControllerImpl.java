@@ -1,6 +1,7 @@
 package ru.senla.socialnetwork.controllers.comments.impl;
 
 import java.util.List;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.socialnetwork.controllers.comments.ReactionController;
+import ru.senla.socialnetwork.dto.DeleteResponseDTO;
 import ru.senla.socialnetwork.dto.comments.ReactionDTO;
 import ru.senla.socialnetwork.facades.comments.ReactionFacade;
 import ru.senla.socialnetwork.model.comment.ReactionType;
@@ -81,6 +83,8 @@ public class ReactionControllerImpl implements ReactionController {
     log.info("Пользователь {} удаляет реакцию ID {}", auth.getName(), reactionId);
     reactionFacade.removeReaction(reactionId, auth.getName());
     log.info("Реакция ID {} успешно удалена", reactionId);
-    return ResponseEntity.ok("Реакция " + reactionId + " удалена");
+    return ResponseEntity.ok(new DeleteResponseDTO(
+        "Реакция успешно удалена",
+        Map.of("reactionId", reactionId)));
   }
 }

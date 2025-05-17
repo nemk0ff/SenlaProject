@@ -1,5 +1,6 @@
 package ru.senla.socialnetwork.controllers.users;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import java.time.LocalDate;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ public interface UserController {
 
   ResponseEntity<?> find(String name, String surname, Gender gender, LocalDate birthdate);
 
-  ResponseEntity<?> edit(UserRequestDTO editDTO, Authentication auth);
+  ResponseEntity<?> edit(@Valid UserRequestDTO editDTO, Authentication auth);
 
   ResponseEntity<?> changeEmail(@Email String newEmail, Authentication auth);
 }

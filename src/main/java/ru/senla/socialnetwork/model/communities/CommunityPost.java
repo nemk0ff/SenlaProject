@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,13 +15,20 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import ru.senla.socialnetwork.model.Post;
 
+
+@Entity
+@DiscriminatorValue("COMMUNITY")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@Entity
-@DiscriminatorValue("COMMUNITY")
+@NamedQuery(name = "CommunityPost.findAllByCommunityId",
+    query = "FROM CommunityPost cp JOIN FETCH cp.community JOIN FETCH cp.author " +
+        "WHERE cp.community.id = :communityId")
+@NamedQuery(name = "CommunityPost.findPinnedByCommunityId",
+    query = "FROM CommunityPost cp JOIN FETCH cp.community JOIN FETCH cp.author " +
+        "WHERE cp.community.id = :communityId AND cp.isPinned")
 public final class CommunityPost extends Post {
   @OneToOne
   @JoinColumn(name = "author_id", nullable = false)

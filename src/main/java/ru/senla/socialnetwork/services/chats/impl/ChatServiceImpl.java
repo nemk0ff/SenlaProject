@@ -20,7 +20,7 @@ public class ChatServiceImpl implements ChatService {
 
   @Override
   public List<Chat> getAllByUser(Long userId) {
-    return chatDao.findAllActiveByUserId(userId);
+    return chatDao.findAllChatsByUserId(userId);
   }
 
   @Override

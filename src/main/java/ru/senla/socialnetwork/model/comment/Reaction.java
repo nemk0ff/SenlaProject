@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
@@ -21,13 +22,25 @@ import lombok.Setter;
 import ru.senla.socialnetwork.model.MyEntity;
 import ru.senla.socialnetwork.model.users.User;
 
+
+@Entity
+@Table(name = "reactions")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
-@Table(name = "reactions")
+@NamedQuery(name = "Reaction.find",
+    query = "SELECT r FROM Reaction r JOIN FETCH r.owner JOIN FETCH r.comment " +
+        "WHERE r.comment.id = :commentId")
+@NamedQuery(name = "Reaction.findAll",
+    query = "SELECT r FROM Reaction r JOIN FETCH r.owner JOIN FETCH r.comment")
+@NamedQuery(name = "Reaction.findAllByCommentId",
+    query = "SELECT r FROM Reaction r JOIN FETCH r.owner JOIN FETCH r.comment " +
+        "WHERE r.comment.id = :commentId")
+@NamedQuery(name = "Reaction.findByUserIdAndCommentId",
+    query = "FROM Reaction r JOIN FETCH r.owner JOIN FETCH r.comment " +
+        "WHERE r.comment.id = :commentId AND r.owner.id = :ownerId")
 public final class Reaction implements MyEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -38,9 +38,9 @@ public class AuthServiceImpl implements AuthService {
       throw new IllegalPasswordException();
     }
 
-    log.info("Пользователь ввёл верный пароль, получаем его роль и генерируем токен...");
-    String role = loadUserByUsername(requestDTO.email())
-        .getAuthorities().iterator().next().getAuthority();
+    String role = correctDetails.getAuthorities()
+        .iterator().next()
+        .getAuthority();
     String token = JwtUtils.generateToken(requestDTO.email(), role);
     log.info("Токен сгенерирован успешно.");
     return new AuthResponseDTO(role, token);

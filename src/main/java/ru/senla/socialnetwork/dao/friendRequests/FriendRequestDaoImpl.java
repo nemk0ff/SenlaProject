@@ -23,14 +23,8 @@ public class FriendRequestDaoImpl extends HibernateAbstractDao<FriendRequest>
   public List<User> findFriendsByUserId(Long userId) {
     log.info("Получение списка друзей для user#{}...", userId);
     try {
-      String hql = "SELECT fr.recipient FROM FriendRequest fr " +
-          "WHERE fr.sender.id = :userId AND fr.status = 'ACCEPTED' " +
-          "UNION " +
-          "SELECT fr.sender FROM FriendRequest fr " +
-          "WHERE fr.recipient.id = :userId AND fr.status = 'ACCEPTED'";
-
       List<User> friends = sessionFactory.getCurrentSession()
-          .createQuery(hql, User.class)
+          .createNamedQuery("FriendRequest.findFriendsByUserId", User.class)
           .setParameter("userId", userId)
           .getResultList();
 
@@ -46,9 +40,8 @@ public class FriendRequestDaoImpl extends HibernateAbstractDao<FriendRequest>
   public List<FriendRequest> getAllByUserId(Long userId) {
     log.info("Получение friendRequests для user#{}...", userId);
     try {
-      String hql = "FROM FriendRequest WHERE sender.id = :userId OR recipient.id = :userId";
       List<FriendRequest> friendRequests = sessionFactory.getCurrentSession()
-          .createQuery(hql, FriendRequest.class)
+          .createNamedQuery("FriendRequest.getAllByUserId", FriendRequest.class)
           .setParameter("userId", userId)
           .list();
       log.info("Найдено {} friendRequests для user#{}", friendRequests.size(), userId);
@@ -90,13 +83,8 @@ public class FriendRequestDaoImpl extends HibernateAbstractDao<FriendRequest>
   public boolean areFriends(Long firstUserId, Long secondUserId) {
     log.info("Проверка дружбы между user#{} и user#{}...", firstUserId, secondUserId);
     try {
-      String hql = "SELECT COUNT(fr) > 0 FROM FriendRequest fr " +
-          "WHERE ((fr.sender.id = :firstUser AND fr.recipient.id = :secondUser) " +
-          "OR (fr.sender.id = :secondUser AND fr.recipient.id = :firstUser)) " +
-          "AND fr.status = :status";
-
       Boolean areFriends = sessionFactory.getCurrentSession()
-          .createQuery(hql, Boolean.class)
+          .createNamedQuery("FriendRequest.areFriends", Boolean.class)
           .setParameter("firstUser", firstUserId)
           .setParameter("secondUser", secondUserId)
           .setParameter("status", FriendStatus.ACCEPTED)
