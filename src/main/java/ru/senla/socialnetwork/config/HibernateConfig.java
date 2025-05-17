@@ -31,7 +31,6 @@ public class HibernateConfig {
     config.setJdbcUrl(dbUrl);
     config.setUsername(dbUsername);
     config.setPassword(dbPassword);
-    config.setDriverClassName("org.postgresql.Driver");
     config.setMaximumPoolSize(5);
     return new HikariDataSource(config);
   }
@@ -43,7 +42,6 @@ public class HibernateConfig {
     sessionFactory.setPackagesToScan("ru.senla.socialnetwork.model");
 
     Properties props = new Properties();
-    props.put(Environment.DIALECT, "org.hibernate.dialect.PostgreSQLDialect");
     props.put(Environment.CURRENT_SESSION_CONTEXT_CLASS,
         "org.springframework.orm.hibernate5.SpringSessionContext");
 
