@@ -24,6 +24,24 @@ VALUES
      'Admin', 'Senla', '1995-04-20', 'MALE', 'Java Web Developer, Founder of this application', 'CLOSED', '2025-04-09 09:00:00+03');
 SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));
 
+
+-- Заявки в друзья между пользователями
+INSERT INTO friend_requests (sender_id, recipient_id, status, created_at)
+VALUES
+    -- Активные заявки (PENDING)
+    (1, 2, 'PENDING', '2025-04-15 10:00:00+03'),  -- Аркадий к Анне
+    (5, 2, 'PENDING', '2025-04-15 10:00:00+03'),  -- Аркадий к Анне
+    -- Принятые заявки (ACCEPTED)
+    (1, 3, 'ACCEPTED', '2025-04-10 09:15:00+03'), -- Аркадий и Дмитрий
+    -- Отклоненные заявки (REJECTED)
+    (7, 1, 'REJECTED', '2025-04-13 17:40:00+03'), -- Максим к Аркадию
+    -- Отмененные заявки (CANCELLED)
+    (5, 7, 'CANCELLED', '2025-04-16 20:10:00+03'); -- Алексей к Максиму
+
+-- Обновляем последовательность для ID
+SELECT setval('friend_requests_id_seq', (SELECT MAX(id) FROM friend_requests));
+
+
 INSERT INTO communities (name, description, created_at)
 VALUES
     ('Трейдеры и инвесторы', 'Сообщество для обсуждения рынков и инвестиций', '2025-04-10 09:00:00+03'),

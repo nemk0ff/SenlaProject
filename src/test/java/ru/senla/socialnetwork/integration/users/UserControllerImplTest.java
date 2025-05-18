@@ -3,27 +3,20 @@ package ru.senla.socialnetwork.integration.users;
 import static org.hamcrest.Matchers.hasSize;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ActiveProfiles;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.senla.socialnetwork.dto.users.UserRequestDTO;
 import ru.senla.socialnetwork.integration.BaseIntegrationTest;
 import ru.senla.socialnetwork.model.users.Gender;
 import ru.senla.socialnetwork.model.users.ProfileType;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
-@Testcontainers
 public class UserControllerImplTest extends BaseIntegrationTest {
+
   @Test
   @WithMockUser(username = "ivanov_arkadiy@senla.ru", roles = "USER")
   @DisplayName("GET /users/{id} - успешное получение пользователя")
