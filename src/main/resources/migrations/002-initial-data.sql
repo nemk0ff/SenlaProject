@@ -55,19 +55,19 @@ VALUES
 SELECT setval('chats_id_seq', (SELECT MAX(id) FROM chats));
 
 -- Участники чатов
-INSERT INTO group_members (id, user_id, chat_id, join_date, role, gm_type, is_banned)
+INSERT INTO group_members (id, user_id, chat_id, join_date, role, gm_type, muted_until)
 VALUES
     -- Аркадий - Анна
-    (1, 1, 1, '2025-04-10 09:30:00+03', 'MEMBER', 'CHAT', false),
-    (2, 2, 1, '2025-04-10 09:30:00+03', 'MEMBER', 'CHAT', false),
+    (1, 1, 1, '2025-04-10 09:30:00+03', 'MEMBER', 'CHAT', null),
+    (2, 2, 1, '2025-04-10 09:30:00+03', 'MEMBER', 'CHAT', null),
     -- Дмитрий - Елена
-    (3, 3, 2, '2025-04-11 14:20:00+03', 'MEMBER', 'CHAT', false),
-    (4, 4, 2, '2025-04-11 14:20:00+03', 'MEMBER', 'CHAT', false),
+    (3, 3, 2, '2025-04-11 14:20:00+03', 'MEMBER', 'CHAT', null),
+    (4, 4, 2, '2025-04-11 14:20:00+03', 'MEMBER', 'CHAT', null),
     -- "Java Team" (Анна, Алексей, Максим, Админ)
-    (5, 2, 3, '2025-04-14 13:30:00+03', 'ADMIN', 'CHAT', false),
-    (6, 5, 3, '2025-04-14 13:35:00+03', 'MEMBER', 'CHAT', false),
-    (7, 7, 3, '2025-04-14 13:40:00+03', 'MEMBER', 'CHAT', false),
-    (8, 11, 3, '2025-04-14 13:45:00+03', 'MODERATOR', 'CHAT', false);
+    (5, 2, 3, '2025-04-14 13:30:00+03', 'ADMIN', 'CHAT', null),
+    (6, 5, 3, '2025-04-14 13:35:00+03', 'MEMBER', 'CHAT', '2026-04-11 15:00:00+03'),
+    (7, 7, 3, '2025-04-14 13:40:00+03', 'MEMBER', 'CHAT', '2026-04-11 15:00:00+03'),
+    (8, 11, 3, '2025-04-14 13:45:00+03', 'MEMBER', 'CHAT', null);
 
 -- Сообщения в чатах
 INSERT INTO content_fragments (id, author_id, chat_id, body, created_at, cf_type, is_pinned)

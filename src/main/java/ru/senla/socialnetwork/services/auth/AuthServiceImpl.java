@@ -57,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
     User user = UserMapper.INSTANCE.toUser(regDTO);
     user.setPassword(passwordEncoder.encode(regDTO.password()));
     user.setRole(UserRole.USER);
-    if(user.getProfileType() == null) {
+    if (user.getProfileType() == null) {
       user.setProfileType(ProfileType.OPEN);
     }
 
