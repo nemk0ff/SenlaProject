@@ -16,6 +16,7 @@ import ru.senla.socialnetwork.dto.users.UserResponseDTO;
 import ru.senla.socialnetwork.exceptions.auth.IllegalPasswordException;
 import ru.senla.socialnetwork.exceptions.users.EmailAlreadyExistsException;
 import ru.senla.socialnetwork.exceptions.auth.UserNotRegisteredException;
+import ru.senla.socialnetwork.model.users.ProfileType;
 import ru.senla.socialnetwork.model.users.User;
 import ru.senla.socialnetwork.model.users.UserRole;
 import ru.senla.socialnetwork.security.JwtUtils;
@@ -56,6 +57,9 @@ public class AuthServiceImpl implements AuthService {
     User user = UserMapper.INSTANCE.toUser(regDTO);
     user.setPassword(passwordEncoder.encode(regDTO.password()));
     user.setRole(UserRole.USER);
+    if(user.getProfileType() == null) {
+      user.setProfileType(ProfileType.OPEN);
+    }
 
     userDao.saveOrUpdate(user);
     log.info("Пользователь {} успешно зарегистрирован.", regDTO.email());
