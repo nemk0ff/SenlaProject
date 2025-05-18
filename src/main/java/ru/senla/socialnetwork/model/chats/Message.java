@@ -28,7 +28,7 @@ import ru.senla.socialnetwork.model.ContentFragment;
         "WHERE m.chat.id = :chatId AND m.replyTo.id = :messageId " +
         "ORDER BY m.createdAt DESC")
 @NamedQuery(name = "Message.findPinnedByChatId",
-    query = "FROM Message m JOIN FETCH m.author JOIN FETCH m.chat JOIN FETCH m.replyTo " +
+    query = "FROM Message m JOIN FETCH m.author JOIN FETCH m.chat LEFT JOIN FETCH m.replyTo " +
         "WHERE m.chat.id = :chatId AND m.isPinned = true " +
         "ORDER BY m.createdAt DESC")
 @NamedQuery(name = "Message.findByIdAndChatId",

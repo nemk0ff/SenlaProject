@@ -22,7 +22,7 @@ public abstract class BaseIntegrationTest {
 
   @Container
   protected static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
-      "postgres:15-alpine")
+      "postgres:17-alpine")
       .withDatabaseName("testdb")
       .withUsername("test")
       .withPassword("test")
