@@ -62,5 +62,5 @@ public final class Chat implements MyEntity {
   private List<Message> messages = new ArrayList<>();
 
   @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private List<ChatMember> members;
+  private List<ChatMember> members = new ArrayList<>();
 }
