@@ -1,27 +1,33 @@
 INSERT INTO users (id, email, role, password, name, surname, birthdate, gender, about_me, profile_type, registered_at)
-VALUES
-    (1, 'ivanov_arkadiy@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
-     'Arkadiy', 'Ivanov', '1995-05-15', 'MALE', 'MSU EF student / trader', 'CLOSED', '2025-04-09 10:15:00+03'),
-    (2, 'petrova_anna@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
-     'Anna', 'Petrova', '1998-08-22', 'FEMALE', 'Python developer, Yandex', 'CLOSED', '2025-04-09 11:30:00+03'),
-    (3, 'sidorov_dmitry@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
-     'Dmitry', 'Sidorov', '1992-11-30', 'MALE', 'Will be a Top G', 'OPEN', '2025-04-09 12:45:00+03'),
-    (4, 'smirnova_elena@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
-     'Elena', 'Smirnova', '1990-03-10', 'FEMALE', 'Акционер технологических компаний', 'CLOSED', '2025-04-09 14:00:00+03'),
-    (5, 'kozlov_alexey@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
-     'Alexey', 'Kozlov', '2000-01-01', 'MALE', 'Профессиональный рыбак, участник турниров', 'CLOSED', '2025-04-09 15:15:00+03'),
-    (6, 'nikolaeva_olga@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
-     'Olga', 'Nikolaeva', '1997-07-18', 'FEMALE', 'Спортсменка, мастер спорта по плаванию', 'CLOSED', '2025-04-09 16:30:00+03'),
-    (7, 'fedorov_maxim@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
-     'Maxim', 'Fedorov', '2002-09-25', 'MALE', 'Студент MBA, будущий предприниматель', 'CLOSED', '2025-04-09 17:45:00+03'),
-    (8, 'morozova_ekaterina@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
-     'Ekaterina', 'Morozova', '1993-04-05', 'FEMALE', 'UX/UI дизайнер в крупной IT компании', 'CLOSED', '2025-04-09 19:00:00+03'),
-    (9, 'volkov_andrey@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
-     'Andrey', 'Volkov', '2005-12-12', 'MALE', 'Увлекаюсь робототехникой', 'CLOSED', '2025-04-09 20:15:00+03'),
-    (10, 'orlova_maria@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
-     'Maria', 'Orlova', '2007-06-20', 'FEMALE', 'Будущий врач, учусь в медицинском колледже', 'CLOSED', '2025-04-09 21:30:00+03'),
-    (11, 'admin@senla.ru', 'ADMIN', '$2a$10$zp4b4MEUJJPBESQka4E7tuHFYnGMAwYa2OqZxLo5LeNX66fLeKa4m',
-     'Admin', 'Senla', '1995-04-20', 'MALE', 'Java Web Developer, Founder of this application', 'CLOSED', '2025-04-09 09:00:00+03');
+VALUES (1, 'ivanov_arkadiy@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
+        'Arkadiy', 'Ivanov', '1995-05-15', 'MALE', 'MSU EF student / trader', 'CLOSED', '2025-04-09 10:15:00+03'),
+       (2, 'petrova_anna@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
+        'Anna', 'Petrova', '1998-08-22', 'FEMALE', 'Python developer, Yandex', 'CLOSED', '2025-04-09 11:30:00+03'),
+       (3, 'sidorov_dmitry@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
+        'Dmitry', 'Sidorov', '1992-11-30', 'MALE', 'Will be a Top G', 'OPEN', '2025-04-09 12:45:00+03'),
+       (4, 'smirnova_elena@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
+        'Elena', 'Smirnova', '1990-03-10', 'FEMALE', 'Акционер технологических компаний', 'CLOSED',
+        '2025-04-09 14:00:00+03'),
+       (5, 'kozlov_alexey@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
+        'Alexey', 'Kozlov', '2000-01-01', 'MALE', 'Профессиональный рыбак, участник турниров', 'CLOSED',
+        '2025-04-09 15:15:00+03'),
+       (6, 'nikolaeva_olga@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
+        'Olga', 'Nikolaeva', '1997-07-18', 'FEMALE', 'Спортсменка, мастер спорта по плаванию', 'CLOSED',
+        '2025-04-09 16:30:00+03'),
+       (7, 'fedorov_maxim@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
+        'Maxim', 'Fedorov', '2002-09-25', 'MALE', 'Студент MBA, будущий предприниматель', 'CLOSED',
+        '2025-04-09 17:45:00+03'),
+       (8, 'morozova_ekaterina@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
+        'Ekaterina', 'Morozova', '1993-04-05', 'FEMALE', 'UX/UI дизайнер в крупной IT компании', 'CLOSED',
+        '2025-04-09 19:00:00+03'),
+       (9, 'volkov_andrey@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
+        'Andrey', 'Volkov', '2005-12-12', 'MALE', 'Увлекаюсь робототехникой', 'CLOSED', '2025-04-09 20:15:00+03'),
+       (10, 'orlova_maria@senla.ru', 'USER', '$2a$10$Smy9JptsypUyVBHOTMidTeh3pEZ9UA1uoGv6H5yLhqXXdLMkQsTKK',
+        'Maria', 'Orlova', '2007-06-20', 'FEMALE', 'Будущий врач, учусь в медицинском колледже', 'CLOSED',
+        '2025-04-09 21:30:00+03'),
+       (11, 'admin@senla.ru', 'ADMIN', '$2a$10$zp4b4MEUJJPBESQka4E7tuHFYnGMAwYa2OqZxLo5LeNX66fLeKa4m',
+        'Admin', 'Senla', '1995-04-20', 'MALE', 'Java Web Developer, Founder of this application', 'CLOSED',
+        '2025-04-09 09:00:00+03');
 
 SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));
 
@@ -37,7 +43,8 @@ VALUES
     -- Отклоненные заявки (REJECTED)
     (7, 1, 'REJECTED', '2025-04-13 17:40:00+03'), -- Максим к Аркадию
     -- Отмененные заявки (CANCELLED)
-    (5, 7, 'CANCELLED', '2025-04-16 20:10:00+03'); -- Алексей к Максиму
+    (5, 7, 'CANCELLED', '2025-04-16 20:10:00+03');
+-- Алексей к Максиму
 
 -- Обновляем последовательность для ID
 SELECT setval('friend_requests_id_seq', (SELECT MAX(id) FROM friend_requests));
@@ -47,8 +54,8 @@ SELECT setval('friend_requests_id_seq', (SELECT MAX(id) FROM friend_requests));
 INSERT INTO chats (id, name, is_group, created_at)
 VALUES
     -- Личные
-    (1, NULL, false, '2025-04-10 09:30:00+03'),  -- Аркадий - Анна
-    (2, NULL, false, '2025-04-11 14:20:00+03'),  -- Дмитрий - Елена
+    (1, NULL, false, '2025-04-10 09:30:00+03'), -- Аркадий - Анна
+    (2, NULL, false, '2025-04-11 14:20:00+03'), -- Дмитрий - Елена
     -- Групповые
     (3, 'Java Team', true, '2025-04-14 13:30:00+03');
 
@@ -83,11 +90,10 @@ VALUES
     (6, 5, 3, 'У меня тоже есть опыт', '2025-04-14 14:10:00+03', 'MESSAGE', false),
     (7, 2, 3, 'Давайте созвонимся завтра)', '2025-04-14 16:20:00+03', 'MESSAGE', true);
 
-INSERT INTO communities (name, description, created_at)
-VALUES
-    ('Трейдеры и инвесторы', 'Сообщество для обсуждения рынков и инвестиций', '2025-04-10 09:00:00+03'),
-    ('Java Developers', 'Сообщество Java-разработчиков. Spring, Hibernate, Jakarta EE', '2025-04-11 10:00:00+03'),
-    ('Спортивное плавание', 'Все о плавании: тренировки, соревнования, экипировка', '2025-04-12 11:00:00+03');
+INSERT INTO communities (id, name, description, created_at)
+VALUES (1, 'Трейдеры и инвесторы', 'Сообщество для обсуждения рынков и инвестиций', '2025-04-10 09:00:00+03'),
+       (2, 'Java Developers', 'Сообщество Java-разработчиков. Spring, Hibernate, Jakarta EE', '2025-04-11 10:00:00+03'),
+       (3, 'Спортивное плавание', 'Все о плавании: тренировки, соревнования, экипировка', '2025-04-12 11:00:00+03');
 
 INSERT INTO group_members (id, user_id, community_id, join_date, role, gm_type, is_banned, banned_reason)
 VALUES
@@ -111,46 +117,54 @@ SELECT setval('group_members_id_seq', (SELECT MAX(id) FROM group_members));
 
 
 -- Посты в сообществах
-INSERT INTO posts (author_id, community_id, body, created_at, post_type)
-VALUES
-    (9, 1, 'Сегодня сильное движение на нефтяном рынке, все в шорте?', '2025-04-10 09:30:00+03', 'COMMUNITY'),
-    (11, 1, 'Кто что думает про акции Tesla после последнего отчета?', '2025-04-10 14:45:00+03', 'COMMUNITY'),
+INSERT INTO posts (id, author_id, community_id, body, created_at, post_type, is_pinned)
+VALUES (1, 9, 1, 'Сегодня сильное движение на нефтяном рынке, все в шорте?', '2025-04-10 09:30:00+03', 'COMMUNITY', false),
+       (2, 11, 1, 'Кто что думает про акции Tesla после последнего отчета?', '2025-04-10 14:45:00+03', 'COMMUNITY', false),
 
-    (12, 2, 'Переходим на Spring Boot 3.2 - основные изменения', '2025-04-11 11:20:00+03', 'COMMUNITY'),
-    (10, 2, 'Как правильно делать интеграционные тесты в Spring?', '2025-04-11 13:45:00+03', 'COMMUNITY'),
-    (13, 2, 'Hibernate vs JPA - в чем разница на практике?', '2025-04-11 16:30:00+03', 'COMMUNITY'),
-    (12, 2, 'Новый LTS релиз Java 21 - кто уже перешел?', '2025-04-11 17:50:00+03', 'COMMUNITY'),
+       (3, 12, 2, 'Переходим на Spring Boot 3.2 - основные изменения', '2025-04-11 11:20:00+03', 'COMMUNITY', false),
+       (4, 10, 2, 'Как правильно делать интеграционные тесты в Spring?', '2025-04-11 13:45:00+03', 'COMMUNITY', false),
+       (5, 13, 2, 'Hibernate vs JPA - в чем разница на практике?', '2025-04-11 16:30:00+03', 'COMMUNITY', false),
+       (6, 12, 2, 'Новый LTS релиз Java 21 - кто уже перешел?', '2025-04-11 17:50:00+03', 'COMMUNITY', false),
 
-    (14, 3, 'Подготовка к чемпионату Москвы - график тренировок', '2025-04-12 12:15:00+03', 'COMMUNITY'),
-    (16, 3, 'Обзор новых гидрокостюмов 2025 года', '2025-04-12 17:50:00+03', 'COMMUNITY');
-
-SELECT setval('posts_id_seq', (SELECT MAX(id) FROM posts));
+       (7, 14, 3, 'Подготовка к чемпионату Москвы - график тренировок', '2025-04-12 12:15:00+03', 'COMMUNITY', true),
+       (8, 16, 3, 'Обзор новых гидрокостюмов 2025 года', '2025-04-12 17:50:00+03', 'COMMUNITY', false);
 
 -- Посты на стенах пользователей
-INSERT INTO posts (wall_owner_id, body, created_at, post_type, mood, location)
+INSERT INTO posts (id, wall_owner_id, body, created_at, post_type, mood, location)
 VALUES
 --  Arkadiy Ivanov (трейдер)
-(1, 'Сегодня закрыл позицию по нефти с прибылью 15%. Хороший день!', '2025-04-15 18:30:00+03', 'WALL', 'Успех', 'Москва, офис'),
-(1, 'Анализирую отчеты компаний сектора технологий. Какие акции сейчас выглядят привлекательно?', '2025-04-20 10:15:00+03', 'WALL', 'Анализ', 'Домашний офис'),
+(9, 1, 'Сегодня закрыл позицию по нефти с прибылью 15%. Хороший день!', '2025-04-15 18:30:00+03', 'WALL', 'Успех',
+ 'Москва, офис'),
+(10, 1, 'Анализирую отчеты компаний сектора технологий. Какие акции сейчас выглядят привлекательно?',
+ '2025-04-20 10:15:00+03', 'WALL', 'Анализ', 'Домашний офис'),
 
 -- Anna Petrova (Python разработчик)
-(2, 'Закончила большой проект по миграции на Python 3.11. Ура!', '2025-04-16 19:45:00+03', 'WALL', 'Побеждаю', 'Офис Yandex'),
-(2, 'Ищу интересные open-source проекты для участия. Посоветуйте что-то стоящее!', '2025-04-22 14:20:00+03', 'WALL', 'Интересуюсь', NULL),
+(11, 2, 'Закончила большой проект по миграции на Python 3.11. Ура!', '2025-04-16 19:45:00+03', 'WALL', 'Побеждаю',
+ 'Офис Yandex'),
+(12, 2, 'Ищу интересные open-source проекты для участия. Посоветуйте что-то стоящее!', '2025-04-22 14:20:00+03', 'WALL',
+ 'Интересуюсь', NULL),
 
 -- Dmitry Sidorov (Top G)
-(3, 'Новый рекорд в жиме лежа - 150 кг! Иду к своей цели!', '2025-04-18 20:00:00+03', 'WALL', 'Достижения', 'Спортзал "Сталь"'),
-(3, 'Читаю "48 законов власти". Рекомендую всем, кто хочет добиться успеха.', '2025-04-25 12:30:00+03', 'WALL', 'Мотивация', NULL),
+(13, 3, 'Новый рекорд в жиме лежа - 150 кг! Иду к своей цели!', '2025-04-18 20:00:00+03', 'WALL', 'Достижения',
+ 'Спортзал "Сталь"'),
+(14, 3, 'Читаю "48 законов власти". Рекомендую всем, кто хочет добиться успеха.', '2025-04-25 12:30:00+03', 'WALL',
+ 'Мотивация', NULL),
 
 -- Olga Nikolaeva (спортсменка)
-(6, 'Сегодня установила личный рекорд на дистанции 200м баттерфляем! 2:15.37', '2025-04-17 21:10:00+03', 'WALL', 'Горжусь', 'Бассейн "Олимпийский"'),
-(6, 'Готовлюсь к чемпионату России. Тренировки по 2 раза в день!', '2025-04-23 08:45:00+03', 'WALL', 'Иду к цели', 'Тренировочная база'),
-(6, 'Отдых после тяжелых соревнований. Море, солнце и никаких мыслей о плавании :)', '2025-04-30 15:20:00+03', 'WALL', 'Отдыхаю', 'Сочи'),
+(15, 6, 'Сегодня установила личный рекорд на дистанции 200м баттерфляем! 2:15.37', '2025-04-17 21:10:00+03', 'WALL',
+ 'Горжусь', 'Бассейн "Олимпийский"'),
+(16, 6, 'Готовлюсь к чемпионату России. Тренировки по 2 раза в день!', '2025-04-23 08:45:00+03', 'WALL', 'Иду к цели',
+ 'Тренировочная база'),
+(17, 6, 'Отдых после тяжелых соревнований. Море, солнце и никаких мыслей о плавании :)', '2025-04-30 15:20:00+03', 'WALL',
+ 'Отдыхаю', 'Сочи'),
 
 -- Maxim Fedorov (студент MBA)
-(7, 'Защитил бизнес-план по запуску стартапа. Преподаватели оценили на 9/10!', '2025-04-19 16:40:00+03', 'WALL', 'Иду к мечте', 'Университет'),
-(7, 'Ищу соучредителей для IT-стартапа в сфере образования. Есть интересные идеи!', '2025-04-27 11:15:00+03', 'WALL', 'Энтузиазм', NULL);
+(18, 7, 'Защитил бизнес-план по запуску стартапа. Преподаватели оценили на 9/10!', '2025-04-19 16:40:00+03', 'WALL',
+ 'Иду к мечте', 'Университет'),
+(19, 7, 'Ищу соучредителей для IT-стартапа в сфере образования. Есть интересные идеи!', '2025-04-27 11:15:00+03', 'WALL',
+ 'Энтузиазм', NULL);
 
-
+SELECT setval('posts_id_seq', (SELECT MAX(id) FROM posts));
 
 
 -- Комментарии к постам на стенах пользователей
@@ -159,7 +173,8 @@ VALUES
 -- Arkadiy Ivanov (трейдер)
 -- К первому посту (о нефти)
 (8, 2, 1, 'Поздравляю с прибылью! Я тоже сегодня закрылся в плюс.', '2025-04-15 19:10:00+03', 'COMMENT'),
-(9, 4, 1, 'А я наоборот, купил фьючерсы. Думаю, нефть пойдет вверх после завтрашнего отчета.', '2025-04-15 20:45:00+03', 'COMMENT'),
+(9, 4, 1, 'А я наоборот, купил фьючерсы. Думаю, нефть пойдет вверх после завтрашнего отчета.', '2025-04-15 20:45:00+03',
+ 'COMMENT'),
 
 -- Ко второму посту (о технологиях)
 (10, 3, 2, 'Apple выглядит перепроданной после коррекции, хорошая точка входа.', '2025-04-20 11:30:00+03', 'COMMENT'),
@@ -204,7 +219,8 @@ VALUES
 (22, 4, 1, 'Будьте осторожны, завтра выходит отчет по запасам.', '2025-04-10 11:45:00+03', 'COMMENT'),
 
 -- К посту о Tesla
-(23, 1, 2, 'Я бы подождал до следующего квартала, слишком много неопределенности.', '2025-04-10 15:30:00+03', 'COMMENT'),
+(23, 1, 2, 'Я бы подождал до следующего квартала, слишком много неопределенности.', '2025-04-10 15:30:00+03',
+ 'COMMENT'),
 (24, 4, 2, 'А я наоборот купил - долгосрочная перспектива хорошая.', '2025-04-10 16:20:00+03', 'COMMENT'),
 
 -- "Java Developers"
@@ -229,7 +245,6 @@ VALUES
 (31, 9, 8, 'Какой марки костюм тебе больше понравился?', '2025-04-12 18:30:00+03', 'COMMENT');
 
 SELECT setval('content_fragments_id_seq', (SELECT MAX(id) FROM content_fragments));
-
 
 
 -- Реакции на комментарии к постам на стенах пользователей
@@ -283,7 +298,6 @@ VALUES
 -- о технологиях для стартапа
 ('LIKE', 11, 20, '2025-04-27 13:00:00+03'),
 ('DISLIKE', 4, 20, '2025-04-27 13:30:00+03');
-
 
 
 -- Реакции на комментарии в сообществах

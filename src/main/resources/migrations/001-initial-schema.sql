@@ -1,87 +1,94 @@
-CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    role VARCHAR(10) NOT NULL CHECK (role IN ('USER', 'ADMIN')),
-    name VARCHAR(255) NOT NULL,
-    surname VARCHAR(32) NOT NULL,
-    birthdate DATE,
-    profile_type VARCHAR(10) NOT NULL CHECK (profile_type IN ('OPEN', 'CLOSED')),
-    gender VARCHAR(10) CHECK (gender IN ('MALE', 'FEMALE', 'OTHER')),
-    about_me VARCHAR(1000),
+CREATE TABLE IF NOT EXISTS users
+(
+    id            SERIAL PRIMARY KEY,
+    email         VARCHAR(255) NOT NULL UNIQUE,
+    password      VARCHAR(255) NOT NULL,
+    role          VARCHAR(10)  NOT NULL CHECK (role IN ('USER', 'ADMIN')),
+    name          VARCHAR(255) NOT NULL,
+    surname       VARCHAR(32)  NOT NULL,
+    birthdate     DATE,
+    profile_type  VARCHAR(10)  NOT NULL CHECK (profile_type IN ('OPEN', 'CLOSED')),
+    gender        VARCHAR(10) CHECK (gender IN ('MALE', 'FEMALE', 'OTHER')),
+    about_me      VARCHAR(1000),
     registered_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-    );
+);
 
-CREATE TABLE IF NOT EXISTS friend_requests (
-    id SERIAL PRIMARY KEY,
-    sender_id INTEGER NOT NULL REFERENCES users (id),
-    recipient_id INTEGER NOT NULL REFERENCES users (id),
-    status VARCHAR(10) NOT NULL CHECK (status IN ('PENDING', 'ACCEPTED', 'REJECTED', 'CANCELLED')),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-    );
+CREATE TABLE IF NOT EXISTS friend_requests
+(
+    id           SERIAL PRIMARY KEY,
+    sender_id    INTEGER     NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    recipient_id INTEGER     NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    status       VARCHAR(10) NOT NULL CHECK (status IN ('PENDING', 'ACCEPTED', 'REJECTED', 'CANCELLED')),
+    created_at   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
 
-CREATE TABLE IF NOT EXISTS communities (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255),
+CREATE TABLE IF NOT EXISTS communities
+(
+    id          SERIAL PRIMARY KEY,
+    name        VARCHAR(255),
     description VARCHAR(1000),
-    type VARCHAR(32),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-    );
+    type        VARCHAR(32),
+    created_at  TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
 
-CREATE TABLE IF NOT EXISTS chats (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255),
-    is_group BOOLEAN NOT NULL,
+CREATE TABLE IF NOT EXISTS chats
+(
+    id         SERIAL PRIMARY KEY,
+    name       VARCHAR(255),
+    is_group   BOOLEAN NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-    );
+);
 
-CREATE TABLE IF NOT EXISTS group_members (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users(id),
-    chat_id INTEGER REFERENCES chats(id),
-    community_id INTEGER REFERENCES communities(id),
-    muted_until TIMESTAMP WITH TIME ZONE,
-    is_banned BOOLEAN,
+CREATE TABLE IF NOT EXISTS group_members
+(
+    id            SERIAL PRIMARY KEY,
+    user_id       INTEGER                  NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    chat_id       INTEGER REFERENCES chats (id) ON DELETE CASCADE,
+    community_id  INTEGER REFERENCES communities (id) ON DELETE CASCADE,
+    muted_until   TIMESTAMP WITH TIME ZONE,
+    is_banned     BOOLEAN,
     banned_reason VARCHAR(255),
-    join_date TIMESTAMP WITH TIME ZONE NOT NULL,
-    leave_date TIMESTAMP WITH TIME ZONE,
-    role VARCHAR(32) NOT NULL,
-    gm_type VARCHAR(32)
-    );
+    join_date     TIMESTAMP WITH TIME ZONE NOT NULL,
+    leave_date    TIMESTAMP WITH TIME ZONE,
+    role          VARCHAR(32)              NOT NULL,
+    gm_type       VARCHAR(32)
+);
 
-CREATE TABLE IF NOT EXISTS posts (
-    id SERIAL PRIMARY KEY,
-    author_id INTEGER REFERENCES group_members(id),
-    community_id INTEGER REFERENCES communities(id),
-    wall_owner_id INTEGER REFERENCES users(id),
-    is_pinned BOOLEAN,
-    mood VARCHAR(32),
-    location VARCHAR(255),
-    body VARCHAR(2000),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    post_type VARCHAR(32)
-    );
+CREATE TABLE IF NOT EXISTS posts
+(
+    id            SERIAL PRIMARY KEY,
+    author_id     INTEGER REFERENCES group_members (id) ON DELETE CASCADE,
+    community_id  INTEGER REFERENCES communities (id) ON DELETE CASCADE,
+    wall_owner_id INTEGER REFERENCES users (id) ON DELETE CASCADE,
+    is_pinned     BOOLEAN,
+    mood          VARCHAR(32),
+    location      VARCHAR(255),
+    body          VARCHAR(2000),
+    created_at    TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    post_type     VARCHAR(32)
+);
 
-CREATE TABLE IF NOT EXISTS content_fragments (
-    id SERIAL PRIMARY KEY,
-    author_id INTEGER NOT NULL REFERENCES users(id),
-    chat_id INTEGER REFERENCES chats(id) ON DELETE CASCADE,
-    post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,
-    body VARCHAR(2000) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    cf_type VARCHAR(32),
-    is_pinned BOOLEAN,
-    reply_to_id INTEGER REFERENCES content_fragments(id)
-    );
+CREATE TABLE IF NOT EXISTS content_fragments
+(
+    id          SERIAL PRIMARY KEY,
+    author_id   INTEGER       NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    chat_id     INTEGER REFERENCES chats (id) ON DELETE CASCADE,
+    post_id     INTEGER REFERENCES posts (id) ON DELETE CASCADE,
+    body        VARCHAR(2000) NOT NULL,
+    created_at  TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    cf_type     VARCHAR(32),
+    is_pinned   BOOLEAN,
+    reply_to_id INTEGER       REFERENCES content_fragments (id) ON DELETE SET NULL
+);
 
-
-CREATE TABLE IF NOT EXISTS reactions (
-    id SERIAL PRIMARY KEY,
-    type VARCHAR(10) NOT NULL CHECK (type IN ('LIKE', 'DISLIKE')),
-    user_id INTEGER REFERENCES users(id),
-    comment_id INTEGER REFERENCES content_fragments(id) ON DELETE CASCADE,
+CREATE TABLE IF NOT EXISTS reactions
+(
+    id         SERIAL PRIMARY KEY,
+    type       VARCHAR(10) NOT NULL CHECK (type IN ('LIKE', 'DISLIKE')),
+    user_id    INTEGER REFERENCES users (id) ON DELETE CASCADE,
+    comment_id INTEGER REFERENCES content_fragments (id) ON DELETE CASCADE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-    );
+);
 
 -- DROP TABLE users CASCADE;
 -- DROP TABLE friend_requests CASCADE;
