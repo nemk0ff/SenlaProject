@@ -1,10 +1,8 @@
 package ru.senla.socialnetwork.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.time.Duration;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,6 +16,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+@Slf4j
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
@@ -53,20 +52,15 @@ public abstract class BaseIntegrationTest {
 
   @BeforeAll
   static void waitForDb() {
-    // Ждём, пока контейнер запустится
     while (!postgres.isRunning()) {
-      try { Thread.sleep(500); }
-      catch (InterruptedException e) { throw new RuntimeException("DB wait interrupted", e); }
+      try {
+        log.debug("Контейнер с postgres ещё не запустился, ITs ждут...");
+        Thread.sleep(500);
+      }
+      catch (InterruptedException e) {
+        throw new RuntimeException("Ожидание БД прервано InterruptedException", e);
+      }
     }
-
-    // Проверяем, что БД действительно доступна
-    try (Connection conn = DriverManager.getConnection(
-        postgres.getJdbcUrl(),
-        postgres.getUsername(),
-        postgres.getPassword())) {
-      conn.createStatement().execute("SELECT 1");
-    } catch (SQLException e) {
-      throw new RuntimeException("Database is not ready!", e);
-    }
+    log.debug("Контейнер с postgres запустился. Запуск ITs");
   }
 }

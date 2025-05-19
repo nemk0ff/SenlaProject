@@ -9,10 +9,11 @@
         <appender-ref ref="STDOUT"/>
     </root>
 
-    <logger name="tc" level="INFO"/>
-    <logger name="org.springframework.test" level="DEBUG"/>
-    <logger name="org.testcontainers" level="DEBUG"/>
-    <logger name="com.zaxxer.hikari" level="DEBUG"/>
-    <logger name="com.github.dockerjava" level="WARN"/>
-    <logger name="com.github.dockerjava.zerodep.shaded.org.apache.hc.client5.http.wire" level="OFF"/>
+    <logger name="org.testcontainers" level="INFO"/>
+
+<!--    <logger name="tc" level="INFO"/>-->
+<!--    <logger name="org.springframework.test" level="DEBUG"/>-->
+<!--    <logger name="com.zaxxer.hikari" level="DEBUG"/>-->
+<!--    <logger name="com.github.dockerjava" level="WARN"/>-->
+<!--    <logger name="com.github.dockerjava.zerodep.shaded.org.apache.hc.client5.http.wire" level="OFF"/>-->
 </configuration>
