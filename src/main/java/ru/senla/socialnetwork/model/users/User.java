@@ -14,7 +14,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -75,5 +74,5 @@ public final class User implements MyEntity {
   private ZonedDateTime registeredAt;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-  private List<ChatMember> chatMemberships = new ArrayList<>();
+  private List<ChatMember> chatMemberships;
 }
