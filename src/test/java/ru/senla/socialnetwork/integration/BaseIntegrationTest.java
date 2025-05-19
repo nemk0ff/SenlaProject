@@ -13,6 +13,7 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -24,6 +25,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public abstract class BaseIntegrationTest {
 
+  @SuppressWarnings("resource")
   @Container
   protected static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
       "postgres:17-alpine")
@@ -52,15 +54,9 @@ public abstract class BaseIntegrationTest {
 
   @BeforeAll
   static void waitForDb() {
-    while (!postgres.isRunning()) {
-      try {
-        log.debug("Контейнер с postgres ещё не запустился, ITs ждут...");
-        Thread.sleep(500);
-      }
-      catch (InterruptedException e) {
-        throw new RuntimeException("Ожидание БД прервано InterruptedException", e);
-      }
-    }
-    log.debug("Контейнер с postgres запустился. Запуск ITs");
+    postgres.waitingFor(
+        Wait.forLogMessage(".*database system is ready to accept connections.*", 1)
+            .withStartupTimeout(Duration.ofSeconds(120))
+    );
   }
 }
