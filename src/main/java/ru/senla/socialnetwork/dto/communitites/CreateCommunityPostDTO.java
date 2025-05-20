@@ -10,4 +10,5 @@ public record CreateCommunityPostDTO(
 
     @Schema(description = "Закрепить пост", example = "false")
     boolean isPinned
-) {}
+) {
+}

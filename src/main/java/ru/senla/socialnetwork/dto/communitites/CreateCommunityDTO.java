@@ -11,4 +11,5 @@ public record CreateCommunityDTO(
 
     @Schema(description = "Описание сообщества", example = "Описание моего сообщества")
     String description
-) {}
+) {
+}

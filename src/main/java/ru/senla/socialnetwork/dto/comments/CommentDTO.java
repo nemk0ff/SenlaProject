@@ -15,4 +15,5 @@ public record CommentDTO(
 
     @Schema(description = "Текст комментария", example = "Интересная статья")
     String body
-) {}
+) {
+}

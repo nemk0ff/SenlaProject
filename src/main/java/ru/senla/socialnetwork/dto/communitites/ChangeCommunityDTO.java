@@ -16,4 +16,5 @@ public record ChangeCommunityDTO(
 
     @Schema(description = "Новое описание сообщества", example = "Обновленное описание")
     String description
-) {}
+) {
+}

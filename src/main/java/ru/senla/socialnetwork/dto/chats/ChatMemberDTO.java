@@ -26,4 +26,5 @@ public record ChatMemberDTO(
     @Schema(description = "Дата выхода из чата", example = "2025-02-15T23:59:59+03:00")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
     ZonedDateTime leaveDate
-) {}
+) {
+}

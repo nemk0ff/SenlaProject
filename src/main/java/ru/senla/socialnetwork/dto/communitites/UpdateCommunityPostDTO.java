@@ -10,4 +10,5 @@ public record UpdateCommunityPostDTO(
 
     @Schema(description = "Закрепить/открепить пост", example = "true")
     boolean isPinned
-) {}
+) {
+}

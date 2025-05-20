@@ -8,4 +8,5 @@ public record CreateCommentDTO(
     @Schema(description = "Текст комментария", example = "Отличный пост!")
     @NotBlank(message = "Нельзя создать пустой комментарий")
     String body
-) {}
+) {
+}

@@ -32,4 +32,5 @@ public record CommunityMemberDTO(
 
     @Schema(description = "Причина блокировки", example = "Нарушение правил")
     String bannedReason
-) {}
+) {
+}

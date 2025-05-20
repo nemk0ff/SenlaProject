@@ -12,15 +12,8 @@ import ru.senla.socialnetwork.dto.comments.CommentDTO;
 import ru.senla.socialnetwork.dto.comments.CreateCommentDTO;
 import ru.senla.socialnetwork.dto.comments.UpdateCommentDTO;
 
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-
-import javax.validation.Valid;
 
 @SecurityRequirement(name = "bearerAuth")
 @Tag(name = "Comments", description = "API для работы с комментариями")
