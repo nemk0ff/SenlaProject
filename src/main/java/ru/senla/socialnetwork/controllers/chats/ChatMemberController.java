@@ -34,8 +34,7 @@ public interface ChatMemberController {
                                ZonedDateTime muteUntil, Authentication auth);
 
   @Operation(summary = "Размутить участника")
-  @ApiResponse(responseCode = "200", description = "Участник успешно размьючен",
-      content = @Content(schema = @Schema(implementation = ChatMemberDTO.class)))
+  @ApiResponse(responseCode = "200", description = "Участник успешно размьючен")
   ResponseEntity<?> unmuteMember(Long chatId, @Email String email, Authentication auth);
 
   @Operation(summary = "Покинуть чат")
