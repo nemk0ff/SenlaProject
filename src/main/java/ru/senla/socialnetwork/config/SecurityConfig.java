@@ -24,11 +24,21 @@ public class SecurityConfig {
   private final AuthenticationEntryPoint authEntryPoint;
   private final UserDetailsService userDetailsService;
 
+  private static final String[] SWAGGER_WHITELIST = {
+      "/swagger-ui.html",
+      "/swagger-ui/**",
+      "/v3/api-docs/**",
+      "/swagger-resources/**",
+      "/swagger-resources",
+      "/webjars/**"
+  };
+
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable)
         .userDetailsService(userDetailsService)
         .authorizeHttpRequests(auth -> auth
+            .requestMatchers(SWAGGER_WHITELIST).permitAll()
             .requestMatchers("/error").permitAll()
             .requestMatchers("/auth/**").permitAll()
             .anyRequest().authenticated())
