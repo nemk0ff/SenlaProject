@@ -90,6 +90,50 @@ CREATE TABLE IF NOT EXISTS reactions
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_users_role ON users(role);
+
+CREATE INDEX idx_friend_requests_sender_recipient_status ON friend_requests(sender_id, recipient_id, status);
+CREATE INDEX idx_friend_requests_recipient_sender_status ON friend_requests(recipient_id, sender_id, status);
+
+CREATE INDEX idx_chats_is_group ON chats(is_group);
+CREATE INDEX idx_chats_created_at ON chats(created_at);
+
+CREATE INDEX idx_group_members_user_id ON group_members(user_id);
+CREATE INDEX idx_group_members_chat_id ON group_members(chat_id);
+CREATE INDEX idx_group_members_community_id ON group_members(community_id);
+CREATE INDEX idx_group_members_join_date_leave_date ON group_members(join_date, leave_date);
+CREATE INDEX idx_group_members_role ON group_members(role);
+
+CREATE INDEX idx_posts_author_id ON posts(author_id);
+CREATE INDEX idx_posts_community_id ON posts(community_id);
+CREATE INDEX idx_posts_wall_owner_id ON posts(wall_owner_id);
+CREATE INDEX idx_posts_is_pinned ON posts(is_pinned);
+CREATE INDEX idx_posts_created_at ON posts(created_at);
+
+CREATE INDEX idx_content_fragments_author_id ON content_fragments(author_id);
+CREATE INDEX idx_content_fragments_chat_id ON content_fragments(chat_id);
+CREATE INDEX idx_content_fragments_post_id ON content_fragments(post_id);
+CREATE INDEX idx_content_fragments_is_pinned ON content_fragments(is_pinned);
+CREATE INDEX idx_content_fragments_reply_to_id ON content_fragments(reply_to_id);
+CREATE INDEX idx_content_fragments_created_at ON content_fragments(created_at);
+
+CREATE INDEX idx_reactions_user_id ON reactions(user_id);
+CREATE INDEX idx_reactions_comment_id ON reactions(comment_id);
+CREATE INDEX idx_reactions_type ON reactions(type);
+
+CREATE INDEX idx_chat_member_active ON group_members(chat_id, user_id)
+    WHERE leave_date IS NULL OR join_date > leave_date;
+
+CREATE INDEX idx_friend_request_status ON friend_requests(status);
+
+CREATE INDEX idx_community_member_active ON group_members(community_id, user_id)
+    WHERE leave_date IS NULL OR join_date > leave_date;
+
+CREATE INDEX idx_content_fragments_chat_id_created_at ON content_fragments(chat_id, created_at);
+
+CREATE INDEX idx_posts_community_id_created_at ON posts(community_id, created_at);
+
 -- DROP TABLE users CASCADE;
 -- DROP TABLE friend_requests CASCADE;
 -- DROP TABLE group_members CASCADE;
