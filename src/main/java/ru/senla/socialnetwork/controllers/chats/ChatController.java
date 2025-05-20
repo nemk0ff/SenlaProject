@@ -16,21 +16,19 @@ import ru.senla.socialnetwork.dto.DeleteResponseDTO;
 import ru.senla.socialnetwork.dto.chats.ChatDTO;
 import ru.senla.socialnetwork.dto.chats.CreateGroupChatDTO;
 
-@Tag(name = "Chat", description = "API для управление чатами")
 @SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Chat", description = "API для управление чатами")
 public interface ChatController {
 
   @Operation(summary = "Получить все чаты пользователя")
   @ApiResponse(responseCode = "200", description = "OK",
       content = @Content(schema = @Schema(implementation = ChatDTO[].class)))
-  ResponseEntity<?> getUserChats(@Parameter(hidden = true) Authentication auth);
+  ResponseEntity<?> getUserChats(Authentication auth);
 
   @Operation(summary = "Создать групповой чат")
   @ApiResponse(responseCode = "200", description = "OK",
       content = @Content(schema = @Schema(implementation = ChatDTO.class)))
-  ResponseEntity<?> createGroupChat(
-      @Valid CreateGroupChatDTO request,
-      @Parameter(hidden = true) Authentication auth);
+  ResponseEntity<?> createGroupChat(@Valid CreateGroupChatDTO request, Authentication auth);
 
   @Operation(summary = "Создать личный чат",
       parameters = {@Parameter(name = "participant", description = "Email участника чата",
@@ -38,9 +36,7 @@ public interface ChatController {
               schema = @Schema(type = "string", format = "email"))})
   @ApiResponse(responseCode = "200", description = "Личный чат создан",
       content = @Content(schema = @Schema(implementation = ChatDTO.class)))
-  ResponseEntity<?> createPersonalChat(
-      @Email String participantEmail,
-      @Parameter(hidden = true) Authentication auth);
+  ResponseEntity<?> createPersonalChat(@Email String participantEmail, Authentication auth);
 
   @Operation(summary = "Удалить чат",
       parameters = {@Parameter(name = "chatId", description = "ID чата для удаления",
@@ -48,12 +44,12 @@ public interface ChatController {
               schema = @Schema(type = "integer", format = "int64"))})
   @ApiResponse(responseCode = "200", description = "Чат удален",
       content = @Content(schema = @Schema(implementation = DeleteResponseDTO.class)))
-  ResponseEntity<?> deleteChat(Long chatId, @Parameter(hidden = true) Authentication auth);
+  ResponseEntity<?> deleteChat(Long chatId, Authentication auth);
 
   @Operation(summary = "Получить информацию о чате",
       parameters = {@Parameter(name = "chatId", description = "ID чата", required = true,
               in = ParameterIn.PATH, schema = @Schema(type = "integer", format = "int64"))})
   @ApiResponse(responseCode = "200", description = "Информация о чате",
       content = @Content(schema = @Schema(implementation = ChatDTO.class)))
-  ResponseEntity<?> getChat(Long chatId, @Parameter(hidden = true) Authentication auth);
+  ResponseEntity<?> getChat(Long chatId, Authentication auth);
 }

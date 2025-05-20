@@ -18,28 +18,19 @@ import ru.senla.socialnetwork.dto.auth.RegisterDTO;
 @SecurityRequirement(name = "bearerAuth")
 public interface AuthController {
 
-  @Operation(
-      summary = "Регистрация нового пользователя",
-      requestBody = @RequestBody(
-          description = "Данные для регистрации",
-          required = true,
+  @Operation(summary = "Регистрация нового пользователя",
+      requestBody = @RequestBody(description = "Данные для регистрации", required = true,
           content = @Content(schema = @Schema(implementation = RegisterDTO.class))))
   @ApiResponse(responseCode = "200", description = "Успешная регистрация")
   ResponseEntity<?> register(@Valid RegisterDTO registerDTO);
 
 
-  @Operation(
-      summary = "Аутентификация пользователя",
+  @Operation(summary = "Аутентификация пользователя",
       description = "Авторизует пользователя и возвращает JWT токен",
-      requestBody = @RequestBody(
-          description = "Данные для входа (email и пароль пользователя)",
+      requestBody = @RequestBody(description = "Данные для входа (email и пароль пользователя)",
           required = true,
-          content = @Content(
-              schema = @Schema(implementation = AuthRequestDTO.class))))
-  @ApiResponse(
-      responseCode = "200",
-      description = "Успешная аутентификация",
-      content = @Content(
-          schema = @Schema(implementation = AuthResponseDTO.class)))
+          content = @Content(schema = @Schema(implementation = AuthRequestDTO.class))))
+  @ApiResponse(responseCode = "200", description = "Успешная аутентификация",
+      content = @Content(schema = @Schema(implementation = AuthResponseDTO.class)))
   ResponseEntity<?> login(@Valid AuthRequestDTO request);
 }
