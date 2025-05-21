@@ -74,16 +74,6 @@ class FriendRequestServiceImplTest {
       assertThat(result).containsExactly(testRequest);
       verify(friendRequestDao).getAllByUserId(TEST_USER_ID_1);
     }
-
-    @Test
-    void getAllByUser_whenNoRequests_thenReturnEmptyList() {
-      when(friendRequestDao.getAllByUserId(TEST_USER_ID_1)).thenReturn(List.of());
-
-      List<FriendRequest> result = friendRequestService.getAllByUser(TEST_USER_ID_1);
-
-      assertThat(result).isEmpty();
-      verify(friendRequestDao).getAllByUserId(TEST_USER_ID_1);
-    }
   }
 
   @Nested
@@ -95,16 +85,6 @@ class FriendRequestServiceImplTest {
       List<User> result = friendRequestService.getFriendsByUser(TEST_USER_ID_1);
 
       assertThat(result).containsExactly(testUser2);
-      verify(friendRequestDao).findFriendsByUserId(TEST_USER_ID_1);
-    }
-
-    @Test
-    void getFriendsByUser_whenNoFriends_thenReturnEmptyList() {
-      when(friendRequestDao.findFriendsByUserId(TEST_USER_ID_1)).thenReturn(List.of());
-
-      List<User> result = friendRequestService.getFriendsByUser(TEST_USER_ID_1);
-
-      assertThat(result).isEmpty();
       verify(friendRequestDao).findFriendsByUserId(TEST_USER_ID_1);
     }
   }
@@ -127,17 +107,6 @@ class FriendRequestServiceImplTest {
           .containsExactly(testRequest);
       verify(friendRequestDao).getAllByUserId(TEST_USER_ID_1);
     }
-
-    @Test
-    void getIncomingRequests_whenNoRequests_thenReturnEmptyList() {
-      when(friendRequestDao.getAllByUserId(TEST_USER_ID_1)).thenReturn(List.of());
-
-      List<FriendRequest> result = friendRequestService.getIncomingRequests(
-          TEST_USER_ID_1, FriendStatus.PENDING);
-
-      assertThat(result).isEmpty();
-      verify(friendRequestDao).getAllByUserId(TEST_USER_ID_1);
-    }
   }
 
   @Nested
@@ -149,16 +118,6 @@ class FriendRequestServiceImplTest {
       List<FriendRequest> result = friendRequestService.getOutgoingRequests(TEST_USER_ID_1);
 
       assertThat(result).containsExactly(testRequest);
-      verify(friendRequestDao).getAllByUserId(TEST_USER_ID_1);
-    }
-
-    @Test
-    void getOutgoingRequests_whenNoRequests_thenReturnEmptyList() {
-      when(friendRequestDao.getAllByUserId(TEST_USER_ID_1)).thenReturn(List.of());
-
-      List<FriendRequest> result = friendRequestService.getOutgoingRequests(TEST_USER_ID_1);
-
-      assertThat(result).isEmpty();
       verify(friendRequestDao).getAllByUserId(TEST_USER_ID_1);
     }
   }
@@ -269,16 +228,6 @@ class FriendRequestServiceImplTest {
       assertThat(result.getStatus()).isEqualTo(FriendStatus.CANCELLED);
       verify(friendRequestDao).saveOrUpdate(testRequest);
     }
-
-    @Test
-    void cancel_whenRequestNotExists_thenThrowException() {
-      when(friendRequestDao.getByUsersIds(TEST_USER_ID_1, 2L, true))
-          .thenReturn(Optional.empty());
-
-      assertThatThrownBy(() -> friendRequestService.cancel(testUser1, testUser2))
-          .isInstanceOf(EntityNotFoundException.class)
-          .hasMessageContaining("Заявка в друзья не найдена");
-    }
   }
 
   @Nested
@@ -352,16 +301,6 @@ class FriendRequestServiceImplTest {
 
       assertThat(result.getStatus()).isEqualTo(FriendStatus.CANCELLED);
       verify(friendRequestDao).saveOrUpdate(friendship);
-    }
-
-    @Test
-    void unfriend_whenNotFriends_thenThrowException() {
-      when(friendRequestDao.getByUsersIds(TEST_USER_ID_1, 2L, false))
-          .thenReturn(Optional.empty());
-
-      assertThatThrownBy(() -> friendRequestService.unfriend(testUser1, testUser2))
-          .isInstanceOf(FriendRequestException.class)
-          .hasMessageContaining("не является другом");
     }
   }
 

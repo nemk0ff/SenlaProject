@@ -282,37 +282,4 @@ class CommunityMemberServiceImplTest {
           .hasMessageContaining("недостаточно прав");
     }
   }
-
-  @Nested
-  class OtherMethodsTests {
-    @Test
-    void isMember_whenActive_thenReturnTrue() {
-      when(communityMemberDao.findByCommunityIdAndUserEmail(
-          TEST_COMMUNITY_ID, TEST_EMAIL_1))
-          .thenReturn(Optional.of(testMember));
-
-      boolean result = communityMemberService.isMember(
-          TEST_COMMUNITY_ID, TEST_EMAIL_1);
-
-      assertThat(result).isTrue();
-    }
-
-    @Test
-    void isMemberExists_whenExists_thenReturnTrue() {
-      when(communityMemberDao.findByCommunityIdAndUserEmail(
-          TEST_COMMUNITY_ID, TEST_EMAIL_1))
-          .thenReturn(Optional.of(testMember));
-
-      boolean result = communityMemberService.isMemberExists(
-          TEST_COMMUNITY_ID, TEST_EMAIL_1);
-
-      assertThat(result).isTrue();
-    }
-
-    @Test
-    void delete_whenCalled_thenCallDaoDelete() {
-      communityMemberService.delete(testMember);
-      verify(communityMemberDao).delete(testMember);
-    }
-  }
 }

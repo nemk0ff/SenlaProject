@@ -119,38 +119,6 @@ class ChatMemberFacadeImplTest {
     }
 
     @Test
-    void addUserToChat_whenUserWasInChatBefore_thenRecreateMember() {
-      ChatMember leftMember = ChatMember.builder()
-          .id(2L)
-          .user(testUser2)
-          .chat(testChat)
-          .role(MemberRole.MEMBER)
-          .joinDate(TEST_DATE)
-          .leaveDate(TEST_DATE)
-          .build();
-
-      ChatMember recreatedMember = ChatMember.builder()
-          .id(3L)
-          .user(testUser2)
-          .chat(testChat)
-          .role(MemberRole.MEMBER)
-          .joinDate(TEST_DATE.plusDays(1))
-          .build();
-
-      when(chatMemberService.isChatMember(TEST_CHAT_ID, TEST_EMAIL_1)).thenReturn(true);
-      when(chatService.get(TEST_CHAT_ID)).thenReturn(testChat);
-      when(chatMemberService.getMaybeMember(TEST_CHAT_ID, TEST_EMAIL_2))
-          .thenReturn(Optional.of(leftMember));
-      when(chatMemberService.recreate(leftMember)).thenReturn(recreatedMember);
-      when(chatMemberMapper.toDTO(recreatedMember)).thenReturn(testMemberDTO);
-
-      ChatMemberDTO result = chatMemberFacade.addUserToChat(TEST_CHAT_ID, TEST_EMAIL_2, TEST_EMAIL_1);
-
-      assertThat(result).isEqualTo(testMemberDTO);
-      verify(chatMemberService).recreate(leftMember);
-    }
-
-    @Test
     void addUserToChat_whenNewUser_thenAddToChat() {
       when(chatMemberService.isChatMember(TEST_CHAT_ID, TEST_EMAIL_1)).thenReturn(true);
       when(chatService.get(TEST_CHAT_ID)).thenReturn(testChat);

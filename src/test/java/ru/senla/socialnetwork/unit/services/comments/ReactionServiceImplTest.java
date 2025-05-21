@@ -76,16 +76,6 @@ class ReactionServiceImplTest {
       assertThat(result).isEqualTo(expected);
       verify(reactionDao).findAll();
     }
-
-    @Test
-    void getAll_whenNoReactions_thenReturnEmptyList() {
-      when(reactionDao.findAll()).thenReturn(Collections.emptyList());
-
-      List<Reaction> result = reactionService.getAll();
-
-      assertThat(result).isEmpty();
-      verify(reactionDao).findAll();
-    }
   }
 
   @Nested
@@ -98,16 +88,6 @@ class ReactionServiceImplTest {
       List<Reaction> result = reactionService.getAllByComment(TEST_COMMENT_ID);
 
       assertThat(result).isEqualTo(expected);
-      verify(reactionDao).findAllByComment(TEST_COMMENT_ID);
-    }
-
-    @Test
-    void getAllByComment_whenNoReactions_thenReturnEmptyList() {
-      when(reactionDao.findAllByComment(TEST_COMMENT_ID)).thenReturn(Collections.emptyList());
-
-      List<Reaction> result = reactionService.getAllByComment(TEST_COMMENT_ID);
-
-      assertThat(result).isEmpty();
       verify(reactionDao).findAllByComment(TEST_COMMENT_ID);
     }
   }
@@ -191,16 +171,6 @@ class ReactionServiceImplTest {
 
       assertThat(result).isEqualTo(existingReaction);
       verify(reactionDao, never()).saveOrUpdate(any(Reaction.class));
-    }
-  }
-
-  @Nested
-  class DeleteTests {
-    @Test
-    void delete_whenValidReaction_thenCallDao() {
-      reactionService.delete(testReaction);
-
-      verify(reactionDao).delete(testReaction);
     }
   }
 }

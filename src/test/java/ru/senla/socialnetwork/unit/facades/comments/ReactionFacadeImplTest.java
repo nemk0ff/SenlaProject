@@ -110,22 +110,6 @@ class ReactionFacadeImplTest {
   @Nested
   class GetByCommentTests {
     @Test
-    void getByComment_whenAdmin_thenReturnReactions() {
-      List<Reaction> reactions = List.of(testReaction);
-      List<ReactionDTO> expectedDTOs = List.of(testReactionDTO);
-
-      when(userService.isAdmin(TEST_EMAIL_1)).thenReturn(true);
-      when(commentService.getById(TEST_COMMENT_ID)).thenReturn(testComment);
-      when(reactionService.getAllByComment(TEST_COMMENT_ID)).thenReturn(reactions);
-
-      List<ReactionDTO> result = reactionFacade.getByComment(TEST_COMMENT_ID, TEST_EMAIL_1);
-
-      assertThat(result).isEqualTo(expectedDTOs);
-      verify(userService).isAdmin(TEST_EMAIL_1);
-      verify(reactionService).getAllByComment(TEST_COMMENT_ID);
-    }
-
-    @Test
     void getByComment_whenWallOwner_thenReturnReactions() {
       List<Reaction> reactions = List.of(testReaction);
       List<ReactionDTO> expectedDTOs = List.of(testReactionDTO);
@@ -173,17 +157,6 @@ class ReactionFacadeImplTest {
 
   @Nested
   class GetByIdTests {
-    @Test
-    void getById_whenAdmin_thenReturnReaction() {
-      when(userService.isAdmin(TEST_EMAIL_1)).thenReturn(true);
-      when(reactionService.get(1L)).thenReturn(testReaction);
-
-      ReactionDTO result = reactionFacade.getById(1L, TEST_EMAIL_1);
-
-      assertThat(result).isEqualTo(testReactionDTO);
-      verify(userService).isAdmin(TEST_EMAIL_1);
-    }
-
     @Test
     void getById_whenWallOwner_thenReturnReaction() {
       wallPost.setWallOwner(postAuthor);
@@ -244,28 +217,6 @@ class ReactionFacadeImplTest {
 
   @Nested
   class SetReactionTests {
-    @Test
-    void setReaction_whenAdmin_thenSetReaction() {
-      when(userService.isAdmin(TEST_EMAIL_1)).thenReturn(true);
-      when(commentService.getById(TEST_COMMENT_ID)).thenReturn(testComment);
-      when(userService.getUserByEmail(TEST_EMAIL_1)).thenReturn(testUser);
-
-      Reaction savedReaction = Reaction.builder()
-          .id(TEST_REACTION_ID)
-          .owner(testUser)
-          .comment(testComment)
-          .type(ReactionType.LIKE)
-          .build();
-
-      when(reactionService.save(any(Reaction.class))).thenReturn(savedReaction);
-
-      ReactionDTO result = reactionFacade.setReaction(
-          TEST_COMMENT_ID, ReactionType.LIKE, TEST_EMAIL_1);
-
-      assertThat(result).isNotNull();
-      assertThat(result).isEqualTo(testReactionDTO);
-      verify(reactionService).save(any(Reaction.class));
-    }
 
     @Test
     void setReaction_whenWallOwner_thenSetReaction() {

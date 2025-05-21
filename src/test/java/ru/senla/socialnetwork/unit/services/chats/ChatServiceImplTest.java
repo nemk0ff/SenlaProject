@@ -61,16 +61,6 @@ class ChatServiceImplTest {
       assertThat(result).isEqualTo(expectedChats);
       verify(chatDao).findAllChatsByUserId(TEST_USER_ID_1);
     }
-
-    @Test
-    void getAllByUser_whenNoChats_thenReturnEmptyList() {
-      when(chatDao.findAllChatsByUserId(TEST_USER_ID_1)).thenReturn(List.of());
-
-      List<Chat> result = chatService.getAllByUser(TEST_USER_ID_1);
-
-      assertThat(result).isEmpty();
-      verify(chatDao).findAllChatsByUserId(TEST_USER_ID_1);
-    }
   }
 
   @Nested

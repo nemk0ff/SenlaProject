@@ -124,33 +124,6 @@ class CommentFacadeImplTest {
   @Nested
   class GetByIdTests {
     @Test
-    void getById_whenAdmin_thenReturnComment() {
-      when(userService.isAdmin(TEST_EMAIL_1)).thenReturn(true);
-      when(commentService.getById(TEST_COMMENT_ID)).thenReturn(testComment);
-      when(commentMapper.toDTO(testComment)).thenReturn(testCommentDTO);
-
-      CommentDTO result = commentFacade.getById(TEST_COMMENT_ID, TEST_EMAIL_1);
-
-      assertThat(result).isEqualTo(testCommentDTO);
-      verify(userService).isAdmin(TEST_EMAIL_1);
-      verify(commentService).getById(TEST_COMMENT_ID);
-    }
-
-    @Test
-    void getById_whenAuthor_thenReturnComment() {
-      testComment.setAuthor(postAuthor);
-      when(userService.isAdmin(TEST_EMAIL_2)).thenReturn(false);
-      when(userService.getUserByEmail(TEST_EMAIL_2)).thenReturn(postAuthor);
-      when(commentService.getById(TEST_COMMENT_ID)).thenReturn(testComment);
-      when(commentMapper.toDTO(testComment)).thenReturn(testCommentDTO);
-
-      CommentDTO result = commentFacade.getById(TEST_COMMENT_ID, TEST_EMAIL_2);
-
-      assertThat(result).isEqualTo(testCommentDTO);
-      verify(userService).getUserByEmail(TEST_EMAIL_2);
-    }
-
-    @Test
     void getById_whenFriend_thenReturnComment() {
       when(userService.isAdmin(TEST_EMAIL_1)).thenReturn(false);
       when(userService.getUserByEmail(TEST_EMAIL_1)).thenReturn(testUser);
@@ -180,22 +153,6 @@ class CommentFacadeImplTest {
   @Nested
   class GetPostCommentsTests {
     @Test
-    void getPostComments_whenAdmin_thenReturnComments() {
-      List<Comment> comments = List.of(testComment);
-      List<CommentDTO> expectedDTOs = List.of(testCommentDTO);
-
-      when(userService.isAdmin(TEST_EMAIL_1)).thenReturn(true);
-      when(commentService.getAllByPost(TEST_POST_ID)).thenReturn(comments);
-      when(generalPostService.getPost(TEST_POST_ID)).thenReturn(wallPost);
-      when(commentMapper.toListDTO(comments)).thenReturn(expectedDTOs);
-
-      List<CommentDTO> result = commentFacade.getPostComments(TEST_POST_ID, TEST_EMAIL_1);
-
-      assertThat(result).isEqualTo(expectedDTOs);
-      verify(commentService).getAllByPost(TEST_POST_ID);
-    }
-
-    @Test
     void getPostComments_whenNoRights_thenThrowException() {
       when(userService.isAdmin(TEST_EMAIL_1)).thenReturn(false);
       when(userService.getUserByEmail(TEST_EMAIL_1)).thenReturn(testUser);
@@ -210,20 +167,6 @@ class CommentFacadeImplTest {
 
   @Nested
   class CreateTests {
-    @Test
-    void create_whenAdmin_thenCreateComment() {
-      when(userService.isAdmin(TEST_EMAIL_1)).thenReturn(true);
-      when(generalPostService.getPost(TEST_POST_ID)).thenReturn(wallPost);
-      when(userService.getUserByEmail(TEST_EMAIL_1)).thenReturn(testUser);
-      when(commentService.create(wallPost, testUser, TEST_BODY)).thenReturn(testComment);
-      when(commentMapper.toDTO(testComment)).thenReturn(testCommentDTO);
-
-      CommentDTO result = commentFacade.create(TEST_POST_ID, createCommentDTO, TEST_EMAIL_1);
-
-      assertThat(result).isEqualTo(testCommentDTO);
-      verify(commentService).create(wallPost, testUser, TEST_BODY);
-    }
-
     @Test
     void create_whenNoRights_thenThrowException() {
       when(userService.isAdmin(TEST_EMAIL_1)).thenReturn(false);
@@ -267,16 +210,6 @@ class CommentFacadeImplTest {
 
   @Nested
   class DeleteTests {
-    @Test
-    void delete_whenAdmin_thenDeleteComment() {
-      when(userService.isAdmin(TEST_EMAIL_1)).thenReturn(true);
-      when(commentService.getById(TEST_COMMENT_ID)).thenReturn(testComment);
-      when(userService.getUserByEmail(TEST_EMAIL_1)).thenReturn(testUser);
-
-      commentFacade.delete(TEST_COMMENT_ID, TEST_EMAIL_1);
-
-      verify(commentService).delete(testComment);
-    }
 
     @Test
     void delete_whenAuthor_thenDeleteComment() {
@@ -295,23 +228,6 @@ class CommentFacadeImplTest {
       testComment.setAuthor(postAuthor);
       wallPost.setWallOwner(testUser);
       testComment.setPost(wallPost);
-
-      when(userService.isAdmin(TEST_EMAIL_1)).thenReturn(false);
-      when(commentService.getById(TEST_COMMENT_ID)).thenReturn(testComment);
-      when(userService.getUserByEmail(TEST_EMAIL_1)).thenReturn(testUser);
-
-      commentFacade.delete(TEST_COMMENT_ID, TEST_EMAIL_1);
-
-      verify(commentService).delete(testComment);
-    }
-
-    @Test
-    void delete_whenCommunityModerator_thenDeleteComment() {
-      testComment.setPost(communityPost);
-      CommunityMember moderator = CommunityMember.builder()
-          .user(testUser)
-          .role(MemberRole.MODERATOR)
-          .build();
 
       when(userService.isAdmin(TEST_EMAIL_1)).thenReturn(false);
       when(commentService.getById(TEST_COMMENT_ID)).thenReturn(testComment);

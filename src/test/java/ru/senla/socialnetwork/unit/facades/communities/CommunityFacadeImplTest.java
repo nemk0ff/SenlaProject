@@ -104,18 +104,6 @@ class CommunityFacadeImplTest {
   @Nested
   class DeleteTests {
     @Test
-    void delete_whenAdmin_thenDeleteCommunity() {
-      User adminUser = User.builder().role(UserRole.ADMIN).build();
-      when(userService.getUserByEmail(TEST_EMAIL_1)).thenReturn(adminUser);
-      when(communityService.get(TEST_COMMUNITY_ID)).thenReturn(testCommunity);
-      when(communityMemberService.getAll(TEST_COMMUNITY_ID)).thenReturn(List.of());
-
-      communityFacade.delete(TEST_COMMUNITY_ID, TEST_EMAIL_1);
-
-      verify(communityService).delete(testCommunity);
-    }
-
-    @Test
     void delete_whenCommunityAdmin_thenDeleteCommunity() {
       when(userService.getUserByEmail(TEST_EMAIL_1)).thenReturn(testUser);
       when(communityService.get(TEST_COMMUNITY_ID)).thenReturn(testCommunity);

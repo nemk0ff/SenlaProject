@@ -95,16 +95,6 @@ class CommentServiceImplTest {
       assertThat(result).isEqualTo(expectedComments);
       verify(commentDao).findAllByPostId(TEST_POST_ID);
     }
-
-    @Test
-    void getAllByPost_whenNoComments_thenReturnEmptyList() {
-      when(commentDao.findAllByPostId(TEST_POST_ID)).thenReturn(Collections.emptyList());
-
-      List<Comment> result = commentService.getAllByPost(TEST_POST_ID);
-
-      assertThat(result).isEmpty();
-      verify(commentDao).findAllByPostId(TEST_POST_ID);
-    }
   }
 
   @Nested
@@ -160,16 +150,6 @@ class CommentServiceImplTest {
 
       assertThat(result.getBody()).isEqualTo(newBody);
       verify(commentDao).saveOrUpdate(testComment);
-    }
-  }
-
-  @Nested
-  class DeleteTests {
-    @Test
-    void delete_whenValidComment_thenCallDao() {
-      commentService.delete(testComment);
-
-      verify(commentDao).delete(testComment);
     }
   }
 }

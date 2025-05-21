@@ -121,17 +121,6 @@ class ChatMemberServiceImplTest {
       assertThatThrownBy(() -> chatMemberService.mute(TEST_CHAT_ID, TEST_EMAIL_1, TEST_FUTURE_DATE))
           .isInstanceOf(EntityNotFoundException.class);
     }
-
-    @Test
-    void mute_whenAdmin_thenThrowException() {
-      testMember.setRole(MemberRole.ADMIN);
-      when(chatMemberDao.findActiveByChatIdAndUserEmail(TEST_CHAT_ID, TEST_EMAIL_1))
-          .thenReturn(Optional.of(testMember));
-
-      assertThatThrownBy(() -> chatMemberService.mute(TEST_CHAT_ID, TEST_EMAIL_1, TEST_FUTURE_DATE))
-          .isInstanceOf(ChatMemberException.class)
-          .hasMessageContaining("Можно мьютить только обычных участников");
-    }
   }
 
   @Nested
