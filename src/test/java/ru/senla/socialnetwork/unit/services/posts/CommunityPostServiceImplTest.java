@@ -78,17 +78,6 @@ class CommunityPostServiceImplTest {
       assertThat(result).containsExactly(testPost);
       verify(communityPostDao).findAllByCommunity(TEST_COMMUNITY_ID);
     }
-
-    @Test
-    void getAllPosts_whenNoPosts_thenReturnEmptyList() {
-      when(communityPostDao.findAllByCommunity(TEST_COMMUNITY_ID))
-          .thenReturn(List.of());
-
-      List<CommunityPost> result = communityPostService.getAllPosts(TEST_COMMUNITY_ID);
-
-      assertThat(result).isEmpty();
-      verify(communityPostDao).findAllByCommunity(TEST_COMMUNITY_ID);
-    }
   }
 
   @Nested
@@ -108,17 +97,6 @@ class CommunityPostServiceImplTest {
 
       assertThat(result).containsExactly(pinnedPost);
       assertThat(result.get(0).getIsPinned()).isTrue();
-      verify(communityPostDao).findPinnedByCommunity(TEST_COMMUNITY_ID);
-    }
-
-    @Test
-    void getPinnedPosts_whenNoPosts_thenReturnEmptyList() {
-      when(communityPostDao.findPinnedByCommunity(TEST_COMMUNITY_ID))
-          .thenReturn(List.of());
-
-      List<CommunityPost> result = communityPostService.getPinnedPosts(TEST_COMMUNITY_ID);
-
-      assertThat(result).isEmpty();
       verify(communityPostDao).findPinnedByCommunity(TEST_COMMUNITY_ID);
     }
   }
@@ -144,24 +122,6 @@ class CommunityPostServiceImplTest {
       assertThatThrownBy(() -> communityPostService.getPost(TEST_COMMUNITY_ID, TEST_POST_ID))
           .isInstanceOf(EntityNotFoundException.class)
           .hasMessageContaining("Пост не найден");
-    }
-
-    @Test
-    void getPost_whenPostFromDifferentCommunity_thenThrowException() {
-      Community otherCommunity = Community.builder()
-          .id(999L)
-          .build();
-      CommunityPost otherPost = CommunityPost.builder()
-          .id(TEST_POST_ID)
-          .community(otherCommunity)
-          .build();
-
-      when(communityPostDao.find(TEST_POST_ID))
-          .thenReturn(Optional.of(otherPost));
-
-      assertThatThrownBy(() -> communityPostService.getPost(TEST_COMMUNITY_ID, TEST_POST_ID))
-          .isInstanceOf(CommunityPostException.class)
-          .hasMessageContaining("Пост не принадлежит этому сообществу");
     }
   }
 

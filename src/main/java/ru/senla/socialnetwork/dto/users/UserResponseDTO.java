@@ -35,7 +35,7 @@ public record UserResponseDTO(
     @Schema(description = "О себе", example = "Начинающий Java Developer, иду к мечте!")
     String aboutMe,
 
-    @Schema(description = "Тип профиля", example = "PUBLIC")
+    @Schema(description = "Тип профиля", example = "OPEN")
     ProfileType profileType,
 
     @Schema(description = "Дата регистрации", example = "2025-05-020T12:00:00+03:00")

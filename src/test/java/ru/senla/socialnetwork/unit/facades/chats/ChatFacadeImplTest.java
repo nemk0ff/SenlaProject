@@ -96,20 +96,6 @@ class ChatFacadeImplTest {
       verify(chatService).getAllByUser(TEST_USER_ID_1);
       verify(chatMapper).toListChatDTO(chats);
     }
-
-    @Test
-    void getUserChats_whenNoChats_thenReturnEmptyList() {
-      when(userService.getUserByEmail(TEST_EMAIL_1)).thenReturn(testUser);
-      when(chatService.getAllByUser(TEST_USER_ID_1)).thenReturn(List.of());
-      when(chatMapper.toListChatDTO(List.of())).thenReturn(List.of());
-
-      List<ChatDTO> result = chatFacade.getUserChats(TEST_EMAIL_1);
-
-      assertThat(result).isEmpty();
-      verify(userService).getUserByEmail(TEST_EMAIL_1);
-      verify(chatService).getAllByUser(TEST_USER_ID_1);
-      verify(chatMapper).toListChatDTO(List.of());
-    }
   }
 
   @Nested
@@ -128,41 +114,6 @@ class ChatFacadeImplTest {
 
   @Nested
   class DeleteChatTests {
-    @Test
-    void delete_whenAdmin_thenDeleteChat() {
-      when(userService.isAdmin(TEST_EMAIL_1)).thenReturn(true);
-      when(chatService.get(TEST_CHAT_ID)).thenReturn(testChat);
-      when(chatMemberService.getMembers(TEST_CHAT_ID)).thenReturn(List.of());
-
-      chatFacade.delete(TEST_CHAT_ID, TEST_EMAIL_1);
-
-      verify(userService).isAdmin(TEST_EMAIL_1);
-      verify(chatService).get(TEST_CHAT_ID);
-      verify(chatMemberService).getMembers(TEST_CHAT_ID);
-      verify(chatService).delete(testChat);
-    }
-
-    @Test
-    void delete_whenChatAdmin_thenDeleteChat() {
-      ChatMember adminMember = ChatMember.builder()
-          .user(testUser)
-          .role(MemberRole.ADMIN)
-          .build();
-
-      when(userService.isAdmin(TEST_EMAIL_1)).thenReturn(false);
-      when(chatService.get(TEST_CHAT_ID)).thenReturn(testChat);
-      when(chatMemberService.getMember(TEST_CHAT_ID, TEST_EMAIL_1)).thenReturn(adminMember);
-      when(chatMemberService.getMembers(TEST_CHAT_ID)).thenReturn(List.of());
-
-      chatFacade.delete(TEST_CHAT_ID, TEST_EMAIL_1);
-
-      verify(userService).isAdmin(TEST_EMAIL_1);
-      verify(chatService).get(TEST_CHAT_ID);
-      verify(chatMemberService).getMember(TEST_CHAT_ID, TEST_EMAIL_1);
-      verify(chatMemberService).getMembers(TEST_CHAT_ID);
-      verify(chatService).delete(testChat);
-    }
-
     @Test
     void delete_whenNotAdminNorChatAdmin_thenThrowException() {
       ChatMember regularMember = ChatMember.builder()

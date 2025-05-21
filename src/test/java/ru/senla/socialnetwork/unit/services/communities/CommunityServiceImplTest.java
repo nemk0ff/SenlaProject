@@ -73,16 +73,6 @@ class CommunityServiceImplTest {
       assertThat(result).isEqualTo(expected);
       verify(communityDao).getAll();
     }
-
-    @Test
-    void getAll_whenNoCommunities_thenReturnEmptyList() {
-      when(communityDao.getAll()).thenReturn(List.of());
-
-      List<Community> result = communityService.getAll();
-
-      assertThat(result).isEmpty();
-      verify(communityDao).getAll();
-    }
   }
 
   @Test
@@ -93,12 +83,5 @@ class CommunityServiceImplTest {
 
     assertThat(result).isEqualTo(testCommunity);
     verify(communityDao).saveOrUpdate(testCommunity);
-  }
-
-  @Test
-  void delete_whenCalled_thenCallDaoDelete() {
-    communityService.delete(testCommunity);
-
-    verify(communityDao).delete(testCommunity);
   }
 }

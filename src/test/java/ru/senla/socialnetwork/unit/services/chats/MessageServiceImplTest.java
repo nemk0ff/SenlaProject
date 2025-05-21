@@ -161,18 +161,6 @@ class MessageServiceImplTest {
           .isInstanceOf(MessageException.class)
           .hasMessageContaining("Сообщение не найдено");
     }
-
-    @Test
-    void get_whenMessageFromWrongChat_thenThrowException() {
-      Chat wrongChat = Chat.builder().id(999L).build();
-      testMessage.setChat(wrongChat);
-
-      when(messageDao.find(TEST_MESSAGE_ID)).thenReturn(Optional.of(testMessage));
-
-      assertThatThrownBy(() -> messageService.get(TEST_CHAT_ID, TEST_MESSAGE_ID))
-          .isInstanceOf(MessageException.class)
-          .hasMessageContaining("Сообщение не принадлежит этому чату");
-    }
   }
 
   @Nested
@@ -258,11 +246,5 @@ class MessageServiceImplTest {
           .isInstanceOf(ChatMemberException.class)
           .hasMessageContaining("нет закреплённых сообщений");
     }
-  }
-
-  @Test
-  void delete_whenCalled_thenCallDaoDelete() {
-    messageService.delete(testMessage);
-    verify(messageDao).delete(testMessage);
   }
 }

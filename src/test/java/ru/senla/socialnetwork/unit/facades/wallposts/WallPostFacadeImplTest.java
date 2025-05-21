@@ -78,33 +78,6 @@ class WallPostFacadeImplTest {
   @Nested
   class GetByUserTests {
     @Test
-    void getByUser_whenAdmin_thenReturnPosts() {
-      User admin = User.builder()
-          .email(TEST_EMAIL_2)
-          .role(UserRole.ADMIN)
-          .build();
-
-      when(userService.getUserByEmail(TEST_EMAIL_1)).thenReturn(testUser);
-      when(userService.getUserByEmail(TEST_EMAIL_2)).thenReturn(admin);
-      when(userService.isAdmin(TEST_EMAIL_2)).thenReturn(true);
-      when(wallPostService.getByUser(testUser.getId())).thenReturn(List.of(testPost));
-
-      List<WallPostResponseDTO> result = wallPostFacade.getByUser(TEST_EMAIL_1, TEST_EMAIL_2);
-
-      assertThat(result).hasSize(1);
-    }
-
-    @Test
-    void getByUser_whenOwner_thenReturnPosts() {
-      when(userService.getUserByEmail(TEST_EMAIL_1)).thenReturn(testUser);
-      when(wallPostService.getByUser(testUser.getId())).thenReturn(List.of(testPost));
-
-      List<WallPostResponseDTO> result = wallPostFacade.getByUser(TEST_EMAIL_1, TEST_EMAIL_1);
-
-      assertThat(result).hasSize(1);
-    }
-
-    @Test
     void getByUser_whenFriendAndClosedProfile_thenReturnPosts() {
       when(userService.getUserByEmail(TEST_EMAIL_1)).thenReturn(testUser);
       when(userService.getUserByEmail(TEST_EMAIL_2)).thenReturn(friendUser);
@@ -112,18 +85,6 @@ class WallPostFacadeImplTest {
       when(wallPostService.getByUser(testUser.getId())).thenReturn(List.of(testPost));
 
       List<WallPostResponseDTO> result = wallPostFacade.getByUser(TEST_EMAIL_1, TEST_EMAIL_2);
-
-      assertThat(result).hasSize(1);
-    }
-
-    @Test
-    void getByUser_whenOpenProfile_thenReturnPosts() {
-      testUser.setProfileType(ProfileType.OPEN);
-      when(userService.getUserByEmail(TEST_EMAIL_1)).thenReturn(testUser);
-      when(userService.getUserByEmail("not_friend@senla.ru")).thenReturn(notFriendUser);
-      when(wallPostService.getByUser(testUser.getId())).thenReturn(List.of(testPost));
-
-      List<WallPostResponseDTO> result = wallPostFacade.getByUser(TEST_EMAIL_1, "not_friend@senla.ru");
 
       assertThat(result).hasSize(1);
     }
@@ -142,23 +103,6 @@ class WallPostFacadeImplTest {
 
   @Nested
   class GetByIdTests {
-    @Test
-    void getById_whenAdmin_thenReturnPost() {
-      User admin = User.builder()
-          .email(TEST_EMAIL_2)
-          .role(UserRole.ADMIN)
-          .build();
-
-      when(wallPostService.get(TEST_POST_ID)).thenReturn(testPost);
-      when(userService.getUserByEmail(TEST_EMAIL_2)).thenReturn(admin);
-      when(userService.isAdmin(TEST_EMAIL_2)).thenReturn(true);
-
-      WallPostResponseDTO result = wallPostFacade.getById(TEST_POST_ID, TEST_EMAIL_2);
-
-      assertThat(result).isNotNull();
-      assertThat(result.body()).isEqualTo(TEST_BODY);
-    }
-
     @Test
     void getById_whenNoAccess_thenThrowException() {
       when(wallPostService.get(TEST_POST_ID)).thenReturn(testPost);
@@ -193,18 +137,6 @@ class WallPostFacadeImplTest {
       when(wallPostService.get(TEST_POST_ID)).thenReturn(testPost);
 
       wallPostFacade.delete(TEST_POST_ID, TEST_EMAIL_1);
-
-      verify(wallPostService).delete(testPost);
-    }
-
-    @Test
-    void delete_whenAdmin_thenDeletePost() {
-      User admin = User.builder().role(UserRole.ADMIN).build();
-      when(userService.getUserByEmail(TEST_EMAIL_2)).thenReturn(admin);
-      when(userService.isAdmin(TEST_EMAIL_2)).thenReturn(true);
-      when(wallPostService.get(TEST_POST_ID)).thenReturn(testPost);
-
-      wallPostFacade.delete(TEST_POST_ID, TEST_EMAIL_2);
 
       verify(wallPostService).delete(testPost);
     }

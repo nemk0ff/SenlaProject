@@ -33,8 +33,8 @@ public abstract class BaseIntegrationTest {
       .withStartupTimeout(Duration.ofSeconds(120))
       .withConnectTimeoutSeconds(120)
       .withInitScripts(
-          "migrations/001-initial-schema.sql",
-          "migrations/002-initial-data.sql"
+          "test-init-schema.sql",
+          "test-init-data.sql"
       );
 
   @Autowired

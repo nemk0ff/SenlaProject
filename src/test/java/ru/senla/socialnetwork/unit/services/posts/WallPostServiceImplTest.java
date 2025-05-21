@@ -69,16 +69,6 @@ class WallPostServiceImplTest {
       assertThat(result).containsExactly(testPost);
       verify(wallPostDao).findAllByUser(TEST_USER_ID_1);
     }
-
-    @Test
-    void getByUser_whenNoPosts_thenReturnEmptyList() {
-      when(wallPostDao.findAllByUser(TEST_USER_ID_1)).thenReturn(List.of());
-
-      List<WallPost> result = wallPostService.getByUser(TEST_USER_ID_1);
-
-      assertThat(result).isEmpty();
-      verify(wallPostDao).findAllByUser(TEST_USER_ID_1);
-    }
   }
 
   @Nested

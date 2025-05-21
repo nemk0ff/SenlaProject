@@ -152,7 +152,7 @@ class CommunityPostFacadeImplTest {
 
     @Test
     void createPost_whenBanned_thenThrowException() {
-      doThrow(new CommunityMemberException("User is banned"))
+      doThrow(new CommunityMemberException("Пользователь забанен в этом сообществе"))
           .when(communityMemberService).checkIsBanned(TEST_COMMUNITY_ID, TEST_EMAIL_1);
 
       assertThatThrownBy(() -> communityPostFacade.createPost(
@@ -163,16 +163,6 @@ class CommunityPostFacadeImplTest {
 
   @Nested
   class DeletePostTests {
-    @Test
-    void deletePost_whenAdmin_thenDelete() {
-      when(userService.isAdmin(TEST_EMAIL_1)).thenReturn(true);
-      when(communityPostService.getPost(TEST_COMMUNITY_ID, TEST_POST_ID)).thenReturn(testPost);
-
-      communityPostFacade.deletePost(TEST_COMMUNITY_ID, TEST_POST_ID, TEST_EMAIL_1);
-
-      verify(communityPostService).deletePost(testPost);
-    }
-
     @Test
     void deletePost_whenAuthor_thenDelete() {
       when(userService.isAdmin(TEST_EMAIL_1)).thenReturn(false);

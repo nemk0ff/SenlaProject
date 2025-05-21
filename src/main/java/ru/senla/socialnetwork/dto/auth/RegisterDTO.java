@@ -35,7 +35,7 @@ public record RegisterDTO(
     @Schema(description = "О себе", example = "Начинающий Java Developer, иду к мечте!")
     String aboutMe,
 
-    @Schema(description = "Тип профиля", example = "PUBLIC")
+    @Schema(description = "Тип профиля", example = "OPEN")
     ProfileType profileType
 ) {
 }

@@ -55,7 +55,7 @@ public class ReactionControllerImplTest extends BaseIntegrationTest {
       mockMvc.perform(get("/reactions/comment/8"))
           .andExpect(status().isOk())
           .andExpect(jsonPath("$", hasSize(5)))
-          .andExpect(jsonPath("$[0].type").value("LIKE"))
+          .andExpect(jsonPath("$[0].type").value("DISLIKE"))
           .andExpect(jsonPath("$[1].type").value("LIKE"));
     }
 

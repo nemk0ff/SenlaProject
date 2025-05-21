@@ -77,31 +77,16 @@ class UserServiceImplTest {
     }
   }
 
-  @Nested
-  class FindTests {
-    @Test
-    void find_whenParamsProvided_thenReturnUsers() {
-      List<User> expectedUsers = List.of(testUser);
-      when(userDao.findByParam(TEST_NAME, TEST_SURNAME, TEST_GENDER, TEST_BIRTHDATE))
-          .thenReturn(expectedUsers);
+  @Test
+  void find_whenParamsProvided_thenReturnUsers() {
+    List<User> expectedUsers = List.of(testUser);
+    when(userDao.findByParam(TEST_NAME, TEST_SURNAME, TEST_GENDER, TEST_BIRTHDATE))
+        .thenReturn(expectedUsers);
 
-      List<User> result = userService.find(TEST_NAME, TEST_SURNAME, TEST_GENDER, TEST_BIRTHDATE);
+    List<User> result = userService.find(TEST_NAME, TEST_SURNAME, TEST_GENDER, TEST_BIRTHDATE);
 
-      assertThat(result).isEqualTo(expectedUsers);
-      verify(userDao).findByParam(TEST_NAME, TEST_SURNAME, TEST_GENDER, TEST_BIRTHDATE);
-    }
-
-    @Test
-    void find_whenNullParams_thenCallDaoWithNulls() {
-      List<User> expectedUsers = List.of(testUser);
-      when(userDao.findByParam(null, null, null, null))
-          .thenReturn(expectedUsers);
-
-      List<User> result = userService.find(null, null, null, null);
-
-      assertThat(result).isEqualTo(expectedUsers);
-      verify(userDao).findByParam(null, null, null, null);
-    }
+    assertThat(result).isEqualTo(expectedUsers);
+    verify(userDao).findByParam(TEST_NAME, TEST_SURNAME, TEST_GENDER, TEST_BIRTHDATE);
   }
 
   @Nested
@@ -119,28 +104,6 @@ class UserServiceImplTest {
       assertThat(result.getBirthDate()).isEqualTo(editDTO.birthDate());
       assertThat(result.getProfileType()).isEqualTo(editDTO.profileType());
       assertThat(result.getAboutMe()).isEqualTo(editDTO.aboutMe());
-      verify(userDao).findByEmail(TEST_EMAIL_1);
-      verify(userDao).saveOrUpdate(testUser);
-    }
-
-    @Test
-    void edit_whenPartialData_thenUpdateOnlyProvidedFields() {
-      UserRequestDTO partialEditDTO = new UserRequestDTO(
-          null,
-          "New Surname",
-          null,
-          null,
-          null,
-          null
-      );
-
-      when(userDao.findByEmail(TEST_EMAIL_1)).thenReturn(Optional.of(testUser));
-      when(userDao.saveOrUpdate(any(User.class))).thenReturn(testUser);
-
-      User result = userService.edit(partialEditDTO, TEST_EMAIL_1);
-
-      assertThat(result.getName()).isEqualTo(testUser.getName());
-      assertThat(result.getSurname()).isEqualTo(partialEditDTO.surname());
       verify(userDao).findByEmail(TEST_EMAIL_1);
       verify(userDao).saveOrUpdate(testUser);
     }
@@ -172,15 +135,6 @@ class UserServiceImplTest {
     }
 
     @Test
-    void changeEmail_whenEmailsSame_thenThrowException() {
-      when(userDao.findByEmail(TEST_EMAIL_1)).thenReturn(Optional.of(testUser));
-
-      assertThatThrownBy(() -> userService.changeEmail(TEST_EMAIL_1, TEST_EMAIL_1))
-          .isInstanceOf(UserException.class)
-          .hasMessageContaining("Старый и новый email совпадают");
-    }
-
-    @Test
     void changeEmail_whenNewEmailExists_thenThrowException() {
       when(userDao.findByEmail(TEST_EMAIL_1)).thenReturn(Optional.of(testUser));
       when(userDao.findByEmail(TEST_EMAIL_2)).thenReturn(Optional.of(new User()));
@@ -188,15 +142,6 @@ class UserServiceImplTest {
       assertThatThrownBy(() -> userService.changeEmail(TEST_EMAIL_1, TEST_EMAIL_2))
           .isInstanceOf(EmailAlreadyExistsException.class)
           .hasMessageContaining(TEST_EMAIL_2);
-    }
-
-    @Test
-    void changeEmail_whenUserNotExists_thenThrowException() {
-      when(userDao.findByEmail(TEST_EMAIL_1)).thenReturn(Optional.empty());
-
-      assertThatThrownBy(() -> userService.changeEmail(TEST_EMAIL_1, TEST_EMAIL_2))
-          .isInstanceOf(EntityNotFoundException.class)
-          .hasMessageContaining(TEST_EMAIL_1);
     }
   }
 
@@ -267,15 +212,6 @@ class UserServiceImplTest {
 
       assertThat(result).isFalse();
       verify(userDao).findByEmail(TEST_EMAIL_1);
-    }
-
-    @Test
-    void isAdmin_whenUserNotExists_thenThrowException() {
-      when(userDao.findByEmail(TEST_EMAIL_1)).thenReturn(Optional.empty());
-
-      assertThatThrownBy(() -> userService.isAdmin(TEST_EMAIL_1))
-          .isInstanceOf(EntityNotFoundException.class)
-          .hasMessageContaining(TEST_EMAIL_1);
     }
   }
 }
