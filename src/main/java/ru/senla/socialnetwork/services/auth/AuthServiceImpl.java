@@ -1,5 +1,6 @@
 package ru.senla.socialnetwork.services.auth;
 
+import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -57,11 +58,12 @@ public class AuthServiceImpl implements AuthService {
     User user = UserMapper.INSTANCE.toUser(regDTO);
     user.setPassword(passwordEncoder.encode(regDTO.password()));
     user.setRole(UserRole.USER);
+    user.setRegisteredAt(ZonedDateTime.now());
     if (user.getProfileType() == null) {
       user.setProfileType(ProfileType.OPEN);
     }
 
-    userDao.saveOrUpdate(user);
+    user = userDao.saveOrUpdate(user);
     log.info("Пользователь {} успешно зарегистрирован.", regDTO.email());
     return UserMapper.INSTANCE.toUserResponseDTO(user);
   }

@@ -95,6 +95,8 @@ VALUES (1, 'Трейдеры и инвесторы', 'Сообщество дл�
        (2, 'Java Developers', 'Сообщество Java-разработчиков. Spring, Hibernate, Jakarta EE', '2025-04-11 10:00:00+03'),
        (3, 'Спортивное плавание', 'Все о плавании: тренировки, соревнования, экипировка', '2025-04-12 11:00:00+03');
 
+SELECT setval('communities_id_seq', (SELECT MAX(id) FROM communities));
+
 INSERT INTO group_members (id, user_id, community_id, join_date, role, gm_type, is_banned, banned_reason)
 VALUES
 -- "Трейдеры и инвесторы"
