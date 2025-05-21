@@ -62,7 +62,7 @@
 Клонировать репозиторий:
 ```bash
 git clone https://github.com/nemk0ff/SenlaProject.git
-cd socialnetwork
+cd SenlaProject
 ```
 Запустить все сервисы одной командой:
 
